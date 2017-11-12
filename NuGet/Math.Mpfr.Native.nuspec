@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Math.Mpfr.Native.NET</id>
+        <version>1.6.4</version>
+        <title>MPFR Native Interface for .NET</title>
+        <authors>Robert Baron (Machine Cognitis)</authors>
+        <owners>Robert Baron (Machine Cognitis)</owners>
+        <licenseUrl>https://github.com/MachineCognitis/Math.Mpfr.Native/blob/master/LICENSE.md</licenseUrl>
+        <projectUrl>https://github.com/MachineCognitis/Math.Mpfr.Native/</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>The MPFR Native Interface for .NET Library exposes to .NET (through P-Invoke and .NET types) all of the functionality of the GNU MPFR Library (version 6.1.2). It automatically loads at runtime the 32-bit or 64-bit GNU MPFR library that matches the current CPU architecture, thus allowing building Visual Studio Projects for AnyCPU, x86, or x64. It is based on the GNU MPFR "fat" build which automatically detects the current CPU type, and selects any available assembly language code optimization for that CPU, thus providing optimal performance.
+
+Documentation with sample usage is given at the Project URL. GNU MPFR is at https://mpfrlib.org/.
+
+Supported Platform: .NET Framework 2.0+</description>
+        <summary>MPFR Native Interface for .NET</summary>
+        <releaseNotes>Initial release for GNU MPFR v6.1.2.</releaseNotes>
+        <copyright>Copyright (c) 2017 Robert Baron, Machine Cognitis</copyright>
+        <tags>GNU MPFR MPFR multi-precision arithmetic integer float rational bigint biginteger bigfloat bignum</tags>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System" targetFramework=".NETFramework2.0" />
+        </frameworkAssemblies>
+      <references>
+        <reference file="Math.Mpfr.Native.dll" />
+      </references>
+      <dependencies>
+        <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.0" />
+      </dependencies>    </metadata>
+    <files>
+        <file src="..\Math.Mpfr.Native\bin\Release\Math.Mpfr.Native.dll" target="lib\net20\Math.Mpfr.Native.dll" />
+        <file src="..\Math.Mpfr.Native\bin\Release\Math.Mpfr.Native.pdb" target="lib\net20\Math.Mpfr.Native.pdb" />
+        <file src="..\Math.Mpfr.Native\bin\Release\Math.Mpfr.Native.xml" target="lib\net20\Math.Mpfr.Native.xml" />
+        <file src="..\Math.Mpfr.Native\bin\Release\MPFR_COPYING" target="output\x86\MPFR_COPYING" />
+        <file src="..\Math.Mpfr.Native\bin\Release\MPFR_README" target="output\x86\MPFR_README" />
+        <file src="..\Math.Mpfr.Native\bin\Release\MPFR_COPYING" target="output\x64\MPFR_COPYING" />
+        <file src="..\Math.Mpfr.Native\bin\Release\MPFR_README" target="output\x64\MPFR_README" />
+        <file src="..\Math.Mpfr.Native\bin\Release\x86\libmpfr-4.dll" target="output\x86\libmpfr-4.dll" />
+        <file src="..\Math.Mpfr.Native\bin\Release\x64\libmpfr-4.dll" target="output\x64\libmpfr-4.dll" />
+    </files>
+</package>
