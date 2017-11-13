@@ -10,7 +10,7 @@ namespace Math.Mpfr.Native
     /// Represents the state of a random number generator.
     /// </summary>
     /// <remarks></remarks>
-    public class mpfr_randstate_t
+    public class gmp_randstate_t
     {
 
         private IntPtr _pointer;
@@ -20,10 +20,10 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <remarks>
         /// <para>
-        /// When done with the random number generator state, unmanaged memory must be released with <see cref="mpfr_lib.free(mpfr_randstate_t)"/> .
+        /// When done with the random number generator state, unmanaged memory must be released with <see cref="mpfr_lib.free(gmp_randstate_t)"/> .
         /// </para>
         /// </remarks>
-        public mpfr_randstate_t()
+        public gmp_randstate_t()
         {
             // Allocation sizes take into account the members alignment done by the C compiler.
             _pointer = mpfr_lib.allocate(IntPtr.Size == 4 ? 20U : 32U).ToIntPtr();
