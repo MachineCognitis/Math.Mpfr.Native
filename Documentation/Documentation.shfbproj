@@ -32,7 +32,7 @@
       <Argument Key="requestExampleUrl" Value="" />
     </TransformComponentArguments>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\Math.Gmp.Native\Math.Gmp.Native.csproj" />
+      <DocumentationSource sourceFile="..\Math.Mpfr.Native\Math.Mpfr.Native.csproj" />
     </DocumentationSources>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
