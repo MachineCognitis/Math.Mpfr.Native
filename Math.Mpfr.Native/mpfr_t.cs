@@ -2,6 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Math.Gmp.Native;
 
 namespace Math.Mpfr.Native
 {
@@ -10,34 +11,25 @@ namespace Math.Mpfr.Native
     {
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal bool _initialized = false;
+        private bool _initialized = false;
 
-        /// <summary>
-        /// Creates a new multiple precision floating-point number.
-        /// </summary>
-        public mpfr_t()
+        internal void Initializing()
         {
-            size_t length = /*sizeof(int) + sizeof(int) + sizeof(int)*/ 12U + (size_t)IntPtr.Size;
-            _pointer = mpfr_lib.allocate(length).ToIntPtr();
-            mpfr_lib.ZeroMemory(_pointer, (int)length);
+            Math.Gmp.Native.size_t length = /*sizeof(int) + sizeof(int) + sizeof(int)*/ 12U + (size_t)IntPtr.Size;
+            Pointer = gmp_lib.allocate(length).ToIntPtr();
         }
 
-        /// <summary>
-        /// The number of limbs currently in use, or the negative of that when representing a negative value.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Zero is represented by <see cref="_mp_size"/> and <see cref="_mp_exp"/> both set to zero,
-        /// and in that case the <see cref="mp_base._mp_d"/> data is unused.
-        /// (In the future <see cref="_mp_exp"/> might be undefined when representing zero.) 
-        /// </para>
-        /// </remarks>
-        public override mp_size_t _mp_size
+        internal void Initialized()
         {
-            get
-            {
-                return Marshal.ReadInt32(_pointer,  /*sizeof(int)*/ 4);
-            }
+            //gmp_lib.ZeroMemory(Pointer, (int)length);
+            _initialized = true;
+        }
+
+        internal void Clear()
+        {
+            if (_initialized) gmp_lib.free(Pointer);
+            Pointer = IntPtr.Zero;
+            _initialized = false;
         }
 
         /// <summary>
@@ -48,11 +40,19 @@ namespace Math.Mpfr.Native
         ///  In any calculation the aim is to produce <see cref="_mp_prec"/> limbs of result (the most significant being non-zero). 
         /// </para>
         /// </remarks>
-        public int _mp_prec
+        public mpfr_prec_t _mpfr_prec
         {
             get
             {
-                return Marshal.ReadInt32(_pointer, 0);
+                return (mpfr_prec_t)Marshal.ReadInt32(Pointer, 0);
+            }
+        }
+
+        public mpfr_sign_t _mpfr_sign
+        {
+            get
+            {
+                return Marshal.ReadInt32(Pointer, 4);
             }
         }
 
@@ -71,24 +71,42 @@ namespace Math.Mpfr.Native
         /// Limbs other than those included in the {<see cref="mp_base._mp_d"/>, <see cref="_mp_size"/>} data are treated as zero.
         /// </para>
         /// </remarks>
-        public int _mp_exp
+        public mpfr_exp_t _mpfr_exp
         {
             get
             {
-                return Marshal.ReadInt32(_pointer, /*sizeof(int) + sizeof(int)*/ 8);
+                return Marshal.ReadInt32(Pointer, /*sizeof(int) + sizeof(int)*/ 8);
             }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal override IntPtr _mp_d_intptr
+        public override IntPtr _mp_d_intptr
         {
             get
             {
-                return Marshal.ReadIntPtr(_pointer, /*sizeof(int) + sizeof(int) + sizeof(int)*/ 12);
+                return Marshal.ReadIntPtr(Pointer, /*sizeof(int) + sizeof(int) + sizeof(int)*/ 12);
             }
             set
             {
-                Marshal.WriteIntPtr(_pointer, /*sizeof(int) + sizeof(int) + sizeof(int)*/ 12, value);
+                Marshal.WriteIntPtr(Pointer, /*sizeof(int) + sizeof(int) + sizeof(int)*/ 12, value);
+            }
+        }
+
+        /// <summary>
+        /// The number of limbs currently in use, or the negative of that when representing a negative value.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Zero is represented by <see cref="_mp_size"/> and <see cref="_mp_exp"/> both set to zero,
+        /// and in that case the <see cref="mp_base._mp_d"/> data is unused.
+        /// (In the future <see cref="_mp_exp"/> might be undefined when representing zero.) 
+        /// </para>
+        /// </remarks>
+        public override mp_size_t _mp_size
+        {
+            get
+            {
+                return (mp_size_t)((_mpfr_prec + gmp_lib.mp_bits_per_limb - 1) / gmp_lib.mp_bits_per_limb);
             }
         }
 
@@ -98,14 +116,14 @@ namespace Math.Mpfr.Native
         /// <returns>The unmanaged memory pointer of the multiple precision floating-point number.</returns>
         public IntPtr ToIntPtr()
         {
-            return _pointer;
+            return Pointer;
         }
 
         /// <summary>
-        /// Converts a <see cref="string"/> value to an <see cref="mpf_t"/> value.
+        /// Converts a <see cref="string"/> value to an <see cref="mpfr_t"/> value.
         /// </summary>
         /// <param name="value">A <see cref="string"/> value.</param>
-        /// <returns>An <see cref="mpf_t"/> value.</returns>
+        /// <returns>An <see cref="mpfr_t"/> value.</returns>
         /// <remarks>
         /// <para>
         /// Base is assumed to be 10 unless the first character of the string is <c>B</c>
@@ -114,11 +132,11 @@ namespace Math.Mpfr.Native
         /// Negative values are used to specify that the exponent is in decimal.
         /// </para>
         /// </remarks>
-        public static implicit operator mpf_t(string value)
+        public static implicit operator mpfr_t(string value)
         {
-            int @base = 10;
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
+            int @base = 0;
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init(x);
             if (value != null && value.Substring(0, 1).ToUpperInvariant() == "B")
             {
                 int pos = value.IndexOf(' ', 1);
@@ -126,8 +144,8 @@ namespace Math.Mpfr.Native
                     value = value.Substring(pos + 1);
             }
             char_ptr s = new char_ptr(value);
-            mpfr_lib.mpf_set_str(x, s, @base);
-            mpfr_lib.free(s);
+            mpfr_lib.mpfr_set_str(x, s, @base, mpfr_lib.mpfr_get_default_rounding_mode());
+            gmp_lib.free(s);
             return x;
         }
 
@@ -138,14 +156,14 @@ namespace Math.Mpfr.Native
         public override string ToString()
         {
             if (!_initialized) return null;
-            ptr<mp_exp_t> exp = new ptr<mp_exp_t>(0);
-            char_ptr s_ptr = mpfr_lib.mpf_get_str(char_ptr.Zero, exp, 10, 0, this);
+            mpfr_exp_t exp = 0;
+            char_ptr s_ptr = mpfr_lib.mpfr_get_str(char_ptr.Zero, ref exp, 10, 0, this, mpfr_lib.mpfr_get_default_rounding_mode());
             string s = s_ptr.ToString();
-            mpfr_lib.free(s_ptr);
+            gmp_lib.free(s_ptr);
             if (s.StartsWith("-", StringComparison.Ordinal))
-                return "-0." + s.Substring(1) + "e" + exp.Value._value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                return "-0." + s.Substring(1) + "e" + exp.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
             else
-                return "0." + s + "e" + exp.Value._value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                return "0." + s + "e" + exp.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
 
     }

@@ -8,7 +8,8 @@ namespace Math.Mpfr.Native
     public struct mpfr_prec_t
     {
 
-        internal uint _value;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
+        public uint Value;
 
         /// <summary>
         /// Creates a new <see cref="mpfr_prec_t"/>, and sets its <paramref name="value"/>.
@@ -16,7 +17,7 @@ namespace Math.Mpfr.Native
         /// <param name="value">The value of the new <see cref="mpfr_prec_t"/>.</param>
         public mpfr_prec_t(uint value)
         {
-            _value = value;
+            this.Value = value;
         }
 
         /// <summary>
@@ -111,8 +112,8 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="Byte"/> value.</returns>
         public static explicit operator byte(mpfr_prec_t value)
         {
-            if (value._value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
-            return (byte)value._value;
+            if (value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
+            return (byte)value.Value;
         }
 
         /// <summary>
@@ -122,8 +123,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="Byte"/> value.</returns>
         public static explicit operator sbyte(mpfr_prec_t value)
         {
-            if (value._value > sbyte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the SByte data type.", value));
-            return (sbyte)value._value;
+            if (value.Value > sbyte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the SByte data type.", value));
+            return (sbyte)value.Value;
         }
 
         /// <summary>
@@ -133,8 +134,8 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt16"/> value.</returns>
         public static explicit operator ushort(mpfr_prec_t value)
         {
-            if (value._value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
-            return (ushort)value._value;
+            if (value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
+            return (ushort)value.Value;
         }
 
         /// <summary>
@@ -144,8 +145,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="Int16"/> value.</returns>
         public static explicit operator short(mpfr_prec_t value)
         {
-            if (value._value > short.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int16 data type.", value));
-            return (short)value._value;
+            if (value.Value > short.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int16 data type.", value));
+            return (short)value.Value;
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt32"/> value.</returns>
         public static implicit operator uint(mpfr_prec_t value)
         {
-            return value._value;
+            return value.Value;
         }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace Math.Mpfr.Native
         public static explicit operator int(mpfr_prec_t value)
         {
             //if (value._value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int32 data type.", value));
-            return unchecked((int)value._value);
+            return unchecked((int)value.Value);
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt64"/> value.</returns>
         public static implicit operator ulong(mpfr_prec_t value)
         {
-            return value._value;
+            return value.Value;
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="Int64"/> value.</returns>
         public static implicit operator long(mpfr_prec_t value)
         {
-            return value._value;
+            return value.Value;
         }
 
         /// <summary>
@@ -195,7 +196,7 @@ namespace Math.Mpfr.Native
         /// <returns>The string representation of the <see cref="mpfr_prec_t"/>.</returns>
         public override string ToString()
         {
-            return _value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -218,7 +219,7 @@ namespace Math.Mpfr.Native
         /// <returns><c>True</c> if <paramref name="other"/> has the same value as this instance; otherwise, <c>False</c>.</returns>
         public bool Equals(mpfr_prec_t other)
         {
-            return _value == other._value;
+            return Value == other.Value;
         }
 
         /// <summary>
@@ -227,7 +228,7 @@ namespace Math.Mpfr.Native
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            return _value.GetHashCode();
+            return Value.GetHashCode();
         }
 
         /// <summary>

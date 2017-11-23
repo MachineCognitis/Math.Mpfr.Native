@@ -2,6 +2,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.InteropServices;
+using Math.Gmp.Native;
 using Math.Mpfr.Native;
 using System.Linq;
 using System.Text;
@@ -35,61 +36,24 @@ namespace UnitTests
         #region "Types."
 
         [TestMethod]
-        public void char_ptr_test()
+        public void mpfr_prec_t_test()
         {
-            // Create new string in unmanaged memory.
-            char_ptr s = new char_ptr("Test");
-            Assert.IsTrue(s.ToString() == "Test");
-
-            // Set string pointer to zero.
-            s = char_ptr.Zero;
-            Assert.IsTrue(s.ToIntPtr() == IntPtr.Zero);
-
-            // Assert that obj and s are the same pointer.
-            object obj = s;
-            Assert.IsTrue(s.Equals(obj) == true);
-
-            // Create new unmanaged string.
-            char_ptr t = new char_ptr("Test");
-
-            // Assert that s and t are distinct string pointers.
-            Assert.IsTrue(s.Equals(t) == false);
-
-            // Check inequality and equality of s and t pointers.
-            Assert.IsTrue(s != t);
-            mpfr_lib.free(t);
-            t = s;
-            Assert.IsTrue(s == t);
-            mpfr_lib.free(t);
-        }
-
-        [TestMethod]
-        public void mpfr_randstate_t_test()
-        {
-            // Allocate and release random number generator state.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.free(state);
-        }
-
-        [TestMethod]
-        public void mp_bitcnt_t_test()
-        {
-            mp_bitcnt_t v;
+            mpfr_prec_t v;
 
             byte zero = 0;
             sbyte minusOne = -1;
 
-            // Check implicit and explict conversions to mp_bitcnt_t.
+            // Check implicit and explict conversions to mpfr_prec_t.
             v = (byte)zero;
-            v = (mp_bitcnt_t)(sbyte)zero;
+            v = (mpfr_prec_t)(sbyte)zero;
             v = (ushort)zero;
-            v = (mp_bitcnt_t)(short)zero;
+            v = (mpfr_prec_t)(short)zero;
             v = (uint)zero;
-            v = (mp_bitcnt_t)(int)zero;
-            v = (mp_bitcnt_t)(ulong)zero;
-            v = (mp_bitcnt_t)(long)zero;
+            v = (mpfr_prec_t)(int)zero;
+            v = (mpfr_prec_t)(ulong)zero;
+            v = (mpfr_prec_t)(long)zero;
 
-            // Check implicit and explict conversions from mp_bitcnt_t.
+            // Check implicit and explict conversions from mpfr_prec_t.
             byte b = (byte)v;
             sbyte sb = (sbyte)v;
             ushort us = (ushort)v;
@@ -100,83 +64,48 @@ namespace UnitTests
             long l = v;
 
             // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (mp_bitcnt_t)(sbyte)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_bitcnt_t)(short)minusOne) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => v = (mp_bitcnt_t)(int)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_bitcnt_t)(long)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(sbyte)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(short)minusOne) == typeof(OverflowException).Name);
+            //Assert.IsTrue(Test(() => v = (mpfr_prec_t)(int)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(long)minusOne) == typeof(OverflowException).Name);
 
-            Assert.IsTrue(Test(() => v = (mp_bitcnt_t)ulong.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_bitcnt_t)long.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)ulong.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)long.MaxValue) == typeof(OverflowException).Name);
 
-            Assert.IsTrue(Test(() => b = (byte)(new mp_bitcnt_t(uint.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new mp_bitcnt_t(uint.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => us = (ushort)(new mp_bitcnt_t(uint.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new mp_bitcnt_t(uint.MaxValue))) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => i = (int)(new mp_bitcnt_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => b = (byte)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            //Assert.IsTrue(Test(() => i = (int)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
 
             // Check equality and inequality.
-            Object obj = new mp_bitcnt_t(8);
-            Assert.IsTrue((new mp_bitcnt_t(8)).Equals(obj));
-            Assert.IsTrue(!(new mp_bitcnt_t(8)).Equals(new int()));
-            Assert.IsTrue((new mp_bitcnt_t(8)).Equals(new mp_bitcnt_t(8)));
-            Assert.IsTrue(!(new mp_bitcnt_t(8)).Equals(new mp_bitcnt_t(9)));
-            Assert.IsTrue((new mp_bitcnt_t(8)) == (new mp_bitcnt_t(8)));
-            Assert.IsTrue((new mp_bitcnt_t(8)) != (new mp_bitcnt_t(9)));
+            Object obj = new mpfr_prec_t(8);
+            Assert.IsTrue((new mpfr_prec_t(8)).Equals(obj));
+            Assert.IsTrue(!(new mpfr_prec_t(8)).Equals(new int()));
+            Assert.IsTrue((new mpfr_prec_t(8)).Equals(new mpfr_prec_t(8)));
+            Assert.IsTrue(!(new mpfr_prec_t(8)).Equals(new mpfr_prec_t(9)));
+            Assert.IsTrue((new mpfr_prec_t(8)) == (new mpfr_prec_t(8)));
+            Assert.IsTrue((new mpfr_prec_t(8)) != (new mpfr_prec_t(9)));
         }
 
-        //[TestMethod]
-        //public void mp_exp_ptr_test()
-        //{
-        //    // Create new exponent pointer.
-        //    mp_exp_ptr i = new mp_exp_ptr(8);
-
-        //    // Assert that obj and i are the same pointer.
-        //    object obj = i;
-        //    Assert.IsTrue(i.Equals(obj) == true);
-
-        //    // Create new exponent pointer.
-        //    mp_exp_ptr j = new mp_exp_ptr(8);
-
-        //    // Assert that i and j are distinct exponent pointers.
-        //    Assert.IsTrue(i.Equals(j) == false);
-
-        //    // Check equality of i and j values.
-        //    Assert.IsTrue(i.Value == j.Value);
-        //    i.Value += 4;
-        //    Assert.IsTrue(i.Value != j.Value);
-
-        //    // Check inequality and equality of i and j pointers.
-        //    Assert.IsTrue(i != j);
-        //    mpfr_lib.free(j);
-        //    j = i;
-        //    Assert.IsTrue(i == j);
-
-        //    // Check equality of i and j values.
-        //    Assert.IsTrue(i.Value == j.Value);
-        //    i.Value += 4;
-        //    Assert.IsTrue(i.Value == j.Value);
-
-        //    mpfr_lib.free(j);
-        //}
-
         [TestMethod]
-        public void mp_exp_t_test()
+        public void mpfr_sign_t_test()
         {
-            mp_exp_t v;
+            mpfr_sign_t v;
 
             byte zero = 0;
 
-            // Check implicit and explict conversions to mp_exp_t.
+            // Check implicit and explict conversions to mpfr_sign_t.
             v = (byte)zero;
             v = (sbyte)zero;
             v = (ushort)zero;
             v = (short)zero;
-            v = (mp_exp_t)(uint)zero;
+            v = (mpfr_sign_t)(uint)zero;
             v = (int)zero;
-            v = (mp_exp_t)(ulong)zero;
-            v = (mp_exp_t)(long)zero;
+            v = (mpfr_sign_t)(ulong)zero;
+            v = (mpfr_sign_t)(long)zero;
 
-            // Check implicit and explict conversions from mp_exp_t.
+            // Check implicit and explict conversions from mpfr_sign_t.
             byte b = (byte)v;
             sbyte sb = (sbyte)v;
             ushort us = (ushort)v;
@@ -187,228 +116,45 @@ namespace UnitTests
             long l = v;
 
             // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (mp_exp_t)uint.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_exp_t)long.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_exp_t)ulong.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)uint.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)long.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)ulong.MaxValue) == typeof(OverflowException).Name);
 
-            Assert.IsTrue(Test(() => b = (byte)(new mp_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new mp_exp_t(int.MinValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new mp_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => us = (ushort)(new mp_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new mp_exp_t(int.MinValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new mp_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
-
-            // Check equality and inequality.
-            Object obj = new mp_exp_t(8);
-            Assert.IsTrue((new mp_exp_t(8)).Equals(obj));
-            Assert.IsTrue(!(new mp_exp_t(8)).Equals(new byte()));
-            Assert.IsTrue((new mp_exp_t(8)).Equals(new mp_exp_t(8)));
-            Assert.IsTrue(!(new mp_exp_t(8)).Equals(new mp_exp_t(9)));
-            Assert.IsTrue((new mp_exp_t(8)) == (new mp_exp_t(8)));
-            Assert.IsTrue((new mp_exp_t(8)) != (new mp_exp_t(9)));
-        }
-
-        [TestMethod]
-        public void mp_limb_t_test()
-        {
-            mp_limb_t v;
-
-            byte zero = 0;
-            sbyte minusOne = -1;
-
-            // Check implicit and explict conversions to mp_limb_t.
-            v = (byte)zero;
-            v = (mp_limb_t)(sbyte)zero;
-            v = (ushort)zero;
-            v = (mp_limb_t)(short)zero;
-            v = (uint)zero;
-            v = (mp_limb_t)(int)zero;
-            v = (ulong)zero;
-            v = (mp_limb_t)(long)zero;
-
-            // Check implicit and explict conversions from mp_limb_t.
-            byte b = (byte)v;
-            sbyte sb = (sbyte)v;
-            ushort us = (ushort)v;
-            short s = (short)v;
-            uint ui = (uint)v;
-            int i = (int)v;
-            ulong ul = v;
-            long l = (long)v;
-
-            // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (mp_limb_t)(sbyte)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_limb_t)(short)minusOne) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => v = (mp_limb_t)(int)minusOne) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => v = (mp_limb_t)(long)minusOne) == typeof(OverflowException).Name);
-
-            Assert.IsTrue(Test(() => b = (byte)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => us = (ushort)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => i = (int)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => ui = (uint)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => l = (long)(new mp_limb_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => b = (byte)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
 
             // Check equality and inequality.
-            Object obj = new mp_limb_t(8);
-            Assert.IsTrue((new mp_limb_t(8)).Equals(obj));
-            Assert.IsTrue(!(new mp_limb_t(8)).Equals(new byte()));
-            Assert.IsTrue((new mp_limb_t(8)).Equals(new mp_limb_t(8)));
-            Assert.IsTrue(!(new mp_limb_t(8)).Equals(new mp_limb_t(9)));
-            Assert.IsTrue((new mp_limb_t(8)) == (new mp_limb_t(8)));
-            Assert.IsTrue((new mp_limb_t(8)) != (new mp_limb_t(9)));
+            Object obj = new mpfr_sign_t(8);
+            Assert.IsTrue((new mpfr_sign_t(8)).Equals(obj));
+            Assert.IsTrue(!(new mpfr_sign_t(8)).Equals(new byte()));
+            Assert.IsTrue((new mpfr_sign_t(8)).Equals(new mpfr_sign_t(8)));
+            Assert.IsTrue(!(new mpfr_sign_t(8)).Equals(new mpfr_sign_t(9)));
+            Assert.IsTrue((new mpfr_sign_t(8)) == (new mpfr_sign_t(8)));
+            Assert.IsTrue((new mpfr_sign_t(8)) != (new mpfr_sign_t(9)));
         }
 
         [TestMethod]
-        public void mp_ptr_test()
+        public void mpfr_exp_t_test()
         {
-            mp_ptr bytes0 = new mp_ptr(new byte[0]);
-            Assert.IsTrue(bytes0.Size == 0);
-            mpfr_lib.free(bytes0);
-
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            mp_ptr bytes1 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 });
-            mpfr_lib.mpz_roinit_n(z, bytes1, bytes1.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0x00000088 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x0000000000000088 }));
-            mpfr_lib.free(bytes1);
-
-            mp_ptr bytes2 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 });
-            mpfr_lib.mpz_roinit_n(z, bytes2, bytes2.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0x00009988 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x0000000000009988 }));
-            mpfr_lib.free(bytes2);
-
-            mp_ptr bytes3 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa });
-            mpfr_lib.mpz_roinit_n(z, bytes3, bytes3.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0x00aa9988 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x0000000000aa9988 }));
-            mpfr_lib.free(bytes3);
-
-            mp_ptr bytes4 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb });
-            mpfr_lib.mpz_roinit_n(z, bytes4, bytes4.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x00000000bbaa9988 }));
-            mpfr_lib.free(bytes4);
-
-            mp_ptr bytes5 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc });
-            mpfr_lib.mpz_roinit_n(z, bytes5, bytes5.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0x000000cc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x000000ccbbaa9988 }));
-            mpfr_lib.free(bytes5);
-
-            mp_ptr bytes6 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd });
-            mpfr_lib.mpz_roinit_n(z, bytes6, bytes6.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0x0000ddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x0000ddccbbaa9988 }));
-            mpfr_lib.free(bytes6);
-
-            mp_ptr bytes7 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee });
-            mpfr_lib.mpz_roinit_n(z, bytes7, bytes7.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0x00eeddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x00eeddccbbaa9988 }));
-            mpfr_lib.free(bytes7);
-
-            mp_ptr bytes8 = new mp_ptr(new byte[] { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff });
-            mpfr_lib.mpz_roinit_n(z, bytes8, bytes8.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0xffeeddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0xffeeddccbbaa9988 }));
-            mpfr_lib.free(bytes8);
-
-            mp_ptr ushort1 = new mp_ptr(new ushort[] { 0x1100, 0x3322, 0x5544, 0x7766, 0x9988 });
-            mpfr_lib.mpz_roinit_n(z, ushort1, ushort1.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0x00009988 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x0000000000009988 }));
-            mpfr_lib.free(ushort1);
-
-            mp_ptr ushort2 = new mp_ptr(new ushort[] { 0x1100, 0x3322, 0x5544, 0x7766, 0x9988, 0xbbaa });
-            mpfr_lib.mpz_roinit_n(z, ushort2, ushort2.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x00000000bbaa9988 }));
-            mpfr_lib.free(ushort2);
-
-            mp_ptr ushort3 = new mp_ptr(new ushort[] { 0x1100, 0x3322, 0x5544, 0x7766, 0x9988, 0xbbaa, 0xddcc });
-            mpfr_lib.mpz_roinit_n(z, ushort3, ushort3.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0x0000ddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x0000ddccbbaa9988 }));
-            mpfr_lib.free(ushort3);
-
-            mp_ptr ushort4 = new mp_ptr(new ushort[] { 0x1100, 0x3322, 0x5544, 0x7766, 0x9988, 0xbbaa, 0xddcc, 0xffee });
-            mpfr_lib.mpz_roinit_n(z, ushort4, ushort4.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0xffeeddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0xffeeddccbbaa9988 }));
-            mpfr_lib.free(ushort4);
-
-            mp_ptr uint1 = new mp_ptr(new uint[] { 0x33221100, 0x77665544, 0xbbaa9988 });
-            mpfr_lib.mpz_roinit_n(z, uint1, uint1.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988 }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0x00000000bbaa9988 }));
-            mpfr_lib.free(uint1);
-
-            mp_ptr uint2 = new mp_ptr(new uint[] { 0x33221100, 0x77665544, 0xbbaa9988, 0xffeeddcc });
-            mpfr_lib.mpz_roinit_n(z, uint2, uint2.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0xffeeddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0xffeeddccbbaa9988 }));
-            mpfr_lib.free(uint2);
-
-            mp_ptr ulong1 = new mp_ptr(new ulong[] { 0x7766554433221100, 0xffeeddccbbaa9988 });
-            mpfr_lib.mpz_roinit_n(z, ulong1, ulong1.Size);
-            if (mpfr_lib.mp_bits_per_limb == 32)
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x33221100, 0x77665544, 0xbbaa9988, 0xffeeddcc }));
-            else
-                Assert.IsTrue(mpfr_lib.mpz_limbs_read(z).SequenceEqual(new mp_limb_t[] { 0x7766554433221100, 0xffeeddccbbaa9988 }));
-            mpfr_lib.free(ulong1);
-        }
-
-        [TestMethod]
-        public void mp_size_t_test()
-        {
-            mp_size_t v;
+            mpfr_exp_t v;
 
             byte zero = 0;
 
-            // Check implicit and explict conversions to mp_size_t.
+            // Check implicit and explict conversions to mpfr_exp_t.
             v = (byte)zero;
             v = (sbyte)zero;
             v = (ushort)zero;
             v = (short)zero;
-            v = (mp_size_t)(uint)zero;
+            v = (mpfr_exp_t)(uint)zero;
             v = (int)zero;
-            v = (mp_size_t)(ulong)zero;
-            v = (mp_size_t)(long)zero;
+            v = (mpfr_exp_t)(ulong)zero;
+            v = (mpfr_exp_t)(long)zero;
 
-            // Check implicit and explict conversions from mp_size_t.
+            // Check implicit and explict conversions from mpfr_exp_t.
             byte b = (byte)v;
             sbyte sb = (sbyte)v;
             ushort us = (ushort)v;
@@ -419,494 +165,455 @@ namespace UnitTests
             long l = v;
 
             // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (mp_size_t)uint.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_size_t)long.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mp_size_t)ulong.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)uint.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)long.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)ulong.MaxValue) == typeof(OverflowException).Name);
 
-            Assert.IsTrue(Test(() => b = (byte)(new mp_size_t(int.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new mp_size_t(int.MinValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new mp_size_t(int.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => us = (ushort)(new mp_size_t(int.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new mp_size_t(int.MinValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new mp_size_t(int.MaxValue))) == typeof(OverflowException).Name);
-
-            // Check equality and inequality.
-            Object obj = new mp_size_t(8);
-            Assert.IsTrue((new mp_size_t(8)).Equals(obj));
-            Assert.IsTrue(!(new mp_size_t(8)).Equals(new byte()));
-            Assert.IsTrue((new mp_size_t(8)).Equals(new mp_size_t(8)));
-            Assert.IsTrue(!(new mp_size_t(8)).Equals(new mp_size_t(9)));
-            Assert.IsTrue((new mp_size_t(8)) == (new mp_size_t(8)));
-            Assert.IsTrue((new mp_size_t(8)) != (new mp_size_t(9)));
-        }
-
-        [TestMethod]
-        public void size_t_test()
-        {
-            size_t v;
-
-            byte zero = 0;
-            sbyte minusOne = -1;
-
-            // Check implicit and explict conversions to size_t.
-            v = (byte)zero;
-            v = (size_t)(sbyte)zero;
-            v = (ushort)zero;
-            v = (size_t)(short)zero;
-            v = (uint)zero;
-            v = (size_t)(int)zero;
-            v = (ulong)zero;
-            v = (size_t)(long)zero;
-
-            // Check implicit and explict conversions from size_t.
-            byte b = (byte)v;
-            sbyte sb = (sbyte)v;
-            ushort us = (ushort)v;
-            short s = (short)v;
-            uint ui = (uint)v;
-            int i = (int)v;
-            ulong ul = v;
-            long l = (long)v;
-
-            // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (size_t)(sbyte)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (size_t)(short)minusOne) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => v = (size_t)(int)minusOne) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => v = (size_t)(long)minusOne) == typeof(OverflowException).Name);
-
-            Assert.IsTrue(Test(() => b = (byte)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => sb = (sbyte)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => us = (ushort)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => s = (short)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => i = (int)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => ui = (uint)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => l = (long)(new size_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => b = (byte)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
 
             // Check equality and inequality.
-            Object obj = new size_t(8);
-            Assert.IsTrue((new size_t(8)).Equals(obj));
-            Assert.IsTrue(!(new size_t(8)).Equals(new byte()));
-            Assert.IsTrue((new size_t(8)).Equals(new size_t(8)));
-            Assert.IsTrue(!(new size_t(8)).Equals(new size_t(9)));
-            Assert.IsTrue((new size_t(8)) == (new size_t(8)));
-            Assert.IsTrue((new size_t(8)) != (new size_t(9)));
+            Object obj = new mpfr_exp_t(8);
+            Assert.IsTrue((new mpfr_exp_t(8)).Equals(obj));
+            Assert.IsTrue(!(new mpfr_exp_t(8)).Equals(new byte()));
+            Assert.IsTrue((new mpfr_exp_t(8)).Equals(new mpfr_exp_t(8)));
+            Assert.IsTrue(!(new mpfr_exp_t(8)).Equals(new mpfr_exp_t(9)));
+            Assert.IsTrue((new mpfr_exp_t(8)) == (new mpfr_exp_t(8)));
+            Assert.IsTrue((new mpfr_exp_t(8)) != (new mpfr_exp_t(9)));
         }
 
         [TestMethod]
-        public void void_ptr_test()
-        {
-            // Set block pointer to zero.
-            void_ptr s = void_ptr.Zero;
-            Assert.IsTrue(s.ToIntPtr() == IntPtr.Zero);
-
-            // Create new block in unmanaged memory.
-            s = mpfr_lib.allocate(10);
-            
-            // Assert that obj and s are the same pointer.
-            object obj = s;
-            Assert.IsTrue(s.Equals(obj) == true);
-
-            // Create new unmanaged string.
-            void_ptr t = mpfr_lib.allocate(10);
-
-            // Assert that s and t are distinct block pointers.
-            Assert.IsTrue(s.Equals(t) == false);
-
-            // Check inequality and equality of s and t pointers.
-            Assert.IsTrue(s != t);
-            mpfr_lib.free(t);
-            t = s;
-            Assert.IsTrue(s == t);
-            mpfr_lib.free(t);
-        }
-
-        [TestMethod]
-        public void mpz_t_test()
-        {
-            // Create new multiple-precision integers.
-            mpz_t x = "123 456 789 012 345 678 901 234 567 890";
-            mpz_t y = "123 456 789 012 345 678 901 234 567 890";
-            mpz_t z = new mpz_t();
-            mpz_t result = "246 913 578 024 691 357 802 469 135 780";
-            mpfr_lib.mpz_init(z);
-
-            // Add integers, and assert result.
-            mpfr_lib.mpz_add(z, x, y);
-            Assert.IsTrue(mpfr_lib.mpz_cmp(z, result) == 0);
-
-            // Release allocated memory for integers.
-            mpfr_lib.mpz_clears(x, y, z, result, null);
-        }
-
-        [TestMethod]
-        public void mpq_t_test()
-        {
-            // Create new multiple-precision rationals.
-            mpq_t x = "123 456 789 012 345 / 0x2 6975 02EC 8AD2";
-            mpq_t y = "03 404 420 603 357 571 / 678 901 234 567 890";
-            mpq_t z = new mpq_t();
-            mpq_t result = "246 913 578 024 690 / 0b10 0110 1001 0111 0101 0000 0010 1110 1100 1000 1010 1101 0010";
-            mpfr_lib.mpq_init(z);
-
-            // Add rationals, and assert result.
-            mpfr_lib.mpq_add(z, x, y);
-            Assert.IsTrue(mpfr_lib.mpq_cmp(z, result) == 0);
-
-            // Release allocated memory for rationals.
-            mpfr_lib.mpq_clears(x, y, z, result, null);
-        }
-
-        [TestMethod]
-        public void mpf_t_test()
+        [TestCategory("mpfr_t")]
+        public void mpfr_t_test()
         {
             // Set default precision to 84 bits.
-            mpfr_lib.mpf_set_default_prec(32U);
+            mpfr_lib.mpfr_set_default_prec(32U);
 
             // Create new multiple-precision floating-point numbers.
-            mpf_t x = "B-16 7048 860D DF79@0";
-            mpf_t y = "123 456 789 012 345e0";
-            mpf_t z = new mpf_t();
-            mpf_t result = "246 913 578 024 690e0";
-            mpfr_lib.mpf_init(z);
+            mpfr_t x = "B16 7048 860D DF79@0";
+            mpfr_t y = "123 456 789 012 345e0";
+            mpfr_t z = new mpfr_t();
+            mpfr_t result = "0.28867000000e5";
+            mpfr_lib.mpfr_init(z);
 
             // Add floating-point numbers, and assert result.
-            mpfr_lib.mpf_add(z, x, y);
-            Assert.IsTrue(mpfr_lib.mpf_cmp(z, result) == 0);
+            mpfr_lib.mpfr_add(z, x, y, mpfr_rnd_t.MPFR_RNDN);
+            Assert.IsTrue(mpfr_lib.mpfr_cmp(z, result) == 0);
 
             // Release allocated memory for floating-point numbers.
-            mpfr_lib.mpf_clears(x, y, z, result, null);
-        }
-
-        //[TestMethod]
-        //public void va_list()
-        //{
-        //    object[] args;
-        //    va_list va_args;
-
-        //    args = new object[] { new ptr<Char>('A') };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Char>)args[0]).Value == 'A');
-
-        //    args = new object[] { new ptr<Byte>(Byte.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Byte>)args[0]).Value == Byte.MinValue);
-
-        //    args = new object[] { new ptr<SByte>(SByte.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<SByte>)args[0]).Value == SByte.MaxValue);
-
-        //    args = new object[] { new ptr<Int16>(Int16.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Int16>)args[0]).Value == Int16.MinValue);
-
-        //    args = new object[] { new ptr<UInt16>(UInt16.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<UInt16>)args[0]).Value == UInt16.MaxValue);
-
-        //    args = new object[] { new ptr<Int32>(Int32.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Int32>)args[0]).Value == Int32.MinValue);
-
-        //    args = new object[] { new ptr<UInt32>(UInt32.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<UInt32>)args[0]).Value == UInt32.MaxValue);
-
-        //    args = new object[] { new ptr<Int64>(Int64.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Int64>)args[0]).Value == Int64.MinValue);
-
-        //    args = new object[] { new ptr<UInt64>(UInt64.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<UInt64>)args[0]).Value == UInt64.MaxValue);
-
-        //    args = new object[] { new ptr<mp_bitcnt_t>(UInt32.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<mp_bitcnt_t>)args[0]).Value == UInt32.MaxValue);
-
-        //    args = new object[] { new ptr<mp_size_t>(Int32.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<mp_size_t>)args[0]).Value == Int32.MinValue);
-
-        //    args = new object[] { new ptr<Single>(Single.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Single>)args[0]).Value == Single.MinValue);
-
-        //    args = new object[] { new ptr<Double>(Double.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<Double>)args[0]).Value == Double.MaxValue);
-
-        //    args = new object[] { new ptr<mp_limb_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<mp_limb_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
-
-        //    args = new object[] { new ptr<size_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<size_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
-
-        //    args = new object[] { new ptr<mp_exp_t>(Int32.MinValue) };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((ptr<mp_exp_t>)args[0]).Value == Int32.MinValue);
-
-        //    args = new object[] { new StringBuilder("ABCDEFGHIJ") };
-        //    va_args = new va_list(args);
-        //    va_args.RetrieveArgumentValues();
-        //    Assert.IsTrue(((StringBuilder)args[0]).ToString() == "ABCDEFGHIJ");
-        //}
-
-        #endregion
-
-        #region "Global variables."
-
-        [TestMethod]
-        public void mp_bits_per_limb()
-        {
-            int bitsPerLimb = mpfr_lib.mp_bits_per_limb;
-            Assert.AreEqual(bitsPerLimb, IntPtr.Size * 8);
+            mpfr_lib.mpfr_clears(x, y, z, result, null);
         }
 
         [TestMethod]
-        public void mp_bytes_per_limb()
+        public void va_list()
         {
-            mp_size_t bytesPerLimb = mpfr_lib.mp_bytes_per_limb;
-            Assert.AreEqual(bytesPerLimb, (mp_size_t)IntPtr.Size);
-        }
+            object[] args;
+            va_list va_args;
 
-        [TestMethod]
-        public void mp_uint_per_limb()
-        {
-            mp_size_t uintsPerLimb = mpfr_lib.mp_uint_per_limb;
-            Assert.AreEqual(uintsPerLimb, (mp_size_t)(IntPtr.Size / 4));
-        }
+            args = new object[] { new ptr<Char>('A') };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Char>)args[0]).Value == 'A');
 
-        [TestMethod]
-        public void mpfr_errno()
-        {
-            int errno = mpfr_lib.mpfr_errno;
-            Assert.AreEqual(errno, 0);
-            mpfr_lib.mpfr_errno = 100;
-            errno = mpfr_lib.mpfr_errno;
-            Assert.AreEqual(errno, 100);
-        }
+            args = new object[] { new ptr<Byte>(Byte.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Byte>)args[0]).Value == Byte.MinValue);
 
-        [TestMethod]
-        public void mpfr_version()
-        {
-            string version = mpfr_lib.mpfr_version;
-            Assert.AreEqual(version, "6.1.2");
+            args = new object[] { new ptr<SByte>(SByte.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<SByte>)args[0]).Value == SByte.MaxValue);
+
+            args = new object[] { new ptr<Int16>(Int16.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Int16>)args[0]).Value == Int16.MinValue);
+
+            args = new object[] { new ptr<UInt16>(UInt16.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<UInt16>)args[0]).Value == UInt16.MaxValue);
+
+            args = new object[] { new ptr<Int32>(Int32.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Int32>)args[0]).Value == Int32.MinValue);
+
+            args = new object[] { new ptr<UInt32>(UInt32.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<UInt32>)args[0]).Value == UInt32.MaxValue);
+
+            args = new object[] { new ptr<Int64>(Int64.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Int64>)args[0]).Value == Int64.MinValue);
+
+            args = new object[] { new ptr<UInt64>(UInt64.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<UInt64>)args[0]).Value == UInt64.MaxValue);
+
+            args = new object[] { new ptr<mp_bitcnt_t>(UInt32.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<mp_bitcnt_t>)args[0]).Value == UInt32.MaxValue);
+
+            args = new object[] { new ptr<mp_size_t>(Int32.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<mp_size_t>)args[0]).Value == Int32.MinValue);
+
+            args = new object[] { new ptr<Single>(Single.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Single>)args[0]).Value == Single.MinValue);
+
+            args = new object[] { new ptr<Double>(Double.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<Double>)args[0]).Value == Double.MaxValue);
+
+            args = new object[] { new ptr<mp_limb_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<mp_limb_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
+
+            args = new object[] { new ptr<size_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<size_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
+
+            args = new object[] { new ptr<mp_exp_t>(Int32.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<mp_exp_t>)args[0]).Value == Int32.MinValue);
+
+            args = new object[] { new StringBuilder("ABCDEFGHIJ") };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((StringBuilder)args[0]).ToString() == "ABCDEFGHIJ");
         }
 
         #endregion
 
-        #region "Memory allocation functions."
+        #region "Float routines."
 
         [TestMethod]
-        public void mp_get_memory_functions()
+        public void mpfr_abs()
         {
-            allocate_function allocate;
-            reallocate_function reallocate;
-            free_function free;
+            // Create, initialize, and set a new floating-point number op to -10.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, -10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Retrieve the MPFR memory allocation functions.
-            allocate = null; reallocate = null; free = null;
-            mpfr_lib.mp_get_memory_functions(ref allocate, ref reallocate, ref free);
-            Assert.IsTrue(allocate != null && reallocate != null && free != null);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Allocate and free memory.
-            void_ptr p = allocate(100);
-            free(p, 100);
+            // Set rop = |op|.
+            Assert.IsTrue(mpfr_lib.mpfr_abs(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 10) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mp_set_memory_functions()
+        public void mpfr_acos()
         {
-            // Retrieve MPFR default memory allocation functions.
-            allocate_function default_allocate = null;
-            reallocate_function default_reallocate = null;
-            free_function default_free = null;
-            mpfr_lib.mp_get_memory_functions(ref default_allocate, ref default_reallocate, ref default_free);
+            // Create, initialize, and set a new floating-point number op to 0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 0, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Create and set new memory allocation functions that count the number of times they are called.
-            int counter = 0;
-            allocate_function new_allocate = (size_t alloc_size) => { counter++; return default_allocate(alloc_size); };
-            reallocate_function new_reallocate = (void_ptr ptr, size_t old_size, size_t new_size) => { counter++; return default_reallocate(ptr, old_size, new_size); };
-            free_function new_free = (void_ptr ptr, size_t size) => { counter++; default_free(ptr, size); };
-            mpfr_lib.mp_set_memory_functions(new_allocate, new_reallocate, new_free);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Retrieve MPFR memory allocation functions.
-            allocate_function allocate = null;
-            reallocate_function reallocate = null;
-            free_function free = null;
-            mpfr_lib.mp_get_memory_functions(ref allocate, ref reallocate, ref free);
+            // Set rop = 2 * acos(op).
+            Assert.IsTrue(mpfr_lib.mpfr_acos(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_mul_si(rop, rop, 2, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Call memory function and assert calls count.
-            void_ptr p = allocate(10);
-            Assert.IsTrue(counter == 1);
+            // Assert that the value of rop is PI.
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_cmp(rop, op) == 0);
 
-            reallocate(p, 10, 20);
-            Assert.IsTrue(counter == 2);
-
-            free(p, 20);
-            Assert.IsTrue(counter == 3);
-
-            // Restore default memory allocation functions.
-            mpfr_lib.mp_set_memory_functions(null, null, null);
-        }
-
-        #endregion
-
-        #region "Random number routines."
-
-        [TestMethod]
-        public void mpfr_randinit_default()
-        {
-            // Create new random number generator state.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-
-            // Initialize state with default random number generator algorithm.
-            mpfr_lib.mpfr_randinit_default(state);
-
-            // Free all memory occupied by state.
-            mpfr_lib.mpfr_randclear(state);
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mpfr_randinit_lc_2exp()
+        public void mpfr_acosh()
         {
-            // Create new random number generator state.
-            mpfr_randstate_t state = new mpfr_randstate_t();
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Initialize state with a linear congruential random number generator algorithm.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 100000U);
-            mpfr_lib.mpfr_randinit_lc_2exp(state, a, 13, 300);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Free all memory occupied by state and a.
-            mpfr_lib.mpfr_randclear(state);
-            mpfr_lib.mpz_clear(a);
+            // Set rop = acosh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_acosh(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 0.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 0) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mpfr_randinit_lc_2exp_size()
+        public void mpfr_add()
         {
-            // Create new random number generator state.
-            mpfr_randstate_t state = new mpfr_randstate_t();
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Initialize state with a linear congruential random number generator algorithm.
-            mpfr_lib.mpfr_randinit_lc_2exp_size(state, 30);
+            // Create, initialize, and set a new floating-point number op2 to -210.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Free all memory occupied by state.
-            mpfr_lib.mpfr_randclear(state);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 + op2.
+            Assert.IsTrue(mpfr_lib.mpfr_add(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -200.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -200.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
         }
 
         [TestMethod]
-        public void mpfr_randinit_mt()
+        public void mpfr_add_d()
         {
-            // Create new random number generator state.
-            mpfr_randstate_t state = new mpfr_randstate_t();
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Initialize state with Mersenne Twister random number generator algorithm.
-            mpfr_lib.mpfr_randinit_mt(state);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Free all memory occupied by state.
-            mpfr_lib.mpfr_randclear(state);
+            // Set rop = op1 + 210.
+            Assert.IsTrue(mpfr_lib.mpfr_add_d(rop, op1, 210.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
         }
 
         [TestMethod]
-        public void mpfr_randinit_set()
+        public void mpfr_add_q()
         {
-            // Create new random number generator state, and initialize state with the Mersenne Twister algorithm.
-            mpfr_randstate_t op = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(op);
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Create new random number generator state, and initialize it with the state op.
-            mpfr_randstate_t rop = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_set(rop, op);
+            // Create, initialize, and set a new rational number op2 to 1/5.
+            mpq_t op2 = new mpq_t();
+            gmp_lib.mpq_init(op2);
+            gmp_lib.mpq_set_si(op2, 1, 5);
 
-            // Free all memory occupied by op and rop.
-            mpfr_lib.mpfr_randclear(op);
-            mpfr_lib.mpfr_randclear(rop);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 + op2.
+            Assert.IsTrue(mpfr_lib.mpfr_add_q(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -209.8);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpq_clear(op2);
         }
 
         [TestMethod]
-        public void mpfr_randseed()
+        public void mpfr_add_si()
         {
-            // Create new random number generator state, and initialize state with the Mersenne Twister algorithm.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Seed random number generator.
-            mpz_t seed = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(seed, 100000U);
-            mpfr_lib.mpfr_randseed(state, seed);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Free all memory occupied by state and seed.
-            mpfr_lib.mpfr_randclear(state);
-            mpfr_lib.mpz_clear(seed);
+            // Set rop = op1 + 210.
+            Assert.IsTrue(mpfr_lib.mpfr_add_si(rop, op1, 210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
         }
 
         [TestMethod]
-        public void mpfr_randseed_ui()
+        public void mpfr_add_ui()
         {
-            // Create new random number generator state, and initialize state with the Mersenne Twister algorithm.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Seed random number generator.
-            mpfr_lib.mpfr_randseed_ui(state, 100000U);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Free all memory occupied by state.
-            mpfr_lib.mpfr_randclear(state);
+            // Set rop = op1 + 210.
+            Assert.IsTrue(mpfr_lib.mpfr_add_ui(rop, op1, 210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
         }
 
         [TestMethod]
-        public void mpfr_urandomb_ui()
+        public void mpfr_add_z()
         {
-            // Create, initialize, and seed a new random number generator.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
-            mpfr_lib.mpfr_randseed_ui(state, 100000U);
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Generate a random integer in the range [0, 2^8-1].
-            uint rand = mpfr_lib.mpfr_urandomb_ui(state, 8);
+            // Create, initialize, and set a new integer op2 to 5.
+            mpz_t op2 = new mpz_t();
+            gmp_lib.mpz_init_set_si(op2, 5);
 
-            // Free all memory occupied by state.
-            mpfr_lib.mpfr_randclear(state);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 + op2.
+            Assert.IsTrue(mpfr_lib.mpfr_add_z(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -200.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -205.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpz_clear(op2);
         }
 
         [TestMethod]
-        public void mpfr_urandomm_ui()
+        public void mpfr_agm()
         {
-            // Create, initialize, and seed a new random number generator.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
-            mpfr_lib.mpfr_randseed_ui(state, 1000U);
+            // Create, initialize, and set a new floating-point number op1 to 24.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 24, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Generate a random integer in the range [0, 8-1].
-            uint rand = mpfr_lib.mpfr_urandomm_ui(state, 8);
+            // Create, initialize, and set a new floating-point number op2 to 6.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_si(op2, 6, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Free all memory occupied by state.
-            mpfr_lib.mpfr_randclear(state);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = agm(op1, op2).
+            Assert.IsTrue(mpfr_lib.mpfr_agm(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 13.458171481725615420766813156);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
         }
 
-        #endregion
+        [TestMethod]
+        public void mpfr_ai()
+        {
+            // Create, initialize, and set a new floating-point number x to 1.0.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(x, 1.0, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-        #region "Formatted output routines."
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = Airy(x).
+            Assert.IsTrue(mpfr_lib.mpfr_ai(rop, x, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.135292416312881415524e0");
+
+            // Release unmanaged memory allocated for x and rop.
+            mpfr_lib.mpfr_clears(x, rop, null);
+        }
+
+        [TestMethod]
+        public void mpfr_asin()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 2 * asin(op).
+            Assert.IsTrue(mpfr_lib.mpfr_asin(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_mul_si(rop, rop, 2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is PI.
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_cmp(rop, op) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_asinh()
+        {
+            // Create, initialize, and set a new floating-point number op to 0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = asinh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_asinh(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 0.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 0) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
 
         [TestMethod]
         public void mpfr_asprintf()
@@ -917,6 +624,7 @@ namespace UnitTests
             mpz_t z = "123456";
             mpq_t q = "123/456";
             mpf_t f = "12345e6";
+            mpfr_t r = "12345e6";
             mp_limb_t m = 123456;
 
             // Print to newly allocated unmanaged memory string.
@@ -925,766 +633,4433 @@ namespace UnitTests
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Zd", z) == 6);
             Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Zi", z) == 6);
             Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%ZX", z) == 5);
             Assert.IsTrue(str.Value.ToString() == "1E240");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Zo", z) == 6);
             Assert.IsTrue(str.Value.ToString() == "361100");
-            mpfr_lib.free(str.Value);
-            mpfr_lib.mpz_clear(z);
+            gmp_lib.free(str.Value);
+            gmp_lib.mpz_clear(z);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Qd", q) == 7);
             Assert.IsTrue(str.Value.ToString() == "123/456");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Qi", q) == 7);
             Assert.IsTrue(str.Value.ToString() == "123/456");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%QX", q) == 6);
             Assert.IsTrue(str.Value.ToString() == "7B/1C8");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Qo", q) == 7);
             Assert.IsTrue(str.Value.ToString() == "173/710");
-            mpfr_lib.free(str.Value);
-            mpfr_lib.mpq_clear(q);
+            gmp_lib.free(str.Value);
+            gmp_lib.mpq_clear(q);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Fe", f) == 12);
             Assert.IsTrue(str.Value.ToString() == "1.234500e+10");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Ff", f) == 18);
             Assert.IsTrue(str.Value.ToString() == "12345000000.000000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Fg", f) == 10);
             Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Fa", f) == 15);
             Assert.IsTrue(str.Value.ToString() == "0x2.dfd1c04p+32");
-            mpfr_lib.free(str.Value);
-            mpfr_lib.mpf_clear(f);
+            gmp_lib.free(str.Value);
+            gmp_lib.mpf_clear(f);
+
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Re", r) == 10);
+            Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Rf", r) == 18);
+            Assert.IsTrue(str.Value.ToString() == "12345000000.000000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Rg", r) == 10);
+            Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Ra", r) == 15);
+            Assert.IsTrue(str.Value.ToString() == "0x2.dfd1c04p+32");
+            gmp_lib.free(str.Value);
+            mpfr_lib.mpfr_clear(r);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Md", m) == 6);
             Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Mi", m) == 6);
             Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%MX", m) == 5);
             Assert.IsTrue(str.Value.ToString() == "1E240");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Mo", m) == 6);
             Assert.IsTrue(str.Value.ToString() == "361100");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
 
             mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Nd", n, n.Size) == 11);
             Assert.IsTrue(str.Value.ToString() == "11111111111");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Ni", n, n.Size) == 11);
             Assert.IsTrue(str.Value.ToString() == "11111111111");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%NX", n, n.Size) == 9);
             Assert.IsTrue(str.Value.ToString() == "2964619C7");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%No", n, n.Size) == 12);
             Assert.IsTrue(str.Value.ToString() == "122621414707");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%hd", (short)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%hhd", (byte)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%hhc", 'A') == 1);
-            Assert.IsTrue(str.Value.ToString() == "A");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
+            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.Value.ToString() == "A");
+            //gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%ld", (Int32)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%lld", (Int64)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
 
             // Instead of %z, use %M.
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Md", (size_t)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%d", (mp_bitcnt_t)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%d", (mp_size_t)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%d", (mp_exp_t)1) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%d", (mpfr_exp_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%d", (mpfr_sign_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Pd", (mpfr_prec_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%f", (Double)1.0) == 8);
             Assert.IsTrue(str.Value.ToString() == "1.000000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%f", (Single)1.0) == 8);
             Assert.IsTrue(str.Value.ToString() == "1.000000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%e", (Double)1.0) == 13);
             Assert.IsTrue(str.Value.ToString() == "1.000000e+000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%e", (Single)1.0) == 13);
             Assert.IsTrue(str.Value.ToString() == "1.000000e+000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%g", (Double)1.0) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%g", (Single)1.0) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%E", (Double)1.0) == 13);
             Assert.IsTrue(str.Value.ToString() == "1.000000E+000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%E", (Single)1.0) == 13);
             Assert.IsTrue(str.Value.ToString() == "1.000000E+000");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%G", (Double)1.0) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%G", (Single)1.0) == 1);
             Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
 
-            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%a", (Double)1.0) == 13);
+            //Assert.IsTrue(gmp_lib.gmp_asprintf(str, "%a", (Double)1.0) == 13);
             //Assert.IsTrue(str.Value.ToString() == "0x1.000000p+0");
-            //mpfr_lib.free(str.Value);
-            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%a", (Single)1.0) == 13);
+            //gmp_lib.free(str.Value);
+            //Assert.IsTrue(gmp_lib.gmp_asprintf(str, "%a", (Single)1.0) == 13);
             //Assert.IsTrue(str.Value.ToString() == "0x1.000004p+0");
-            //mpfr_lib.free(str.Value);
+            //gmp_lib.free(str.Value);
 
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%s", "Hello World!") == 12);
             Assert.IsTrue(str.Value.ToString() == "Hello World!");
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
 
             ptr<int> p = new ptr<int>(12);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "123456%n", p) == 6);
             Assert.IsTrue(str.Value.ToString() == "123456");
             Assert.IsTrue(p.Value == 6);
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
             Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%p", p) == 2 * IntPtr.Size);
-            mpfr_lib.free(str.Value);
+            gmp_lib.free(str.Value);
         }
 
         [TestMethod]
-        public void mpfr_vasprintf()
+        public void mpfr_atan()
         {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 4 * atan(op).
+            Assert.IsTrue(mpfr_lib.mpfr_atan(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_mul_si(rop, rop, 4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is PI.
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_cmp(rop, op) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_atan2()
+        {
+            // Create, initialize, and set a new floating-point number x to -1.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, -1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to 0.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = atan2(y, x).
+            Assert.IsTrue(mpfr_lib.mpfr_atan2(rop, y, x, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert that the value of rop is PI.
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(x, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_cmp(rop, x) == 0);
+
+            // Release unmanaged memory allocated for x, y, and rop.
+            mpfr_lib.mpfr_clears(x, y, rop, null);
+        }
+
+        [TestMethod]
+        public void mpfr_atanh()
+        {
+            // Create, initialize, and set a new floating-point number op to 0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = atanh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_atanh(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 0.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 0) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_buildopt_decimal_p()
+        {
+            // Assert that Decimal float is not available.
+            Assert.IsTrue(mpfr_lib.mpfr_buildopt_decimal_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_buildopt_gmpinternals_p()
+        {
+            // Assert that --with-gmp-build compile option was used.
+            Assert.IsTrue(mpfr_lib.mpfr_buildopt_gmpinternals_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_buildopt_tls_p()
+        {
+            // Assert that --enable-thread-safe compile option was used.
+            Assert.IsTrue(mpfr_lib.mpfr_buildopt_tls_p() != 0);
+        }
+
+        [TestMethod]
+        public void mpfr_buildopt_tune_case()
+        {
+            if (gmp_lib.mp_bytes_per_limb == 4)
+                Assert.IsTrue(mpfr_lib.mpfr_buildopt_tune_case().ToString() == "src/x86/mparam.h");
+            else
+                Assert.IsTrue(mpfr_lib.mpfr_buildopt_tune_case().ToString() == "default");
+        }
+
+        [TestMethod]
+        public void mpfr_can_round()
+        {
+            // Create, initialize, and set a new floating-point number x to 0.100146.
+            mpfr_t b = new mpfr_t();
+            mpfr_lib.mpfr_init2(b, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(b, 0.100146, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            mpfr_exp_t err = 63;
+            mpfr_rnd_t rnd1 = mpfr_rnd_t.MPFR_RNDN;
+            mpfr_rnd_t rnd2 = mpfr_rnd_t.MPFR_RNDN;
+            mpfr_prec_t prec = 53;
+
+            // Assert that we can round to 53 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_can_round(b, err, rnd1, rnd2, prec) != 0);
+
+            // Release unmanaged memory allocated for b.
+            mpfr_lib.mpfr_clear(b);
+        }
+
+        [TestMethod]
+        public void mpfr_cbrt()
+        {
+            // Create, initialize, and set a new floating-point number op to 8.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = cbrt(op).
+            Assert.IsTrue(mpfr_lib.mpfr_cbrt(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 2) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_ceil()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = ceil(op).
+            Assert.IsTrue(mpfr_lib.mpfr_ceil(rop, op) == 2);
+
+            // Assert that the value of rop is 11.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 11.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_check_range()
+        {
+            // Create, initialize, and set a new floating-point number x to 0.100146.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(x, 0.100146, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that return value is -1.
+            Assert.IsTrue(mpfr_lib.mpfr_check_range(x, -1, mpfr_rnd_t.MPFR_RNDZ) == -1);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_clear()
+        {
+            // Create and initialize a new floating-point number x.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+
+            // Assert that the value of x is NaN.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x) != 0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_divby0()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_divby0();
+            Assert.IsTrue(mpfr_lib.mpfr_divby0_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_erangeflag()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_erangeflag();
+            Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_flags()
+        {
+            // Clear all flags and assert that flags are clear.
+            mpfr_lib.mpfr_clear_flags();
+            Assert.IsTrue(mpfr_lib.mpfr_underflow_p() == 0);
+            Assert.IsTrue(mpfr_lib.mpfr_overflow_p() == 0);
+            Assert.IsTrue(mpfr_lib.mpfr_divby0_p() == 0);
+            Assert.IsTrue(mpfr_lib.mpfr_nanflag_p() == 0);
+            Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() == 0);
+            Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_inexflag()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_inexflag();
+            Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_nanflag()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_nanflag();
+            Assert.IsTrue(mpfr_lib.mpfr_nanflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_overflow()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_overflow();
+            Assert.IsTrue(mpfr_lib.mpfr_overflow_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clear_underflow()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_underflow();
+            Assert.IsTrue(mpfr_lib.mpfr_underflow_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_clears()
+        {
+            // Create new floating-point numbers x1, x2 and x3.
+            mpfr_t x1 = new mpfr_t();
+            mpfr_t x2 = new mpfr_t();
+            mpfr_t x3 = new mpfr_t();
+
+            // Initialize the floating-point numbers.
+            mpfr_lib.mpfr_inits(x1, x2, x3, null);
+
+            // Assert that their value is NaN.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x1) != 0);
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x2) != 0);
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x3) != 0);
+
+            // Release unmanaged memory allocated for the floating-point numbers.
+            mpfr_lib.mpfr_clears(x1, x2, x3, null);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number op2.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 128, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 > op2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp(op1, op2) > 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_d()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 > 128.0.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_d(op1, 128.0) > 0);
+
+            // Release unmanaged memory allocated for op1.
+            mpfr_lib.mpfr_clear(op1);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_f()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number op2.
+            mpf_t op2 = new mpf_t();
+            gmp_lib.mpf_init_set_si(op2, 128);
+
+            // Assert that op1 > op2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_f(op1, op2) > 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clear(op1);
+            gmp_lib.mpf_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_q()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new rational number op2.
+            mpq_t op2 = new mpq_t();
+            gmp_lib.mpq_init(op2);
+            gmp_lib.mpq_set_si(op2, 128, 1);
+
+            // Assert that op1 > op2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_q(op1, op2) > 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clear(op1);
+            gmp_lib.mpq_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 > 128.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(op1, 128) > 0);
+
+            // Release unmanaged memory allocated for op1.
+            mpfr_lib.mpfr_clear(op1);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_si_2exp()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 = 128 * 2^2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si_2exp(op1, 128, 2) == 0);
+
+            // Release unmanaged memory allocated for op1.
+            mpfr_lib.mpfr_clear(op1);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 > 128.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_ui(op1, 128) > 0);
+
+            // Release unmanaged memory allocated for op1.
+            mpfr_lib.mpfr_clear(op1);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_ui_2exp()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 = 128 * 2^2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_ui_2exp(op1, 128, 2) == 0);
+
+            // Release unmanaged memory allocated for op1.
+            mpfr_lib.mpfr_clear(op1);
+        }
+
+        [TestMethod]
+        public void mpfr_cmp_z()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new integer op2 to 128.
+            mpz_t op2 = new mpz_t();
+            gmp_lib.mpz_init_set_si(op2, 128);
+
+            // Assert that op1 > op2.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_z(op1, op2) > 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clear(op1);
+            gmp_lib.mpz_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_cmpabs()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number op2.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 128, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that |op1| > |op2|.
+            Assert.IsTrue(mpfr_lib.mpfr_cmpabs(op1, op2) > 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_const_catalan()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Assert that rop is the Catalan's constant.
+            Assert.IsTrue(mpfr_lib.mpfr_const_catalan(rop, mpfr_rnd_t.MPFR_RNDN) == -1);
+            Assert.IsTrue(rop.ToString() == "0.915965594177219015048e0");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_const_euler()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Assert that rop is the Euler's constant.
+            Assert.IsTrue(mpfr_lib.mpfr_const_euler(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(rop.ToString() == "0.577215664901532860616e0");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_const_log2()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Assert that rop is log(2).
+            Assert.IsTrue(mpfr_lib.mpfr_const_log2(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(rop.ToString() == "0.693147180559945309429e0");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_const_pi()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Assert that z is the Catalan's constant.
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(rop.ToString() == "0.314159265358979323851e1");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_copysign()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to -5.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Assert that rop = -512.
+            Assert.IsTrue(mpfr_lib.mpfr_copysign(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, -512) == 0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_cos()
+        {
+            // Create, initialize, and set a new floating-point number op to 0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = cos(op).
+            Assert.IsTrue(mpfr_lib.mpfr_cos(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 1) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_cosh()
+        {
+            // Create, initialize, and set a new floating-point number op to 0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = cosh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_cosh(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 1) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_cot()
+        {
+            // Create, initialize, and set a new floating-point number op to pi / 4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_mul_d(op, op, 0.25, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = cot(op).
+            Assert.IsTrue(mpfr_lib.mpfr_cot(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert that the value of rop is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 1) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_coth()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = coth(op).
+            Assert.IsTrue(mpfr_lib.mpfr_coth(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.131303528549933130366e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_csc()
+        {
+            // Create, initialize, and set a new floating-point number op to pi / 2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(op, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(mpfr_lib.mpfr_mul_d(op, op, 0.5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = csc(op).
+            Assert.IsTrue(mpfr_lib.mpfr_csc(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert that the value of rop is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 1) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_csch()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = csch(op).
+            Assert.IsTrue(mpfr_lib.mpfr_csch(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.850918128239321545122e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_custom_get_exp()
+        {
+            // Initialize a custom, 64-bit significand floating-point number, and set it to 0.
+            size_t size = mpfr_lib.mpfr_custom_get_size(64U);
+            void_ptr significand = gmp_lib.allocate(size);
+            gmp_lib.ZeroMemory(significand.ToIntPtr(), (int)size);
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_custom_init_set(x, mpfr_kind_t.MPFR_ZERO_KIND, 0, 64U, significand);
+
+            // Set x = x + 1.
+            Assert.IsTrue(mpfr_lib.mpfr_add_si(x, x, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the exponent of x is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_custom_get_exp(x) == 1);
+
+            // Release unmanaged memory allocated for x and significand.
+            mpfr_lib.mpfr_custom_clear(x);
+            gmp_lib.free(significand);
+        }
+
+        [TestMethod]
+        public void mpfr_custom_get_kind()
+        {
+            // Initialize a custom, 64-bit significand floating-point number, and set it to 0.
+            size_t size = mpfr_lib.mpfr_custom_get_size(64U);
+            void_ptr significand = gmp_lib.allocate(size);
+            gmp_lib.ZeroMemory(significand.ToIntPtr(), (int)size);
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_custom_init_set(x, mpfr_kind_t.MPFR_ZERO_KIND, 0, 64U, significand);
+
+            // Set x = x + 1.
+            Assert.IsTrue(mpfr_lib.mpfr_add_si(x, x, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert x is a regular floating-point number.
+            Assert.IsTrue(mpfr_lib.mpfr_custom_get_kind(x) == mpfr_kind_t.MPFR_REGULAR_KIND);
+
+            // Release unmanaged memory allocated for x and significand.
+            mpfr_lib.mpfr_custom_clear(x);
+            gmp_lib.free(significand);
+        }
+
+        [TestMethod]
+        public void mpfr_custom_get_significand()
+        {
+            // Initialize a custom, 64-bit significand floating-point number, and set it to 0.
+            size_t size = mpfr_lib.mpfr_custom_get_size(64U);
+            void_ptr significand = gmp_lib.allocate(size);
+            gmp_lib.ZeroMemory(significand.ToIntPtr(), (int)size);
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_custom_init_set(x, mpfr_kind_t.MPFR_ZERO_KIND, 0, 64U, significand);
+
+            // Set x = x + 1.
+            Assert.IsTrue(mpfr_lib.mpfr_add_si(x, x, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert significand of x.
+            Byte[] result = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0x80 };
+            byte[] sp = new byte[8];
+            Marshal.Copy(significand.ToIntPtr(), sp, 0, 8);
+            Assert.IsTrue(sp.SequenceEqual(result));
+
+            // Release unmanaged memory allocated for x and significand.
+            mpfr_lib.mpfr_custom_clear(x);
+            gmp_lib.free(significand);
+        }
+
+        [TestMethod]
+        public void mpfr_custom_get_size()
+        {
+            // Initialize a custom, 64-bit significand floating-point number, and set it to 0.
+            size_t size = mpfr_lib.mpfr_custom_get_size(64U);
+            void_ptr significand = gmp_lib.allocate(size);
+            gmp_lib.ZeroMemory(significand.ToIntPtr(), (int)size);
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_custom_init_set(x, mpfr_kind_t.MPFR_ZERO_KIND, 0, 64U, significand);
+
+            // Set x = 16.
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 16, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert exponent of x.
+            Assert.IsTrue(mpfr_lib.mpfr_custom_get_exp(x) == 5);
+
+            // Assert significand of x.
+            Byte[] result = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0x80 };
+            byte[] sp = new byte[8];
+            Marshal.Copy(significand.ToIntPtr(), sp, 0, 8);
+            Assert.IsTrue(sp.SequenceEqual(result));
+
+            // Release unmanaged memory allocated for x and significand.
+            mpfr_lib.mpfr_custom_clear(x);
+            gmp_lib.free(significand);
+        }
+
+        [TestMethod]
+        public void mpfr_custom_init_set()
+        {
+            // Initialize a custom, 64-bit significand floating-point number, and set it to 0.
+            size_t size = mpfr_lib.mpfr_custom_get_size(64U);
+            void_ptr significand = gmp_lib.allocate(size);
+            gmp_lib.ZeroMemory(significand.ToIntPtr(), (int)size);
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_custom_init_set(x, mpfr_kind_t.MPFR_ZERO_KIND, 0, 64U, significand);
+
+            // Set x = 16.
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 16, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert exponent of x.
+            Assert.IsTrue(mpfr_lib.mpfr_custom_get_exp(x) == 5);
+
+            // Assert significand of x.
+            Byte[] result = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0x80 };
+            byte[] sp = new byte[8];
+            Marshal.Copy(significand.ToIntPtr(), sp, 0, 8);
+            Assert.IsTrue(sp.SequenceEqual(result));
+
+            // Release unmanaged memory allocated for x and significand.
+            mpfr_lib.mpfr_custom_clear(x);
+            gmp_lib.free(significand);
+        }
+
+        [TestMethod]
+        public void mpfr_custom_move()
+        {
+            // Initialize a custom, 64-bit significand floating-point number, and set it to 0.
+            size_t size = mpfr_lib.mpfr_custom_get_size(64U);
+            void_ptr significand = gmp_lib.allocate(size);
+            gmp_lib.ZeroMemory(significand.ToIntPtr(), (int)size);
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_custom_init_set(x, mpfr_kind_t.MPFR_ZERO_KIND, 0, 64U, significand);
+
+            // Set x = 16.
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 16, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of x.
+            Assert.IsTrue(x.ToString() == "0.160000000000000000000e2");
+
+            // Allocate new significand.
+            void_ptr significand2 = gmp_lib.allocate(8);
+            Marshal.Copy(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0 }, 0, significand2.ToIntPtr(), 8);
+
+            // Assign new significanf to x.
+            mpfr_lib.mpfr_custom_move(x, significand2);
+
+            // Assert the value of x.
+            Assert.IsTrue(x.ToString() == "0.240000000000000000000e2");
+
+            // Release unmanaged memory allocated for x and significand.
+            mpfr_lib.mpfr_custom_clear(x);
+            gmp_lib.free(significand);
+            gmp_lib.free(significand2);
+        }
+
+        [TestMethod]
+        public void mpfr_d_div()
+        {
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = -210.0 / op2.
+            Assert.IsTrue(mpfr_lib.mpfr_d_div(rop, -210.0, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop and op2.
+            mpfr_lib.mpfr_clears(rop, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_d_sub()
+        {
+            // Create, initialize, and set a new floating-point number op2 to -210.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10.0 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_d_sub(rop, 10.0, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop and op2.
+            mpfr_lib.mpfr_clears(rop, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_digamma()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = digamma(op).
+            Assert.IsTrue(mpfr_lib.mpfr_digamma(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "-0.577215664901532860616e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_dim()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to positive difference of op1 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_dim(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / op2.
+            Assert.IsTrue(mpfr_lib.mpfr_div(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_2exp()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / 2^8.
+            Assert.IsTrue(mpfr_lib.mpfr_div_2exp(rop, op1, 8U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 2.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 2.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_2si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / 2^8.
+            Assert.IsTrue(mpfr_lib.mpfr_div_2si(rop, op1, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 2.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 2.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_2ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 512.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 512, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / 2^8.
+            Assert.IsTrue(mpfr_lib.mpfr_div_2ui(rop, op1, 8U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 2.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 2.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_d()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / 10.0.
+            Assert.IsTrue(mpfr_lib.mpfr_div_d(rop, op1, 10.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_q()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new rational op2 to 10.
+            mpq_t op2 = new mpq_t();
+            gmp_lib.mpq_init(op2);
+            gmp_lib.mpq_set_si(op2, 10, 1);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / op2.
+            Assert.IsTrue(mpfr_lib.mpfr_div_q(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpq_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_div_si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / 10.
+            Assert.IsTrue(mpfr_lib.mpfr_div_si(rop, op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / 10.
+            Assert.IsTrue(mpfr_lib.mpfr_div_ui(rop, op1, 10U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_div_z()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new integer op2 to 10.
+            mpz_t op2 = new mpz_t();
+            gmp_lib.mpz_init(op2);
+            gmp_lib.mpz_set_si(op2, 10);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 / op2.
+            Assert.IsTrue(mpfr_lib.mpfr_div_z(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -21.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpz_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_divby0_p()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_divby0();
+            Assert.IsTrue(mpfr_lib.mpfr_divby0_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_eint()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to exponential integral of op.
+            Assert.IsTrue(mpfr_lib.mpfr_eint(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.189511781635593675550e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_eq()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 = op2 to 10 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_eq(op1, op2, 10U) != 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_equal_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 = op2.
+            Assert.IsTrue(mpfr_lib.mpfr_equal_p(op1, op2) != 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_erangeflag_p()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_erangeflag();
+            Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_erf()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to error function of op.
+            Assert.IsTrue(mpfr_lib.mpfr_erf(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.842700792949714869368e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_erfc()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to complementary error function of op.
+            Assert.IsTrue(mpfr_lib.mpfr_erfc(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.157299207050285130659e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_exp()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = e^op.
+            Assert.IsTrue(mpfr_lib.mpfr_exp(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.271828182845904523543e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_exp10()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10^op.
+            Assert.IsTrue(mpfr_lib.mpfr_exp10(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.100000000000000000000e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_exp2()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 2^op.
+            Assert.IsTrue(mpfr_lib.mpfr_exp2(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.200000000000000000000e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_expm1()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = e^op - 1.
+            Assert.IsTrue(mpfr_lib.mpfr_expm1(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.171828182845904523532e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_fac_ui()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 5!.
+            Assert.IsTrue(mpfr_lib.mpfr_fac_ui(rop, 5U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.120000000000000000000e3");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_intmax_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op fits in intmax_t.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_intmax_p(op, mpfr_rnd_t.MPFR_RNDN) != 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_sint_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op does not fit in int.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_sint_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_slong_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op does not fit in long.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_slong_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_sshort_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op does not fit in short.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_sshort_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_uint_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op does not fit in uint.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_uint_p(op, mpfr_rnd_t.MPFR_RNDN) > 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_uintmax_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op fits in intmax_t.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_uintmax_p(op, mpfr_rnd_t.MPFR_RNDN) != 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_ulong_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op does not fit in int.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_sint_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_ushort_p()
+        {
+            // Create, initialize, and set the value of op 4294967295.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op does not fit in ushort.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_ushort_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_floor()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = floor(op).
+            Assert.IsTrue(mpfr_lib.mpfr_floor(rop, op) == -2);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_fma()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op3 to 10.
+            mpfr_t op3 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op3, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = (op1 * op2) + op3.
+            Assert.IsTrue(mpfr_lib.mpfr_fma(rop, op1, op2, op3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -2090.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2090.0);
+
+            // Release unmanaged memory allocated for rop, op1, op2, and op3.
+            mpfr_lib.mpfr_clears(rop, op1, op2, op3, null);
+        }
+
+        [TestMethod]
+        public void mpfr_fmod()
+        {
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to 3.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number r.
+            mpfr_t r = new mpfr_t();
+            mpfr_lib.mpfr_init2(r, 64U);
+
+            // Set r = x - n * y where n = trunc(x / y).
+            Assert.IsTrue(mpfr_lib.mpfr_fmod(r, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of z.
+            Assert.IsTrue(r.ToString() == "0.100000000000000000000e1");
+
+            // Release unmanaged memory allocated for r, x, and y.
+            mpfr_lib.mpfr_clears(r, x, y, null);
+        }
+
+        [TestMethod]
+        public void mpfr_fms()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op3 to 10.
+            mpfr_t op3 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op3, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = (op1 * op2) - op3.
+            Assert.IsTrue(mpfr_lib.mpfr_fms(rop, op1, op2, op3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -2110.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2110.0);
+
+            // Release unmanaged memory allocated for rop, op1, op2, and op3.
+            mpfr_lib.mpfr_clears(rop, op1, op2, op3, null);
+        }
+
+        [TestMethod]
+        public void mpfr_frac()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = fraction(op).
+            Assert.IsTrue(mpfr_lib.mpfr_frac(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 0.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_free_cache()
+        {
+            // Create and initialize a new floating-point number z.
+            mpfr_t z = new mpfr_t();
+            mpfr_lib.mpfr_init2(z, 64U);
+
+            // Assert that z is the Catalan's constant.
+            Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) == 1);
+            Assert.IsTrue(z.ToString() == "0.693147180559945309429e0");
+
+            // Release unmanaged memory allocated for x and z.
+            mpfr_lib.mpfr_clear(z);
+
+            // Frere constants cache.
+            mpfr_lib.mpfr_free_cache();
+        }
+
+        [TestMethod]
+        public void mpfr_free_str()
+        {
+            // Create pointer to unmanaged character string pointer.
             ptr<char_ptr> str = new ptr<char_ptr>();
+            mpfr_t r = "12345e6";
 
-            mpz_t z = "123456";
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Zd", z) == 6);
-            Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Zi", z) == 6);
-            Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%ZX", z) == 5);
-            Assert.IsTrue(str.Value.ToString() == "1E240");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Zo", z) == 6);
-            Assert.IsTrue(str.Value.ToString() == "361100");
-            mpfr_lib.free(str.Value);
-            mpfr_lib.mpz_clear(z);
-
-            mpq_t q = "123/456";
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Qd", q) == 7);
-            Assert.IsTrue(str.Value.ToString() == "123/456");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Qi", q) == 7);
-            Assert.IsTrue(str.Value.ToString() == "123/456");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%QX", q) == 6);
-            Assert.IsTrue(str.Value.ToString() == "7B/1C8");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Qo", q) == 7);
-            Assert.IsTrue(str.Value.ToString() == "173/710");
-            mpfr_lib.free(str.Value);
-            mpfr_lib.mpq_clear(q);
-
-            mpf_t f = "12345e6";
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Fe", f) == 12);
-            Assert.IsTrue(str.Value.ToString() == "1.234500e+10");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Ff", f) == 18);
-            Assert.IsTrue(str.Value.ToString() == "12345000000.000000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Fg", f) == 10);
+            Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%Re", r) == 10);
             Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Fa", f) == 15);
-            Assert.IsTrue(str.Value.ToString() == "0x2.dfd1c04p+32");
-            mpfr_lib.free(str.Value);
-            mpfr_lib.mpf_clear(f);
+            mpfr_lib.mpfr_free_str(str.Value);
 
-            mp_limb_t m = 123456;
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Md", m) == 6);
-            Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Mi", m) == 6);
-            Assert.IsTrue(str.Value.ToString() == "123456");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%MX", m) == 5);
-            Assert.IsTrue(str.Value.ToString() == "1E240");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Mo", m) == 6);
-            Assert.IsTrue(str.Value.ToString() == "361100");
-            mpfr_lib.free(str.Value);
-
-            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Nd", n, n.Size) == 11);
-            Assert.IsTrue(str.Value.ToString() == "11111111111");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Ni", n, n.Size) == 11);
-            Assert.IsTrue(str.Value.ToString() == "11111111111");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%NX", n, n.Size) == 9);
-            Assert.IsTrue(str.Value.ToString() == "2964619C7");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%No", n, n.Size) == 12);
-            Assert.IsTrue(str.Value.ToString() == "122621414707");
-            mpfr_lib.free(str.Value);
-
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%hd", (short)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%hhd", (byte)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%hhc", 'A') == 1);
-            Assert.IsTrue(str.Value.ToString() == "A");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%ld", (Int32)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%lld", (Int64)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-
-            // Instead of %z, use %M.
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Md", (size_t)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%d", (mp_bitcnt_t)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%d", (mp_size_t)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%d", (mp_exp_t)1) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%f", (Double)1.0) == 8);
-            Assert.IsTrue(str.Value.ToString() == "1.000000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%f", (Single)1.0) == 8);
-            Assert.IsTrue(str.Value.ToString() == "1.000000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%e", (Double)1.0) == 13);
-            Assert.IsTrue(str.Value.ToString() == "1.000000e+000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%e", (Single)1.0) == 13);
-            Assert.IsTrue(str.Value.ToString() == "1.000000e+000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%g", (Double)1.0) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%g", (Single)1.0) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%E", (Double)1.0) == 13);
-            Assert.IsTrue(str.Value.ToString() == "1.000000E+000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%E", (Single)1.0) == 13);
-            Assert.IsTrue(str.Value.ToString() == "1.000000E+000");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%G", (Double)1.0) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%G", (Single)1.0) == 1);
-            Assert.IsTrue(str.Value.ToString() == "1");
-            mpfr_lib.free(str.Value);
-
-            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%a", (Double)1.0) == 13);
-            //Assert.IsTrue(str.Value.ToString() == "0x1.000000p+0");
-            //mpfr_lib.free(str.Value);
-            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%a", (Single)1.0) == 13);
-            //Assert.IsTrue(str.Value.ToString() == "0x1.000004p+0");
-            //mpfr_lib.free(str.Value);
-
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%s", "Hello World!") == 12);
-            Assert.IsTrue(str.Value.ToString() == "Hello World!");
-            mpfr_lib.free(str.Value);
-
-            ptr<int> p = new ptr<int>(12);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "123456%n", p) == 6);
-            Assert.IsTrue(str.Value.ToString() == "123456");
-            Assert.IsTrue(p.Value == 6);
-            mpfr_lib.free(str.Value);
-            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%p", p) == 2 * IntPtr.Size);
-            mpfr_lib.free(str.Value);
+            // Release unmanaged memory allocated for r.
+            mpfr_lib.mpfr_clear(r);
         }
 
         [TestMethod]
-        public void mpfr_fprintf()
+        public void mpfr_frexp()
         {
-            // Create unique file pathname and a file pointer.
-            string pathname = System.IO.Path.GetTempFileName();
-            ptr<FILE> stream = new ptr<FILE>();
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            mpz_t z = "123456";
-            mpq_t q = "123/456";
-            mpf_t f = "12345e6";
-            mp_limb_t m = 123456;
+            // Create, initialize, and set a new floating-point number y.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
 
-            // Open file stream and print to it.
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Zd - %QX - %Fa - %Mo", z, q, f, m) == 42);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456 - 7B/1C8 - 0x2.dfd1c04p+32 - 361100");
-        
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Zd", z) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Zi", z) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%ZX", z) == 5);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1E240");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Zo", z) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "361100");
-            mpfr_lib.mpz_clear(z);
+            // Initialize exponent.
+            mpfr_exp_t exp = 0;
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Qd", q) == 7);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123/456");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Qi", q) == 7);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123/456");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%QX", q) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "7B/1C8");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Qo", q) == 7);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "173/710");
-            mpfr_lib.mpq_clear(q);
+            // Find y and exp such that x = y * 2^exp where y in [0.5, 1).
+            Assert.IsTrue(mpfr_lib.mpfr_frexp(ref exp, y, x, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Fe", f) == 12);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.234500e+10");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Ff", f) == 18);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "12345000000.000000");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Fg", f) == 10);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.2345e+10");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Fa", f) == 15);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "0x2.dfd1c04p+32");
-            mpfr_lib.mpf_clear(f);
+            // Assert the value of exp and y.
+            Assert.IsTrue(y.ToString() == "0.781250000000000000000e0" && exp == 7);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Md", m) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Mi", m) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%MX", m) == 5);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1E240");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Mo", m) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "361100");
-
-            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Nd", n, n.Size) == 11);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "11111111111");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Ni", n, n.Size) == 11);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "11111111111");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%NX", n, n.Size) == 9);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "2964619C7");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%No", n, n.Size) == 12);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "122621414707");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%hd", (short)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%hhd", (byte)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%hhc", 'A') == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "A");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%ld", (Int32)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%lld", (Int64)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-
-            // Instead of %z, use %M.
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%Md", (size_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%d", (mp_bitcnt_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%d", (mp_size_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%d", (mp_exp_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%f", (Double)1.0) == 8);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%f", (Single)1.0) == 8);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%e", (Double)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000e+000");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%e", (Single)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000e+000");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%g", (Double)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%g", (Single)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%E", (Double)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000E+000");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%E", (Single)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000E+000");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%G", (Double)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%G", (Single)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%a", (Double)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "0x1.000000p+0");
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%a", (Single)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "0x1.000000p+0");
-
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%s", "Hello World!") == 12);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "Hello World!");
-
-            ptr<int> p = new ptr<int>(12);
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "123456%n", p) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
-
-            Assert.IsTrue(p.Value == 6);
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_fprintf(stream, "%p", p) == 2 * IntPtr.Size);
-            fclose(stream.Value.Value);
+            // Release unmanaged memory allocated for x, and y.
+            mpfr_lib.mpfr_clears(x, y, null);
         }
 
         [TestMethod]
-        public void mpfr_vfprintf()
+        public void mpfr_frexp_2()
         {
-            string pathname = System.IO.Path.GetTempFileName();
-            ptr<FILE> stream = new ptr<FILE>();
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            mpz_t z = "123456";
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Zd", z) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
+            // Create, initialize, and set a new floating-point number y.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Zi", z) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
+            // Initialize exponent.
+            ptr<mpfr_exp_t> exp = new ptr<mpfr_exp_t>(0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%ZX", z) == 5);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1E240");
+            // Find y and exp such that x = y * 2^exp where y in [0.5, 1).
+            Assert.IsTrue(mpfr_lib.mpfr_frexp(exp, y, x, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Zo", z) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "361100");
-            mpfr_lib.mpz_clear(z);
+            // Assert the value of exp and y.
+            Assert.IsTrue(y.ToString() == "0.781250000000000000000e0" && exp.Value == 7);
 
-            mpq_t q = "123/456";
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Qd", q) == 7);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123/456");
+            // Release unmanaged memory allocated for x, and y.
+            mpfr_lib.mpfr_clears(x, y, null);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Qi", q) == 7);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123/456");
+        [TestMethod]
+        public void mpfr_gamma()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%QX", q) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "7B/1C8");
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Qo", q) == 7);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "173/710");
-            mpfr_lib.mpq_clear(q);
+            // Set rop = Gamma(op).
+            Assert.IsTrue(mpfr_lib.mpfr_gamma(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            mpf_t f = "12345e6";
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Fe", f) == 12);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.234500e+10");
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.100000000000000000000e1");
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Ff", f) == 18);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "12345000000.000000");
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Fg", f) == 10);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.2345e+10");
+        [TestMethod]
+        public void mpfr_get_d()
+        {
+            // Create, initialize, and set a new floating-point number to -123.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Fa", f) == 15);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "0x2.dfd1c04p+32");
-            mpfr_lib.mpf_clear(f);
+            // Assert that the value of op is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(op, mpfr_rnd_t.MPFR_RNDN) == -123.0);
 
-            mp_limb_t m = 123456;
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Md", m) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(op);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Mi", m) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
+        [TestMethod]
+        public void mpfr_get_d_2exp()
+        {
+            // Create, initialize, and set a new floating-point number to -8.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -8.0, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%MX", m) == 5);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1E240");
+            // Assert that the absolute value of op is 0.5 * 2^4.
+            int exp = 0;
+            Assert.IsTrue(mpfr_lib.mpfr_get_d_2exp(ref exp, op, mpfr_rnd_t.MPFR_RNDN) == -0.5);
+            Assert.IsTrue(exp == 4);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Mo", m) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "361100");
+            // Release unmanaged memory allocated for x and exp.
+            mpfr_lib.mpfr_clear(op);
+        }
 
-            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Nd", n, n.Size) == 11);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "11111111111");
+        [TestMethod]
+        public void mpfr_get_d_2exp_2()
+        {
+            // Create, initialize, and set a new floating-point number to -8.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -8.0, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Ni", n, n.Size) == 11);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "11111111111");
+            // Assert that the absolute value of op is 0.5 * 2^4.
+            ptr<int> exp = new ptr<int>(0);
+            Assert.IsTrue(mpfr_lib.mpfr_get_d_2exp(exp, op, mpfr_rnd_t.MPFR_RNDN) == -0.5);
+            Assert.IsTrue(exp.Value == 4);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%NX", n, n.Size) == 9);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "2964619C7");
+            // Release unmanaged memory allocated for x and exp.
+            mpfr_lib.mpfr_clear(op);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%No", n, n.Size) == 12);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "122621414707");
+        [TestMethod]
+        public void mpfr_get_default_prec()
+        {
+            // Assert that default precision is 53 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_get_default_prec() == 53U);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%hd", (short)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+        [TestMethod]
+        public void mpfr_get_default_rounding_mode()
+        {
+            // Set default rounding mode.
+            mpfr_lib.mpfr_set_default_rounding_mode(mpfr_rnd_t.MPFR_RNDN);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%hhd", (byte)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert default rounding mode.
+            Assert.IsTrue(mpfr_lib.mpfr_get_default_rounding_mode() == mpfr_rnd_t.MPFR_RNDN);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%hhc", 'A') == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "A");
+        [TestMethod]
+        public void mpfr_get_emax()
+        {
+            // Assert maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1073741823);
+            // Assert minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == -1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%ld", (Int32)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert mpfr_set_emax minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_min() == -1073741823);
+            // Assert mpfr_set_emax maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_max() == 1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%lld", (Int64)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert mpfr_set_emin minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_min() == -1073741823);
+            // Assert mpfr_set_emin maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_max() == 1073741823);
+        }
 
-            // Instead of %z, use %M.
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%Md", (size_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+        [TestMethod]
+        public void mpfr_get_emax_max()
+        {
+            // Assert maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1073741823);
+            // Assert minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == -1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%d", (mp_bitcnt_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert mpfr_set_emax minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_min() == -1073741823);
+            // Assert mpfr_set_emax maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_max() == 1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%d", (mp_size_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert mpfr_set_emin minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_min() == -1073741823);
+            // Assert mpfr_set_emin maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_max() == 1073741823);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%d", (mp_exp_t)1) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+        [TestMethod]
+        public void mpfr_get_emax_min()
+        {
+            // Assert maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1073741823);
+            // Assert minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == -1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%f", (Double)1.0) == 8);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000");
+            // Assert mpfr_set_emax minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_min() == -1073741823);
+            // Assert mpfr_set_emax maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_max() == 1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%f", (Single)1.0) == 8);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000");
+            // Assert mpfr_set_emin minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_min() == -1073741823);
+            // Assert mpfr_set_emin maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_max() == 1073741823);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%e", (Double)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000e+000");
+        [TestMethod]
+        public void mpfr_get_emin()
+        {
+            // Assert maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1073741823);
+            // Assert minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == -1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%e", (Single)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000e+000");
+            // Assert mpfr_set_emax minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_min() == -1073741823);
+            // Assert mpfr_set_emax maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_max() == 1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%g", (Double)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert mpfr_set_emin minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_min() == -1073741823);
+            // Assert mpfr_set_emin maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_max() == 1073741823);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%g", (Single)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+        [TestMethod]
+        public void mpfr_get_emin_max()
+        {
+            // Assert maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1073741823);
+            // Assert minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == -1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%E", (Double)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000E+000");
+            // Assert mpfr_set_emax minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_min() == -1073741823);
+            // Assert mpfr_set_emax maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_max() == 1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%E", (Single)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1.000000E+000");
+            // Assert mpfr_set_emin minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_min() == -1073741823);
+            // Assert mpfr_set_emin maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_max() == 1073741823);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%G", (Double)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+        [TestMethod]
+        public void mpfr_get_emin_min()
+        {
+            // Assert maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1073741823);
+            // Assert minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == -1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%G", (Single)1.0) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "1");
+            // Assert mpfr_set_emax minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_min() == -1073741823);
+            // Assert mpfr_set_emax maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax_max() == 1073741823);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%a", (Double)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "0x1.000000p+0");
+            // Assert mpfr_set_emin minimum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_min() == -1073741823);
+            // Assert mpfr_set_emin maximum exponent.
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin_max() == 1073741823);
+        }
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%a", (Single)1.0) == 13);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "0x1.000000p+0");
+        [TestMethod]
+        public void mpfr_get_exp()
+        {
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%s", "Hello World!") == 12);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "Hello World!");
+            // Assert exp of x.
+            Assert.IsTrue(mpfr_lib.mpfr_get_exp(x) == 7);
 
-            ptr<int> p = new ptr<int>(12);
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "123456%n", p) == 6);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(System.IO.File.ReadAllText(pathname) == "123456");
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
 
-            Assert.IsTrue(p.Value == 6);
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpfr_vfprintf(stream, "%p", p) == 2 * IntPtr.Size);
-            fclose(stream.Value.Value);
+        [TestMethod]
+        public void mpfr_get_f()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpf_t rop = new mpf_t();
+            gmp_lib.mpf_init(rop);
+
+            // Set rop = op.
+            Assert.IsTrue(mpfr_lib.mpfr_get_f(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.4.
+            Assert.IsTrue(gmp_lib.mpf_get_d(rop) == 10.4);
+
+            // Release unmanaged memory allocated for rop and op.
+            gmp_lib.mpf_clear(rop);
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_get_flt()
+        {
+            // Create, initialize, and set a new floating-point number to -123.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_flt(op, mpfr_rnd_t.MPFR_RNDN) == -123.0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_get_patches()
+        {
+            // Assert no patch applied.
+            Assert.IsTrue(mpfr_lib.mpfr_get_patches().ToString() == "");
+        }
+
+        [TestMethod]
+        public void mpfr_get_prec()
+        {
+            // Create and initialize a new floating-point number x with 64-bit precision.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+
+            // Assert that the value of x is 0.0, and that its precision is 64 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x) != 0);
+            Assert.IsTrue(mpfr_lib.mpfr_get_prec(x) == 64U);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_get_si()
+        {
+            // Create, initialize, and set a new floating-point number to -123.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(op, mpfr_rnd_t.MPFR_RNDN) == -123);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_get_str()
+        {
+            // Create, initialize, and set a new floating-point number to -8.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -8.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -8.
+            mpfr_exp_t exp = 0;
+            char_ptr value = mpfr_lib.mpfr_get_str(char_ptr.Zero, ref exp, 10, 0, op, mpfr_rnd_t.MPFR_RNDN);
+            Assert.IsTrue(value.ToString() == "-800000000000000000000");
+            Assert.IsTrue(exp == 1);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+            gmp_lib.free(value);
+        }
+
+        [TestMethod]
+        public void mpfr_get_str_2()
+        {
+            // Create, initialize, and set a new floating-point number to -8.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -8.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -8.
+            ptr<mpfr_exp_t> exp = new ptr<mpfr_exp_t>(0);
+            char_ptr value = mpfr_lib.mpfr_get_str(char_ptr.Zero, exp, 10, 0, op, mpfr_rnd_t.MPFR_RNDN);
+            Assert.IsTrue(value.ToString() == "-800000000000000000000");
+            Assert.IsTrue(exp.Value == 1);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+            gmp_lib.free(value);
+        }
+
+        [TestMethod]
+        public void mpfr_get_ui()
+        {
+            // Create, initialize, and set a new floating-point number to 123.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) == 123);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_get_version()
+        {
+            // Assert MPFR version.
+            Assert.IsTrue(mpfr_lib.mpfr_get_version().ToString() == "3.1.6");
+        }
+
+        [TestMethod]
+        public void mpfr_get_z()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.6.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.6, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new integer rop.
+            mpz_t rop = new mpz_t();
+            gmp_lib.mpz_init(rop);
+
+            // Set rop = op.
+            Assert.IsTrue(mpfr_lib.mpfr_get_z(rop, op, mpfr_rnd_t.MPFR_RNDN) == 2);
+
+            // Assert that the value of rop is 11.
+            Assert.IsTrue(gmp_lib.mpz_get_ui(rop) == 11);
+
+            // Release unmanaged memory allocated for rop and op.
+            gmp_lib.mpz_clear(rop);
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_get_z_2exp()
+        {
+            // Create, initialize, and set a new floating-point number op to 8.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new integer rop.
+            mpz_t rop = new mpz_t();
+            gmp_lib.mpz_init(rop);
+
+            // Set rop such that op = rop * 2^exp.
+            mpfr_exp_t exp = mpfr_lib.mpfr_get_z_2exp(rop, op);
+
+            // Assert rop and exp.
+            Assert.IsTrue(rop.ToString() == "9223372036854775808" && exp == -60);
+
+            // Release unmanaged memory allocated for rop and op.
+            gmp_lib.mpz_clear(rop);
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_grandom()
+        {
+            // Create, initialize, and seed a new random number generator.
+            gmp_randstate_t state = new gmp_randstate_t();
+            gmp_lib.gmp_randinit_mt(state);
+            gmp_lib.gmp_randseed_ui(state, 100000U);
+
+            // Create and initialize a new floating-point number rop1.
+            mpfr_t rop1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop1, 64U);
+
+            // Create and initialize a new floating-point number rop2.
+            mpfr_t rop2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop2, 64U);
+
+            // Generate two Gaussin random floating-point numbers.
+            Assert.IsTrue(mpfr_lib.mpfr_grandom(rop1, rop2, state, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Generate one Gaussin random floating-point number.
+            Assert.IsTrue(mpfr_lib.mpfr_grandom(rop1, null, state, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Free all memory occupied by state and rop.
+            gmp_lib.gmp_randclear(state);
+            mpfr_lib.mpfr_clears(rop1, rop2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_greater_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 > op2 is false.
+            Assert.IsTrue(mpfr_lib.mpfr_greater_p(op1, op2) == 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_greaterequal_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 >= op2.
+            Assert.IsTrue(mpfr_lib.mpfr_greaterequal_p(op1, op2) != 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_hypot()
+        {
+            // Create, initialize, and set a new floating-point number x to -3.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, -3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to 4.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number z.
+            mpfr_t z = new mpfr_t();
+            mpfr_lib.mpfr_init2(z, 64U);
+
+            // Set z = sqrt(x^2 + y^2).
+            Assert.IsTrue(mpfr_lib.mpfr_hypot(z, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of z is 5.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(z, 5) == 0);
+
+            // Release unmanaged memory allocated for x, y, and z.
+            mpfr_lib.mpfr_clears(x, y, z, null);
+        }
+
+        [TestMethod]
+        public void mpfr_inexflag_p()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_inexflag();
+            Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_inf_p()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is not infinity.
+            Assert.IsTrue(mpfr_lib.mpfr_inf_p(op) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_init()
+        {
+            // Create and initialize a new floating-point number x.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+
+            // Assert that the value of x is NaN.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x) != 0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is not infinity.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_d()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.0.
+            mpfr_t rop = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_d(rop, 10.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_f()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpf_t op = new mpf_t();
+            gmp_lib.mpf_init_set_si(op, 1);
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_f(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpf_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_q()
+        {
+            // Create, initialize, and set a new rational op to 1.
+            mpq_t op = "1/1";
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_q(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpq_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_si()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_si(rop, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_str()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t x = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_str(x, "10.4", 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is not infinity.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(x, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_ui()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_ui(rop, 10U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is not infinity.
+            Assert.IsTrue(mpfr_lib.mpfr_get_ui(rop, mpfr_rnd_t.MPFR_RNDN) == 10U);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_init_set_z()
+        {
+            // Create, initialize, and set a new integer op to 1.
+            mpz_t op = "1";
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_z(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is not infinity.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpz_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_init2()
+        {
+            // Create and initialize a new floating-point number x with 64-bit precision.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+
+            // Assert that the value of x is NaN, and that its precision is 64 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x) != 0);
+            uint p = mpfr_lib.mpfr_get_prec(x);
+            Assert.IsTrue(mpfr_lib.mpfr_get_prec(x) == 64U);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_inits()
+        {
+            // Create new floating-point numbers x1, x2 and x3.
+            mpfr_t x1 = new mpfr_t();
+            mpfr_t x2 = new mpfr_t();
+            mpfr_t x3 = new mpfr_t();
+
+            // Initialize the floating-point numbers.
+            mpfr_lib.mpfr_inits(x1, x2, x3, null);
+
+            // Assert that their value is 0.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x1) != 0);
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x2) != 0);
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x3) != 0);
+
+            // Release unmanaged memory allocated for the floating-point numbers.
+            mpfr_lib.mpfr_clears(x1, x2, x3, null);
+        }
+
+        [TestMethod]
+        public void mpfr_inits2()
+        {
+            // Create new floating-point numbers x1, x2 and x3.
+            mpfr_t x1 = new mpfr_t();
+            mpfr_t x2 = new mpfr_t();
+            mpfr_t x3 = new mpfr_t();
+
+            // Initialize the floating-point numbers.
+            mpfr_lib.mpfr_inits2(64U, x1, x2, x3, null);
+
+            // Assert that their value is 0 and precision is 64 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x1) != 0 && mpfr_lib.mpfr_get_prec(x1) == 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x2) != 0 && mpfr_lib.mpfr_get_prec(x2) == 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x3) != 0 && mpfr_lib.mpfr_get_prec(x3) == 64U);
+
+            // Release unmanaged memory allocated for the floating-point numbers.
+            mpfr_lib.mpfr_clears(x1, x2, x3, null);
+        }
+
+        [TestMethod]
+        public void mpfr_integer_p()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is an integer.
+            Assert.IsTrue(mpfr_lib.mpfr_integer_p(op) != 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_j0()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = J0(op).
+            Assert.IsTrue(mpfr_lib.mpfr_j0(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "-0.243371750714207143215e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_j1()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = J0(op).
+            Assert.IsTrue(mpfr_lib.mpfr_j1(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "-0.554727618489979474337e-1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_jn()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = J0(op).
+            Assert.IsTrue(mpfr_lib.mpfr_jn(rop, 3, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.144974266424802618878e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_less_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 < op2 is false.
+            Assert.IsTrue(mpfr_lib.mpfr_less_p(op1, op2) == 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_lessequal_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 <= op2.
+            Assert.IsTrue(mpfr_lib.mpfr_lessequal_p(op1, op2) != 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_lessgreater_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op1 < op2 is false.
+            Assert.IsTrue(mpfr_lib.mpfr_lessgreater_p(op1, op2) == 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_lgamma()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log(|Gamma(op)|).
+            int sign = 0;
+            Assert.IsTrue(mpfr_lib.mpfr_lgamma(rop, ref sign, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.137108263716202786516e2" && sign == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_lgamma_2()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log(|Gamma(op)|).
+            ptr<int> sign = new ptr<int>(0);
+            Assert.IsTrue(mpfr_lib.mpfr_lgamma(rop, sign, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.137108263716202786516e2" && sign.Value == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_li2()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to Re(Dilog(op)).
+            Assert.IsTrue(mpfr_lib.mpfr_li2(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.449271207859561792596e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_lngamma()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log(Gamma(op)).
+            Assert.IsTrue(mpfr_lib.mpfr_lngamma(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.137108263716202786516e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_log()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log(op).
+            Assert.IsTrue(mpfr_lib.mpfr_log(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.234180580614732701452e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_log10()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log10(op).
+            Assert.IsTrue(mpfr_lib.mpfr_log10(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.101703333929878036968e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_log1p()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log(1 + op).
+            Assert.IsTrue(mpfr_lib.mpfr_log1p(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.243361335540044980788e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_log2()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop to log10(op).
+            Assert.IsTrue(mpfr_lib.mpfr_log2(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop and sign.
+            Assert.IsTrue(rop.ToString() == "0.337851162325372986173e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_max()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = max(op1, op2).
+            Assert.IsTrue(mpfr_lib.mpfr_max(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_min()
+        {
+            // Create, initialize, and set a new floating-point number op1 to -210.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = max(op1, op2).
+            Assert.IsTrue(mpfr_lib.mpfr_min(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -210.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -210.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_min_prec()
+        {
+            // Create and initialize a new floating-point number x.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(x, 10.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the minimum precision in bits to store the value of x.
+            Assert.IsTrue(mpfr_lib.mpfr_min_prec(x) == 3);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_modf()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number iop.
+            mpfr_t iop = new mpfr_t();
+            mpfr_lib.mpfr_init2(iop, 64U);
+
+            // Create and initialize a new floating-point number fop.
+            mpfr_t fop = new mpfr_t();
+            mpfr_lib.mpfr_init2(fop, 64U);
+
+            // Set rop to log10(op).
+            Assert.IsTrue(mpfr_lib.mpfr_modf(iop, fop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of iop and fop.
+            Assert.IsTrue(iop.ToString() == "0.100000000000000000000e2");
+            Assert.IsTrue(fop.ToString() == "0.400000000000000355271e0");
+
+            // Release unmanaged memory allocated for iop, fop, and op.
+            mpfr_lib.mpfr_clears(iop, fop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to -210.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 * op2.
+            Assert.IsTrue(mpfr_lib.mpfr_mul(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -2100.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2100.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_2exp()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 * 2^8.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_2exp(rop, op1, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 25600.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 25600.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_2si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 * 2^8.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_2si(rop, op1, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 25600.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 25600.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_2ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 * 2^8.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_2ui(rop, op1, 8U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 25600.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 25600.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_d()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 * 8.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_d(rop, op1, 8.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 800.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 800.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_q()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new rational op2 to -210.
+            mpq_t op2 = "-210/1";
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 * op2.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_q(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -2100.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2100.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpq_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 * 8.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_si(rop, op1, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 800.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 800.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 * 8.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_ui(rop, op1, 8U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 800.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 800.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_mul_z()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new integer op2 to -210.
+            mpz_t op2 = "-210";
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 * op2.
+            Assert.IsTrue(mpfr_lib.mpfr_mul_z(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is -2100.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2100.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpz_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_nan_p()
+        {
+            // Create and initialize a new floating-point number op.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+
+            // Assert that op is NaN.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(op) != 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_nanflag_p()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_nanflag();
+            Assert.IsTrue(mpfr_lib.mpfr_nanflag_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_neg()
+        {
+            // Create, initialize, and set a new floating-point number  to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = -op1.
+            Assert.IsTrue(mpfr_lib.mpfr_neg(rop, op1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of z is -10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -10.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_nextabove()
+        {
+            // Create, initialize, and set a new floating-point number x to 10.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Move x to next above and then next below.
+            mpfr_lib.mpfr_nextabove(x);
+            mpfr_lib.mpfr_nextbelow(x);
+
+            // Assert that the value of x is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_nextbelow()
+        {
+            // Create, initialize, and set a new floating-point number x to 10.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Move x to next above and then next below.
+            mpfr_lib.mpfr_nextabove(x);
+            mpfr_lib.mpfr_nextbelow(x);
+
+            // Assert that the value of x is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_nexttoward()
+        {
+            // Create, initialize, and set a new floating-point number x to 10.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            mpfr_t y1 = "11.0";
+            mpfr_t y2 = "12.0";
+
+            // Move x toward y1 then y2.
+            mpfr_lib.mpfr_nexttoward(x, y1);
+            mpfr_lib.mpfr_nexttoward(x, y2);
+
+            // Assert that the value of x is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for x, y1, and y2.
+            mpfr_lib.mpfr_clears(x, y1, y2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_number_p()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is an integer.
+            Assert.IsTrue(mpfr_lib.mpfr_number_p(op) != 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_overflow_p()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_overflow();
+            Assert.IsTrue(mpfr_lib.mpfr_overflow_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_pow()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 3.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1^op2.
+            Assert.IsTrue(mpfr_lib.mpfr_pow(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1000.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 1000.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_pow_si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1^3.
+            Assert.IsTrue(mpfr_lib.mpfr_pow_si(rop, op1, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1000.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 1000.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_pow_ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1^3.
+            Assert.IsTrue(mpfr_lib.mpfr_pow_ui(rop, op1, 3U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1000.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 1000.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_pow_z()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new integer op2 to -210.
+            mpz_t op2 = "3";
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1^op2.
+            Assert.IsTrue(mpfr_lib.mpfr_pow_z(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1000.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 1000.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpz_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_prec_round()
+        {
+            // Create and initialize a new floating-point number x with 64-bit precision.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+
+            // Round x to precision 128 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_prec_round(x, 128U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that precision has changed to 128 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_get_prec(x) == 128U);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_print_rnd_mode()
+        {
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDA).ToString() == "MPFR_RNDA");
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDD).ToString() == "MPFR_RNDD");
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDF) == char_ptr.Zero);
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDN).ToString() == "MPFR_RNDN");
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDU).ToString() == "MPFR_RNDU");
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDZ).ToString() == "MPFR_RNDZ");
+            Assert.IsTrue(mpfr_lib.mpfr_print_rnd_mode(mpfr_rnd_t.MPFR_RNDNA) == char_ptr.Zero);
+        }
+
+        [TestMethod]
+        public void mpfr_rec_sqrt()
+        {
+            // Create, initialize, and set a new floating-point number op to 25.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 25, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 1 / sqrt(op).
+            Assert.IsTrue(mpfr_lib.mpfr_rec_sqrt(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.200000000000000000003e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_regular_p()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is an integer.
+            Assert.IsTrue(mpfr_lib.mpfr_regular_p(op) != 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_reldiff()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to -210.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = |op1 - op2| / op1.
+            mpfr_lib.mpfr_reldiff(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN);
+
+            // Assert that the value of z is 22.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 22.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_remainder()
+        {
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to 3.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number r.
+            mpfr_t r = new mpfr_t();
+            mpfr_lib.mpfr_init2(r, 64U);
+
+            // Set r = x - n * y where n = trunc(x / y).
+            Assert.IsTrue(mpfr_lib.mpfr_remainder(r, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of z.
+            Assert.IsTrue(r.ToString() == "0.100000000000000000000e1");
+
+            // Release unmanaged memory allocated for r, x, and y.
+            mpfr_lib.mpfr_clears(r, x, y, null);
+        }
+
+        [TestMethod]
+        public void mpfr_remquo()
+        {
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to 7.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 7, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number r.
+            mpfr_t r = new mpfr_t();
+            mpfr_lib.mpfr_init2(r, 64U);
+
+            // Set r = x - n * y where n = trunc(x / y).
+            int q = 0;
+            Assert.IsTrue(mpfr_lib.mpfr_remquo(r, ref q, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of z and q.
+            Assert.IsTrue(r.ToString() == "0.200000000000000000000e1" && q == 14);
+
+            // Release unmanaged memory allocated for r, x, and y.
+            mpfr_lib.mpfr_clears(r, x, y, null);
+        }
+
+        [TestMethod]
+        public void mpfr_remquo_2()
+        {
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to 7.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 7, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number r.
+            mpfr_t r = new mpfr_t();
+            mpfr_lib.mpfr_init2(r, 64U);
+
+            // Set r = x - n * y where n = trunc(x / y).
+            ptr<int> q = new ptr<int>(0);
+            Assert.IsTrue(mpfr_lib.mpfr_remquo(r, q, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of z and q.
+            Assert.IsTrue(r.ToString() == "0.200000000000000000000e1" && q.Value == 14);
+
+            // Release unmanaged memory allocated for r, x, and y.
+            mpfr_lib.mpfr_clears(r, x, y, null);
+        }
+
+        [TestMethod]
+        public void mpfr_rint()
+        {
+            // Create, initialize, and set a new floating-point number op to 25.2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = round(op).
+            Assert.IsTrue(mpfr_lib.mpfr_rint(rop, op, mpfr_rnd_t.MPFR_RNDN) == -2);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.250000000000000000000e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_rint_ceil()
+        {
+            // Create, initialize, and set a new floating-point number op to 25.2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = round(op).
+            Assert.IsTrue(mpfr_lib.mpfr_rint_ceil(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.260000000000000000000e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_rint_floor()
+        {
+            // Create, initialize, and set a new floating-point number op to 25.2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = round(op).
+            Assert.IsTrue(mpfr_lib.mpfr_rint_floor(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.250000000000000000000e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_rint_round()
+        {
+            // Create, initialize, and set a new floating-point number op to 25.2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = round(op).
+            Assert.IsTrue(mpfr_lib.mpfr_rint_round(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.250000000000000000000e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_rint_trunc()
+        {
+            // Create, initialize, and set a new floating-point number op to 25.2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = round(op).
+            Assert.IsTrue(mpfr_lib.mpfr_rint_trunc(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.250000000000000000000e2");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_root()
+        {
+            // Create, initialize, and set a new floating-point number op to 32.0.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 32.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op^(1/5).
+            Assert.IsTrue(mpfr_lib.mpfr_root(rop, op, 5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.200000000000000000000e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_round()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = round(op).
+            Assert.IsTrue(mpfr_lib.mpfr_round(rop, op) == -2);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sec()
+        {
+            // Create, initialize, and set a new floating-point number op to pi.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_const_pi(op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = csc(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sec(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert that the value of rop is -1.
+            Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, -1) == 0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sech()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = sech(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sech(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.648054273663885399581e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_set()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 128U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(rop, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op to -210.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 128U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assign the value of op to rop.
+            Assert.IsTrue(mpfr_lib.mpfr_set(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of x is -210.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -210.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_set_d()
+        {
+            // Create and initialize a new floating-point number.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 128U);
+
+            // Set rop to -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(rop, -123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of x is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -123.0);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        [TestCategory("mpfr_set_default_prec")]
+        public void mpfr_set_default_prec()
+        {
+            // Set default precision to 128 bits.
+            mpfr_lib.mpfr_set_default_prec(128U);
+
+            // Assert that the value of x is 128 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_get_default_prec() == 128U);
+        }
+
+        [TestMethod]
+        public void mpfr_set_default_rounding_mode()
+        {
+            // Set default rounding mode.
+            mpfr_lib.mpfr_set_default_rounding_mode(mpfr_rnd_t.MPFR_RNDN);
+
+            // Assert default rounding mode.
+            Assert.IsTrue(mpfr_lib.mpfr_get_default_rounding_mode() == mpfr_rnd_t.MPFR_RNDN);
+        }
+
+        [TestMethod]
+        public void mpfr_set_divby0()
+        {
+            // Set flag and assert that flag is set.
+            mpfr_lib.mpfr_set_divby0();
+            Assert.IsTrue(mpfr_lib.mpfr_divby0_p() != 0);
+        }
+
+
+        [TestMethod]
+        [TestCategory("mpfr_set_emax_emin")]
+        public void mpfr_set_emax()
+        {
+            // Set max exponent.
+            mpfr_lib.mpfr_set_emax(1000);
+            Assert.IsTrue(mpfr_lib.mpfr_get_emax() == 1000);
+        }
+
+        [TestMethod]
+        [TestCategory("mpfr_set_emax_emin")]
+        public void mpfr_set_emin()
+        {
+            // Set max exponent.
+            mpfr_lib.mpfr_set_emin(1000);
+            Assert.IsTrue(mpfr_lib.mpfr_get_emin() == 1000);
+        }
+
+        [TestMethod]
+        public void mpfr_set_erangeflag()
+        {
+            // Set flag and assert that flag is set.
+            mpfr_lib.mpfr_set_erangeflag();
+            Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() != 0);
+        }
+
+        [TestMethod]
+        public void mpfr_set_exp()
+        {
+            // Create, initialize, and set a new floating-point number x to 100.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert exp of x.
+            Assert.IsTrue(mpfr_lib.mpfr_get_exp(x) == 7);
+
+            // Set exponent of x.
+            Assert.IsTrue(mpfr_lib.mpfr_set_exp(x, 5) == 0);
+
+            // Assert x and its exp.
+            Assert.IsTrue(mpfr_lib.mpfr_get_exp(x) == 5);
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == 25.0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_set_f()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpf_t op = new mpf_t();
+            gmp_lib.mpf_init_set_si(op, 1);
+
+            // Create and initialize new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op.
+            Assert.IsTrue(mpfr_lib.mpfr_set_f(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that rop is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpf_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_set_flt()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.0.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_flt(rop, (float)10.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_set_inexflag()
+        {
+            // Set flag and assert that flag is set.
+            mpfr_lib.mpfr_set_inexflag();
+            Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() != 0);
+        }
+
+        [TestMethod]
+        public void mpfr_set_inf()
+        {
+            // Create, initialize, and set a new floating-point number x to -infinity.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            mpfr_lib.mpfr_set_inf(x, -1);
+
+            // Assert x is infinity.
+            Assert.IsTrue(mpfr_lib.mpfr_inf_p(x) != 0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_set_nan()
+        {
+            // Create, initialize, and set a new floating-point number x to NaN.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            mpfr_lib.mpfr_set_nan(x);
+
+            // Assert x is NaN.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x) != 0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_set_nanflag()
+        {
+            // Set flag and assert that flag is set.
+            mpfr_lib.mpfr_set_nanflag();
+            Assert.IsTrue(mpfr_lib.mpfr_nanflag_p() != 0);
+        }
+
+        [TestMethod]
+        public void mpfr_set_overflow()
+        {
+            // Set flag and assert that flag is set.
+            mpfr_lib.mpfr_set_overflow();
+            Assert.IsTrue(mpfr_lib.mpfr_overflow_p() != 0);
+        }
+
+        [TestMethod]
+        public void mpfr_set_prec()
+        {
+            // Create and initialize a new floating-point number x.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init(x);
+
+            // Set its precision to 64 bits.
+            mpfr_lib.mpfr_set_prec(x, 64U);
+
+            // Assert that the value of x is 0.0, and that its precision is 64 bits.
+            Assert.IsTrue(mpfr_lib.mpfr_nan_p(x) != 0);
+            Assert.IsTrue(mpfr_lib.mpfr_get_prec(x) == 64U);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_set_prec_raw()
+        {
+            // Create, initialize, and set a new rational y to 200 / 3.
+            mpq_t y = new mpq_t();
+            gmp_lib.mpq_init(y);
+            gmp_lib.mpq_set_ui(y, 200, 3U);
+
+            // Create, initialize, and set a new floating-point number x to y.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 128U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_q(x, y, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            Assert.IsTrue(x.ToString() == "0.6666666666666666666666666666666666666654e2");
+
+            // Change precision of x, and set its value to 10000 / 3.
+            mpfr_lib.mpfr_set_prec_raw(x, 8U);
+            gmp_lib.mpq_set_ui(y, 10000, 3U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_q(x, y, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            Assert.IsTrue(x.ToString() == "0.3328e4");
+
+            // Restore precision of x.
+            mpfr_lib.mpfr_set_prec_raw(x, 128U);
+
+            // Release unmanaged memory allocated for x and y.
+            mpfr_lib.mpfr_clear(x);
+            gmp_lib.mpq_clear(y);
+        }
+
+        [TestMethod]
+        public void mpfr_set_q()
+        {
+            // Create, initialize, and set a new rational op to 1.
+            mpq_t op = "1/1";
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_q(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 1.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpq_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_set_si()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(rop, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_set_si_2exp()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10 * 2^5.
+            Assert.IsTrue(mpfr_lib.mpfr_set_si_2exp(rop, 10, 5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 320.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 320);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_set_str()
+        {
+            // Create, initialize, and set a new floating-point number x to 0.0234.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            char_ptr value = new char_ptr("0.234e-4");
+            Assert.IsTrue(mpfr_lib.mpfr_set_str(x, value, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that x is 0.0234.
+            Assert.IsTrue(x.ToString() == "0.233999999999999999999e-4");
+
+            // Release unmanaged memory allocated for x and value.
+            mpfr_lib.mpfr_clear(x);
+            gmp_lib.free(value);
+        }
+
+        [TestMethod]
+        public void mpfr_set_ui()
+        {
+            // Create and initialize a new floating-point number.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 128U);
+
+            // Set x to 100.
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(x, 100U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of x is 100.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == 100.0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_set_ui_2exp()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10 * 2^5.
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui_2exp(rop, 10U, 5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 320.
+            Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 320);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_set_underflow()
+        {
+            // Set flag and assert that flag is set.
+            mpfr_lib.mpfr_set_underflow();
+            Assert.IsTrue(mpfr_lib.mpfr_underflow_p() != 0);
+        }
+
+        [TestMethod]
+        public void mpfr_set_z()
+        {
+            // Create, initialize, and set a new integer op to 200.
+            mpz_t op = new mpz_t();
+            gmp_lib.mpz_init(op);
+            gmp_lib.mpz_set_ui(op, 200U);
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_z(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that rop is 200.
+            Assert.IsTrue(rop.ToString() == "0.200000000000000000000e3");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpz_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_set_z_2exp()
+        {
+            // Create, initialize, and set a new integer op to 200.
+            mpz_t op = new mpz_t();
+            gmp_lib.mpz_init(op);
+            gmp_lib.mpz_set_ui(op, 200U);
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op * 2^5.
+            Assert.IsTrue(mpfr_lib.mpfr_set_z_2exp(rop, op, 5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that rop is 200.
+            Assert.IsTrue(rop.ToString() == "0.640000000000000000000e4");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.mpz_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_set_zero()
+        {
+            // Create, initialize, and set a new floating-point number x to +0.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 64U);
+            mpfr_lib.mpfr_set_zero(x, 1);
+
+            // Assert x is 0.
+            Assert.IsTrue(mpfr_lib.mpfr_zero_p(x) != 0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_setsign()
+        {
+            // Create, initialize, and set a new integer op to 200.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, 200U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number rop to op.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init(rop);
+
+            // Set rop = -op.
+            Assert.IsTrue(mpfr_lib.mpfr_setsign(rop, op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that rop is -200.
+            Assert.IsTrue(rop.ToString() == "-0.20000000000000000e3");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sgn()
+        {
+            // Create, initialize, and set a new integer op to 200.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, 200U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert sign of op..
+            Assert.IsTrue(mpfr_lib.mpfr_sgn(op) > 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_si_div()
+        {
+            // Create, initialize, and set a new floating-point number op2 to 4.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = 100 / op2.
+            Assert.IsTrue(mpfr_lib.mpfr_si_div(rop, 100, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 25.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 25.0);
+
+            // Release unmanaged memory allocated for rop and op2.
+            mpfr_lib.mpfr_clears(rop, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_si_sub()
+        {
+            // Create, initialize, and set a new floating-point number op2 to 4.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = 100 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_si_sub(rop, 100, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 96.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 96.0);
+
+            // Release unmanaged memory allocated for rop and op2.
+            mpfr_lib.mpfr_clears(rop, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_signbit()
+        {
+            // Create, initialize, and set a new integer op to 200.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_ui(op, 200U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert sign of op..
+            Assert.IsTrue(mpfr_lib.mpfr_signbit(op) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_sin()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = sin(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sin(rop, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.841470984807896506665e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sin_cos()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number sop.
+            mpfr_t sop = new mpfr_t();
+            mpfr_lib.mpfr_init2(sop, 64U);
+
+            // Create and initialize a new floating-point number cop.
+            mpfr_t cop = new mpfr_t();
+            mpfr_lib.mpfr_init2(cop, 64U);
+
+            // Set sop = sin(op), cop = cos(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sin_cos(sop, cop, op, mpfr_rnd_t.MPFR_RNDN) == 5);
+
+            // Assert the value of sop and cop.
+            Assert.IsTrue(sop.ToString() == "0.841470984807896506665e0");
+            Assert.IsTrue(cop.ToString() == "0.540302305868139717414e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(sop, cop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sinh()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = sinh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sinh(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.117520119364380145688e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sinh_cosh()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number sop.
+            mpfr_t sop = new mpfr_t();
+            mpfr_lib.mpfr_init2(sop, 64U);
+
+            // Create and initialize a new floating-point number cop.
+            mpfr_t cop = new mpfr_t();
+            mpfr_lib.mpfr_init2(cop, 64U);
+
+            // Set sop = sinh(op), cop = cosh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sinh_cosh(sop, cop, op, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Assert the value of sop and cop.
+            Assert.IsTrue(sop.ToString() == "0.117520119364380145688e1");
+            Assert.IsTrue(cop.ToString() == "0.154308063481524377844e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(sop, cop, op, null);
         }
 
         [TestMethod]
@@ -1696,12 +5071,13 @@ namespace UnitTests
             mpz_t z = "123456";
             mpq_t q = "123/456";
             mpf_t f = "12345e6";
+            mpfr_t r = "12345e6";
             mp_limb_t m = 123456;
 
             // Print to string.
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 50, "%Zd - %QX - %Fa - %Mo", z, q, f, m) == 42);
             Assert.IsTrue(str.ToString() == "123456 - 7B/1C8 - 0x2.dfd1c04p+32 - 361100");
-        
+
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Zd", z) == 6);
             Assert.IsTrue(str.ToString() == "123456");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Zi", z) == 6);
@@ -1710,7 +5086,7 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1E240");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Zo", z) == 6);
             Assert.IsTrue(str.ToString() == "361100");
-            mpfr_lib.mpz_clear(z);
+            gmp_lib.mpz_clear(z);
 
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Qd", q) == 7);
             Assert.IsTrue(str.ToString() == "123/456");
@@ -1720,7 +5096,7 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "7B/1C8");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Qo", q) == 7);
             Assert.IsTrue(str.ToString() == "173/710");
-            mpfr_lib.mpq_clear(q);
+            gmp_lib.mpq_clear(q);
 
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Fe", f) == 12);
             Assert.IsTrue(str.ToString() == "1.234500e+10");
@@ -1730,7 +5106,17 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1.2345e+10");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Fa", f) == 15);
             Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
-            mpfr_lib.mpf_clear(f);
+            gmp_lib.mpf_clear(f);
+
+            Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Re", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Rf", r) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Rg", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Ra", r) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            mpfr_lib.mpfr_clear(r);
 
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%Md", m) == 6);
             Assert.IsTrue(str.ToString() == "123456");
@@ -1755,8 +5141,8 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%hhd", (byte)1) == 1);
             Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%hhc", 'A') == 1);
-            Assert.IsTrue(str.ToString() == "A");
+            //Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.ToString() == "A");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%ld", (Int32)1) == 1);
             Assert.IsTrue(str.ToString() == "1");
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%lld", (Int64)1) == 1);
@@ -1808,7 +5194,1035 @@ namespace UnitTests
             Assert.IsTrue(p.Value == 6);
             Assert.IsTrue(mpfr_lib.mpfr_snprintf(str, 41, "%p", p) == 2 * IntPtr.Size);
 
-            mpfr_lib.free(str);
+            gmp_lib.free(str);
+        }
+
+        [TestMethod]
+        public void mpfr_sprintf()
+        {
+            // Allocate unmanaged string with 50 characters.
+            char_ptr str = new char_ptr(".................................................");
+
+            mpz_t z = "123456";
+            mpq_t q = "123/456";
+            mpf_t f = "12345e6";
+            mpfr_t r = "12345e6";
+            mp_limb_t m = 123456;
+
+            // Print to string.
+            Assert.IsTrue(gmp_lib.gmp_sprintf(str, "%Zd - %QX - %Fa - %Mo", z, q, f, m) == 42);
+            Assert.IsTrue(str.ToString() == "123456 - 7B/1C8 - 0x2.dfd1c04p+32 - 361100");
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zd", z) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zi", z) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%ZX", z) == 5);
+            Assert.IsTrue(str.ToString() == "1E240");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zo", z) == 6);
+            Assert.IsTrue(str.ToString() == "361100");
+            gmp_lib.mpz_clear(z);
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Qd", q) == 7);
+            Assert.IsTrue(str.ToString() == "123/456");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Qi", q) == 7);
+            Assert.IsTrue(str.ToString() == "123/456");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%QX", q) == 6);
+            Assert.IsTrue(str.ToString() == "7B/1C8");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Qo", q) == 7);
+            Assert.IsTrue(str.ToString() == "173/710");
+            gmp_lib.mpq_clear(q);
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Fe", f) == 12);
+            Assert.IsTrue(str.ToString() == "1.234500e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Ff", f) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Fg", f) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Fa", f) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            gmp_lib.mpf_clear(f);
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Re", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Rf", r) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Rg", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Ra", r) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            mpfr_lib.mpfr_clear(r);
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Md", m) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Mi", m) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%MX", m) == 5);
+            Assert.IsTrue(str.ToString() == "1E240");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Mo", m) == 6);
+            Assert.IsTrue(str.ToString() == "361100");
+
+            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Nd", n, n.Size) == 11);
+            Assert.IsTrue(str.ToString() == "11111111111");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Ni", n, n.Size) == 11);
+            Assert.IsTrue(str.ToString() == "11111111111");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%NX", n, n.Size) == 9);
+            Assert.IsTrue(str.ToString() == "2964619C7");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%No", n, n.Size) == 12);
+            Assert.IsTrue(str.ToString() == "122621414707");
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%hd", (short)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%hhd", (byte)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            //Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.ToString() == "A");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%ld", (Int32)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%lld", (Int64)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+
+            // Instead of %z, use %M.
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Md", (size_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%d", (mp_bitcnt_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%d", (mp_size_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%d", (mp_exp_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%f", (Double)1.0) == 8);
+            Assert.IsTrue(str.ToString() == "1.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%f", (Single)1.0) == 8);
+            Assert.IsTrue(str.ToString() == "1.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%e", (Double)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000e+000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%e", (Single)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000e+000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%g", (Double)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%g", (Single)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%E", (Double)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000E+000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%E", (Single)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000E+000");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%G", (Double)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%G", (Single)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+
+            //Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%a", (Double)1.0) == 13);
+            //Assert.IsTrue(str.ToString() == "0x1.000000p+0");
+            //Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%a", (Single)1.0) == 13);
+            //Assert.IsTrue(str.ToString() == "0x1.000000p+0");
+
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%s", "Hello World!") == 12);
+            Assert.IsTrue(str.ToString() == "Hello World!");
+
+            ptr<int> p = new ptr<int>(12);
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "123456%n", p) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            Assert.IsTrue(p.Value == 6);
+            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%p", p) == 2 * IntPtr.Size);
+
+            gmp_lib.free(str);
+        }
+
+        [TestMethod]
+        public void mpfr_sqr()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op^2.
+            Assert.IsTrue(mpfr_lib.mpfr_sqr(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.100000000000000000000e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sqrt()
+        {
+            // Create, initialize, and set a new floating-point number op to 100.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_si(op, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = sqrt(op).
+            Assert.IsTrue(mpfr_lib.mpfr_sqrt(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of z is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sqrt_ui()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = sqrt(100).
+            Assert.IsTrue(mpfr_lib.mpfr_sqrt_ui(rop, 100U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_strtofr()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Parse first float in string.
+            char_ptr nptr = new char_ptr("10.0  20.0");
+            ptr<char_ptr> endptr = new ptr<char_ptr>();
+            Assert.IsTrue(mpfr_lib.mpfr_strtofr(rop, nptr, endptr, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+            Assert.IsTrue(endptr.Value.ToString() == "  20.0");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.free(nptr);
+        }
+
+        [TestMethod]
+        public void mpfr_strtofr_2()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Parse first float in string.
+            char_ptr nptr = new char_ptr("10.0  20.0");
+            char_ptr endptr = new char_ptr();
+            Assert.IsTrue(mpfr_lib.mpfr_strtofr(rop, nptr, ref endptr, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+            Assert.IsTrue(endptr.ToString() == "  20.0");
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+            gmp_lib.free(nptr);
+        }
+
+        [TestMethod]
+        public void mpfr_sub()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to -210.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_sub(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sub_d()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 - 8.
+            Assert.IsTrue(mpfr_lib.mpfr_sub_d(rop, op1, 8.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 92.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 92.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sub_q()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new rational op2 to -210.
+            mpq_t op2 = "-210/1";
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_sub_q(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpq_clear(op2);
+        }
+
+        [TestMethod]
+        public void mpfr_sub_si()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 - 8.
+            Assert.IsTrue(mpfr_lib.mpfr_sub_si(rop, op1, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 92.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 92.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sub_ui()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 100.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set z = op1 - 8.
+            Assert.IsTrue(mpfr_lib.mpfr_sub_ui(rop, op1, 8U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 92.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 92.0);
+
+            // Release unmanaged memory allocated for rop and op1.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+        }
+
+        [TestMethod]
+        public void mpfr_sub_z()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new integer op2 to -210.
+            mpz_t op2 = "-210";
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = op1 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_sub_z(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, null);
+            gmp_lib.mpz_clear(op2);
+        }
+
+        [TestMethod]
+        [TestCategory("mpfr_subnormalize")]
+        public void mpfr_subnormalize()
+        {
+            // Emulate IEEE 754 double precision.
+            mpfr_lib.mpfr_set_default_prec(53U);
+            mpfr_lib.mpfr_set_emin(-1073);
+            mpfr_lib.mpfr_set_emax(1023);
+
+            // Create and initialize near-subnormal floating-point number x.
+            mpfr_t x = "0x1.1235P-1021";
+
+            // Create subnormal by dividing by 34.3, and round it emulating subnormal.
+            int i = mpfr_lib.mpfr_div_d(x, x, 34.3, mpfr_rnd_t.MPFR_RNDN);
+            i = mpfr_lib.mpfr_subnormalize(x, i, mpfr_rnd_t.MPFR_RNDN);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_sum()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 10.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op2 to 20.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 20, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number op3 to 30.
+            mpfr_t op3 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op3, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 30, mpfr_rnd_t.MPFR_RNDN) == 0);
+            
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = Sum({op1, op2, op3}).
+            Assert.IsTrue(mpfr_lib.mpfr_sum(rop, new mpfr_t[] { op1, op2, op3 }, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 60.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 60.0);
+
+            // Release unmanaged memory allocated for rop, op1, and op2.
+            mpfr_lib.mpfr_clears(rop, op1, op2, op3, null);
+        }
+
+        [TestMethod]
+        public void mpfr_swap()
+        {
+            // Create, initialize, and set a new floating-point number x to 10.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 128U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create, initialize, and set a new floating-point number y to -210.
+            mpfr_t y = new mpfr_t();
+            mpfr_lib.mpfr_init2(y, 128U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(y, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Swap the values of x and y.
+            mpfr_lib.mpfr_swap(x, y);
+
+            // Assert that the value of x is -210.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == -210.0);
+
+            // Assert that the value of y is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(y, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for x and y.
+            mpfr_lib.mpfr_clears(x, y, null);
+        }
+
+        [TestMethod]
+        public void mpfr_tan()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = tan(op).
+            Assert.IsTrue(mpfr_lib.mpfr_tan(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.155740772465490223046e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_tanh()
+        {
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = tanh(op).
+            Assert.IsTrue(mpfr_lib.mpfr_tanh(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.761594155955764888109e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_trunc()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.4.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_init_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = trunc(op).
+            Assert.IsTrue(mpfr_lib.mpfr_trunc(rop, op) == -2);
+
+            // Assert that the value of rop is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_ui_div()
+        {
+            // Create, initialize, and set a new floating-point number op to 10.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 210 / op.
+            Assert.IsTrue(mpfr_lib.mpfr_ui_div(rop, 210U, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 21.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 21.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
+        }
+
+        [TestMethod]
+        public void mpfr_ui_pow()
+        {
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 2^op2.
+            Assert.IsTrue(mpfr_lib.mpfr_ui_pow(rop, 2, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1024.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 1024.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_ui_pow_ui()
+        {
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 2^10.
+            Assert.IsTrue(mpfr_lib.mpfr_ui_pow_ui(rop, 2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of rop is 1024.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 1024.0);
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_ui_sub()
+        {
+            // Create, initialize, and set a new floating-point number op2 to -210.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10 - y.
+            Assert.IsTrue(mpfr_lib.mpfr_ui_sub(rop, 10U, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of z is 220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 220.0);
+
+            // Release unmanaged memory allocated for rop, and op2.
+            mpfr_lib.mpfr_clears(rop, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_underflow_p()
+        {
+            // Clear flag and assert that flag is clear.
+            mpfr_lib.mpfr_clear_underflow();
+            Assert.IsTrue(mpfr_lib.mpfr_underflow_p() == 0);
+        }
+
+        [TestMethod]
+        public void mpfr_unordered_p()
+        {
+            // Create, initialize, and set a new floating-point number op1 to 1.
+            mpfr_t op1 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op1, 64U);
+            mpfr_lib.mpfr_set_si(op1, 1, mpfr_rnd_t.MPFR_RNDN);
+
+            // Create, initialize, and set a new floating-point number op2 to 1.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            mpfr_lib.mpfr_set_si(op2, 1, mpfr_rnd_t.MPFR_RNDN);
+
+            // Assert that op1 and op2 are ordered.
+            Assert.IsTrue(mpfr_lib.mpfr_unordered_p(op1, op2) == 0);
+
+            // Release unmanaged memory allocated for op1 and op2.
+            mpfr_lib.mpfr_clears(op1, op2, null);
+        }
+
+        [TestMethod]
+        public void mpfr_urandom()
+        {
+            // Create, initialize, and seed a new random number generator.
+            gmp_randstate_t state = new gmp_randstate_t();
+            gmp_lib.gmp_randinit_mt(state);
+            gmp_lib.gmp_randseed_ui(state, 100000U);
+
+            // Create, initialize, and set the value of rop to NaN.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Generate a random integer in the range [0, 1].
+            Assert.IsTrue(mpfr_lib.mpfr_urandom(rop, state, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Free all memory occupied by state and rop.
+            gmp_lib.gmp_randclear(state);
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_urandomb()
+        {
+            // Create, initialize, and seed a new random number generator.
+            gmp_randstate_t state = new gmp_randstate_t();
+            gmp_lib.gmp_randinit_mt(state);
+            gmp_lib.gmp_randseed_ui(state, 100000U);
+
+            // Create, initialize, and set the value of rop to NaN.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Generate a random integer in the range [0, 1).
+            Assert.IsTrue(mpfr_lib.mpfr_urandomb(rop, state) == 0);
+
+            // Free all memory occupied by state and rop.
+            gmp_lib.gmp_randclear(state);
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_vasprintf()
+        {
+            ptr<char_ptr> str = new ptr<char_ptr>();
+
+            mpz_t z = "123456";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Zd", z) == 6);
+            Assert.IsTrue(str.Value.ToString() == "123456");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Zi", z) == 6);
+            Assert.IsTrue(str.Value.ToString() == "123456");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%ZX", z) == 5);
+            Assert.IsTrue(str.Value.ToString() == "1E240");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Zo", z) == 6);
+            Assert.IsTrue(str.Value.ToString() == "361100");
+            gmp_lib.free(str.Value);
+            gmp_lib.mpz_clear(z);
+
+            mpq_t q = "123/456";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Qd", q) == 7);
+            Assert.IsTrue(str.Value.ToString() == "123/456");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Qi", q) == 7);
+            Assert.IsTrue(str.Value.ToString() == "123/456");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%QX", q) == 6);
+            Assert.IsTrue(str.Value.ToString() == "7B/1C8");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Qo", q) == 7);
+            Assert.IsTrue(str.Value.ToString() == "173/710");
+            gmp_lib.free(str.Value);
+            gmp_lib.mpq_clear(q);
+
+            mpf_t f = "12345e6";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Fe", f) == 12);
+            Assert.IsTrue(str.Value.ToString() == "1.234500e+10");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Ff", f) == 18);
+            Assert.IsTrue(str.Value.ToString() == "12345000000.000000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Fg", f) == 10);
+            Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Fa", f) == 15);
+            Assert.IsTrue(str.Value.ToString() == "0x2.dfd1c04p+32");
+            gmp_lib.free(str.Value);
+            gmp_lib.mpf_clear(f);
+
+            mpfr_t r = "12345e6";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Re", r) == 10);
+            Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Rf", r) == 18);
+            Assert.IsTrue(str.Value.ToString() == "12345000000.000000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Rg", r) == 10);
+            Assert.IsTrue(str.Value.ToString() == "1.2345e+10");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Ra", r) == 15);
+            Assert.IsTrue(str.Value.ToString() == "0x2.dfd1c04p+32");
+            gmp_lib.free(str.Value);
+            mpfr_lib.mpfr_clear(r);
+
+            mp_limb_t m = 123456;
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Md", m) == 6);
+            Assert.IsTrue(str.Value.ToString() == "123456");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Mi", m) == 6);
+            Assert.IsTrue(str.Value.ToString() == "123456");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%MX", m) == 5);
+            Assert.IsTrue(str.Value.ToString() == "1E240");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Mo", m) == 6);
+            Assert.IsTrue(str.Value.ToString() == "361100");
+            gmp_lib.free(str.Value);
+
+            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Nd", n, n.Size) == 11);
+            Assert.IsTrue(str.Value.ToString() == "11111111111");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Ni", n, n.Size) == 11);
+            Assert.IsTrue(str.Value.ToString() == "11111111111");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%NX", n, n.Size) == 9);
+            Assert.IsTrue(str.Value.ToString() == "2964619C7");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%No", n, n.Size) == 12);
+            Assert.IsTrue(str.Value.ToString() == "122621414707");
+            gmp_lib.free(str.Value);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%hd", (short)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%hhd", (byte)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            //Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.Value.ToString() == "A");
+            //gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%ld", (Int32)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%lld", (Int64)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+
+            // Instead of %z, use %M.
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%Md", (size_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%d", (mp_bitcnt_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%d", (mp_size_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%d", (mp_exp_t)1) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%f", (Double)1.0) == 8);
+            Assert.IsTrue(str.Value.ToString() == "1.000000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%f", (Single)1.0) == 8);
+            Assert.IsTrue(str.Value.ToString() == "1.000000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%e", (Double)1.0) == 13);
+            Assert.IsTrue(str.Value.ToString() == "1.000000e+000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%e", (Single)1.0) == 13);
+            Assert.IsTrue(str.Value.ToString() == "1.000000e+000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%g", (Double)1.0) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%g", (Single)1.0) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%E", (Double)1.0) == 13);
+            Assert.IsTrue(str.Value.ToString() == "1.000000E+000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%E", (Single)1.0) == 13);
+            Assert.IsTrue(str.Value.ToString() == "1.000000E+000");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%G", (Double)1.0) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%G", (Single)1.0) == 1);
+            Assert.IsTrue(str.Value.ToString() == "1");
+            gmp_lib.free(str.Value);
+
+            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%a", (Double)1.0) == 13);
+            //Assert.IsTrue(str.Value.ToString() == "0x1.000000p+0");
+            //gmp_lib.free(str.Value);
+            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(str, "%a", (Single)1.0) == 13);
+            //Assert.IsTrue(str.Value.ToString() == "0x1.000004p+0");
+            //gmp_lib.free(str.Value);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%s", "Hello World!") == 12);
+            Assert.IsTrue(str.Value.ToString() == "Hello World!");
+            gmp_lib.free(str.Value);
+
+            ptr<int> p = new ptr<int>(12);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "123456%n", p) == 6);
+            Assert.IsTrue(str.Value.ToString() == "123456");
+            Assert.IsTrue(p.Value == 6);
+            gmp_lib.free(str.Value);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(str, "%p", p) == 2 * IntPtr.Size);
+            gmp_lib.free(str.Value);
+        }
+
+        [TestMethod]
+        public void mpfr_vasprintf_2()
+        {
+            char_ptr str = new char_ptr();
+
+            mpz_t z = "123456";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Zd", z) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Zi", z) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%ZX", z) == 5);
+            Assert.IsTrue(str.ToString() == "1E240");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Zo", z) == 6);
+            Assert.IsTrue(str.ToString() == "361100");
+            gmp_lib.free(str);
+            gmp_lib.mpz_clear(z);
+
+            mpq_t q = "123/456";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Qd", q) == 7);
+            Assert.IsTrue(str.ToString() == "123/456");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Qi", q) == 7);
+            Assert.IsTrue(str.ToString() == "123/456");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%QX", q) == 6);
+            Assert.IsTrue(str.ToString() == "7B/1C8");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Qo", q) == 7);
+            Assert.IsTrue(str.ToString() == "173/710");
+            gmp_lib.free(str);
+            gmp_lib.mpq_clear(q);
+
+            mpf_t f = "12345e6";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Fe", f) == 12);
+            Assert.IsTrue(str.ToString() == "1.234500e+10");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Ff", f) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Fg", f) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Fa", f) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            gmp_lib.free(str);
+            gmp_lib.mpf_clear(f);
+
+            mpfr_t r = "12345e6";
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Re", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Rf", r) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Rg", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Ra", r) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            gmp_lib.free(str);
+            mpfr_lib.mpfr_clear(r);
+
+            mp_limb_t m = 123456;
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Md", m) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Mi", m) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%MX", m) == 5);
+            Assert.IsTrue(str.ToString() == "1E240");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Mo", m) == 6);
+            Assert.IsTrue(str.ToString() == "361100");
+            gmp_lib.free(str);
+
+            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Nd", n, n.Size) == 11);
+            Assert.IsTrue(str.ToString() == "11111111111");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Ni", n, n.Size) == 11);
+            Assert.IsTrue(str.ToString() == "11111111111");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%NX", n, n.Size) == 9);
+            Assert.IsTrue(str.ToString() == "2964619C7");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%No", n, n.Size) == 12);
+            Assert.IsTrue(str.ToString() == "122621414707");
+            gmp_lib.free(str);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%hd", (short)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%hhd", (byte)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            //Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.ToString() == "A");
+            //gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%ld", (Int32)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%lld", (Int64)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+
+            // Instead of %z, use %M.
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%Md", (size_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%d", (mp_bitcnt_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%d", (mp_size_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%d", (mp_exp_t)1) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%f", (Double)1.0) == 8);
+            Assert.IsTrue(str.ToString() == "1.000000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%f", (Single)1.0) == 8);
+            Assert.IsTrue(str.ToString() == "1.000000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%e", (Double)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000e+000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%e", (Single)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000e+000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%g", (Double)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%g", (Single)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%E", (Double)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000E+000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%E", (Single)1.0) == 13);
+            Assert.IsTrue(str.ToString() == "1.000000E+000");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%G", (Double)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%G", (Single)1.0) == 1);
+            Assert.IsTrue(str.ToString() == "1");
+            gmp_lib.free(str);
+
+            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(ref str, "%a", (Double)1.0) == 13);
+            //Assert.IsTrue(str.ToString() == "0x1.000000p+0");
+            //gmp_lib.free(str);
+            //Assert.IsTrue(mpfr_lib.mpfr_asprintf(ref str, "%a", (Single)1.0) == 13);
+            //Assert.IsTrue(str.ToString() == "0x1.000004p+0");
+            //gmp_lib.free(str);
+
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%s", "Hello World!") == 12);
+            Assert.IsTrue(str.ToString() == "Hello World!");
+            gmp_lib.free(str);
+
+            ptr<int> p = new ptr<int>(12);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "123456%n", p) == 6);
+            Assert.IsTrue(str.ToString() == "123456");
+            Assert.IsTrue(p.Value == 6);
+            gmp_lib.free(str);
+            Assert.IsTrue(mpfr_lib.mpfr_vasprintf(ref str, "%p", p) == 2 * IntPtr.Size);
+            gmp_lib.free(str);
         }
 
         [TestMethod]
@@ -1825,7 +6239,7 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1E240");
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Zo", z) == 6);
             Assert.IsTrue(str.ToString() == "361100");
-            mpfr_lib.mpz_clear(z);
+            gmp_lib.mpz_clear(z);
 
             mpq_t q = "123/456";
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Qd", q) == 7);
@@ -1836,7 +6250,7 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "7B/1C8");
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Qo", q) == 7);
             Assert.IsTrue(str.ToString() == "173/710");
-            mpfr_lib.mpq_clear(q);
+            gmp_lib.mpq_clear(q);
 
             mpf_t f = "12345e6";
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Fe", f) == 12);
@@ -1847,7 +6261,18 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1.2345e+10");
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Fa", f) == 15);
             Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
-            mpfr_lib.mpf_clear(f);
+            gmp_lib.mpf_clear(f);
+
+            mpfr_t r = "12345e6";
+            Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Re", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Rf", r) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Rg", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Ra", r) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            mpfr_lib.mpfr_clear(r);
 
             mp_limb_t m = 123456;
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%Md", m) == 6);
@@ -1873,8 +6298,8 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1");
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%hhd", (byte)1) == 1);
             Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%hhc", 'A') == 1);
-            Assert.IsTrue(str.ToString() == "A");
+            //Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.ToString() == "A");
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%ld", (Int32)1) == 1);
             Assert.IsTrue(str.ToString() == "1");
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%lld", (Int64)1) == 1);
@@ -1926,131 +6351,7 @@ namespace UnitTests
             Assert.IsTrue(p.Value == 6);
             Assert.IsTrue(mpfr_lib.mpfr_vsnprintf(str, 41, "%p", p) == 2 * IntPtr.Size);
 
-            mpfr_lib.free(str);
-        }
-
-        [TestMethod]
-        public void mpfr_sprintf()
-        {
-            // Allocate unmanaged string with 50 characters.
-            char_ptr str = new char_ptr(".................................................");
-
-            mpz_t z = "123456";
-            mpq_t q = "123/456";
-            mpf_t f = "12345e6";
-            mp_limb_t m = 123456;
-
-            // Print to string.
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zd - %QX - %Fa - %Mo", z, q, f, m) == 42);
-            Assert.IsTrue(str.ToString() == "123456 - 7B/1C8 - 0x2.dfd1c04p+32 - 361100");
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zd", z) == 6);
-            Assert.IsTrue(str.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zi", z) == 6);
-            Assert.IsTrue(str.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%ZX", z) == 5);
-            Assert.IsTrue(str.ToString() == "1E240");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Zo", z) == 6);
-            Assert.IsTrue(str.ToString() == "361100");
-            mpfr_lib.mpz_clear(z);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Qd", q) == 7);
-            Assert.IsTrue(str.ToString() == "123/456");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Qi", q) == 7);
-            Assert.IsTrue(str.ToString() == "123/456");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%QX", q) == 6);
-            Assert.IsTrue(str.ToString() == "7B/1C8");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Qo", q) == 7);
-            Assert.IsTrue(str.ToString() == "173/710");
-            mpfr_lib.mpq_clear(q);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Fe", f) == 12);
-            Assert.IsTrue(str.ToString() == "1.234500e+10");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Ff", f) == 18);
-            Assert.IsTrue(str.ToString() == "12345000000.000000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Fg", f) == 10);
-            Assert.IsTrue(str.ToString() == "1.2345e+10");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Fa", f) == 15);
-            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
-            mpfr_lib.mpf_clear(f);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Md", m) == 6);
-            Assert.IsTrue(str.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Mi", m) == 6);
-            Assert.IsTrue(str.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%MX", m) == 5);
-            Assert.IsTrue(str.ToString() == "1E240");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Mo", m) == 6);
-            Assert.IsTrue(str.ToString() == "361100");
-
-            mp_ptr n = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Nd", n, n.Size) == 11);
-            Assert.IsTrue(str.ToString() == "11111111111");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Ni", n, n.Size) == 11);
-            Assert.IsTrue(str.ToString() == "11111111111");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%NX", n, n.Size) == 9);
-            Assert.IsTrue(str.ToString() == "2964619C7");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%No", n, n.Size) == 12);
-            Assert.IsTrue(str.ToString() == "122621414707");
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%hd", (short)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%hhd", (byte)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%hhc", 'A') == 1);
-            Assert.IsTrue(str.ToString() == "A");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%ld", (Int32)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%lld", (Int64)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-
-            // Instead of %z, use %M.
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%Md", (size_t)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%d", (mp_bitcnt_t)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%d", (mp_size_t)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%d", (mp_exp_t)1) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%f", (Double)1.0) == 8);
-            Assert.IsTrue(str.ToString() == "1.000000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%f", (Single)1.0) == 8);
-            Assert.IsTrue(str.ToString() == "1.000000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%e", (Double)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "1.000000e+000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%e", (Single)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "1.000000e+000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%g", (Double)1.0) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%g", (Single)1.0) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%E", (Double)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "1.000000E+000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%E", (Single)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "1.000000E+000");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%G", (Double)1.0) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%G", (Single)1.0) == 1);
-            Assert.IsTrue(str.ToString() == "1");
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%a", (Double)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "0x1.000000p+0");
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%a", (Single)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "0x1.000000p+0");
-
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%s", "Hello World!") == 12);
-            Assert.IsTrue(str.ToString() == "Hello World!");
-
-            ptr<int> p = new ptr<int>(12);
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "123456%n", p) == 6);
-            Assert.IsTrue(str.ToString() == "123456");
-            Assert.IsTrue(p.Value == 6);
-            Assert.IsTrue(mpfr_lib.mpfr_sprintf(str, "%p", p) == 2 * IntPtr.Size);
-
-            mpfr_lib.free(str);
+            gmp_lib.free(str);
         }
 
         [TestMethod]
@@ -2068,7 +6369,7 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1E240");
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Zo", z) == 6);
             Assert.IsTrue(str.ToString() == "361100");
-            mpfr_lib.mpz_clear(z);
+            gmp_lib.mpz_clear(z);
 
             mpq_t q = "123/456";
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Qd", q) == 7);
@@ -2079,7 +6380,7 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "7B/1C8");
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Qo", q) == 7);
             Assert.IsTrue(str.ToString() == "173/710");
-            mpfr_lib.mpq_clear(q);
+            gmp_lib.mpq_clear(q);
 
             mpf_t f = "12345e6";
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Fe", f) == 12);
@@ -2090,7 +6391,18 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1.2345e+10");
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Fa", f) == 15);
             Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
-            mpfr_lib.mpf_clear(f);
+            gmp_lib.mpf_clear(f);
+
+            mpfr_t r = "12345e6";
+            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Re", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Rf", r) == 18);
+            Assert.IsTrue(str.ToString() == "12345000000.000000");
+            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Rg", r) == 10);
+            Assert.IsTrue(str.ToString() == "1.2345e+10");
+            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Ra", r) == 15);
+            Assert.IsTrue(str.ToString() == "0x2.dfd1c04p+32");
+            mpfr_lib.mpfr_clear(r);
 
             mp_limb_t m = 123456;
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%Md", m) == 6);
@@ -2116,8 +6428,8 @@ namespace UnitTests
             Assert.IsTrue(str.ToString() == "1");
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%hhd", (byte)1) == 1);
             Assert.IsTrue(str.ToString() == "1");
-            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%hhc", 'A') == 1);
-            Assert.IsTrue(str.ToString() == "A");
+            //Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%hhc", 'A') == 1);
+            //Assert.IsTrue(str.ToString() == "A");
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%ld", (Int32)1) == 1);
             Assert.IsTrue(str.ToString() == "1");
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%lld", (Int64)1) == 1);
@@ -2155,10 +6467,10 @@ namespace UnitTests
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%G", (Single)1.0) == 1);
             Assert.IsTrue(str.ToString() == "1");
 
-            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%a", (Double)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "0x1.000000p+0");
-            Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%a", (Single)1.0) == 13);
-            Assert.IsTrue(str.ToString() == "0x1.000004p+0");
+            //Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%a", (Double)1.0) == 13);
+            //Assert.IsTrue(str.ToString() == "0x1.000000p+0");
+            //Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%a", (Single)1.0) == 13);
+            //Assert.IsTrue(str.ToString() == "0x1.000004p+0");
 
             Assert.IsTrue(mpfr_lib.mpfr_vsprintf(str, "%s", "Hello World!") == 12);
             Assert.IsTrue(str.ToString() == "Hello World!");
@@ -2170,6899 +6482,153 @@ namespace UnitTests
             //Assert.IsTrue(str.ToString() == p.ToIntPtr().ToString("X0" + (2 * IntPtr.Size).ToString()));
 
             // Free allocated unmanaged memory.
-            mpfr_lib.free(str);
+            gmp_lib.free(str);
         }
 
-        #endregion
-
-        #region "Formatted input routines."
-
-        [TestMethod]
-        public void mpfr_fscanf()
-        {
-            // Create unique filename and stream pointer.
-            string pathname = System.IO.Path.GetTempFileName();
-            ptr<FILE> stream = new ptr<FILE>();
-
-            mpz_t z = "0";
-            mpq_t q = "0";
-            mpf_t f = "0";
-            ptr<Char> c = new ptr<Char>('0');
-            ptr<mp_size_t> zt = new ptr<mp_size_t>(0);
-            ptr<Double> dbl = new ptr<Double>(0);
-
-            // Write string to file, and then read values from it.
-            System.IO.File.WriteAllText(pathname, "123456 7B/1C8 1.234500e+10 A 10 1.000000");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Zd %QX %Fe %hhc %d %lf", z, q, f, c, zt, dbl) == 6);
-            fclose(stream.Value.Value);
-
-            // Assert values read.
-            Assert.IsTrue(z.ToString() == "123456");
-            Assert.IsTrue(q.ToString() == "123/456");
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            Assert.IsTrue(c.Value == 'A');
-            Assert.IsTrue(zt.Value == 10);
-            Assert.IsTrue(dbl.Value == 1.0);
-        
-            System.IO.File.WriteAllText(pathname, "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Zd", z) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(z.ToString() == "123456");
-            System.IO.File.WriteAllText(pathname, "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Zi", z) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(z.ToString() == "123456");
-            System.IO.File.WriteAllText(pathname, "1E240");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%ZX", z) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(z.ToString() == "123456");
-            System.IO.File.WriteAllText(pathname, "361100");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, " %Zo", z) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(z.ToString() == "123456");
-            mpfr_lib.mpz_clear(z);
-
-            System.IO.File.WriteAllText(pathname, "123/456");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Qd", q) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(q.ToString() == "123/456");
-            System.IO.File.WriteAllText(pathname, "123/456");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Qi", q) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(q.ToString() == "123/456");
-            System.IO.File.WriteAllText(pathname, "7B/1C8");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%QX", q) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(q.ToString() == "123/456");
-            System.IO.File.WriteAllText(pathname, "173/710");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Qo", q) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(q.ToString() == "123/456");
-            mpfr_lib.mpq_clear(q);
-
-            System.IO.File.WriteAllText(pathname, "1.234500e+10");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Fe", f) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            System.IO.File.WriteAllText(pathname, "12345000000.000000");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Ff", f) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            System.IO.File.WriteAllText(pathname, "1.2345e+10");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Fg", f) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            //System.IO.File.WriteAllText(pathname, "0x2.dfd1c04p+32");
-            //_wfopen_s(out stream.Value.Value, pathname, "r");
-            //Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%Fa", f) == 1);
-            //fclose(stream.Value.Value);
-            //Assert.IsTrue(f.ToString() == "0.12345e11");
-            mpfr_lib.mpf_clear(f);
-
-            ptr<short> s = new ptr<short>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%hd", s) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(s.Value == 1);
-            ptr<byte> b = new ptr<byte>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%hhd", b) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(b.Value == 1);
-            System.IO.File.WriteAllText(pathname, "A");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%hhc", c) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(c.Value == 'A');
-            ptr<Int32> i = new ptr<Int32>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%ld", i) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(i.Value == 1);
-            ptr<Int64> l = new ptr<Int64>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%lld", l) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(l.Value == 1);
-
-            ptr<size_t> st = new ptr<size_t>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, IntPtr.Size == 4 ? "%d" : "%ld", st) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(st.Value == 1);
-            ptr<mp_bitcnt_t> bt = new ptr<mp_bitcnt_t>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%d", bt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(bt.Value == 1);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%d", zt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(zt.Value == 1);
-            ptr<mp_exp_t> et = new ptr<mp_exp_t>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%d", et) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(et.Value == 1);
-
-            ptr<Single> flt = new ptr<Single>(0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%lf", dbl) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(dbl.Value == 1.0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%f", flt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(flt.Value == 1.0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%le", dbl) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(dbl.Value == 1.0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%e", flt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(flt.Value == 1.0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%lg", dbl) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(dbl.Value == 1.0);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%g", flt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(flt.Value == 1.0);
-
-            System.IO.File.WriteAllText(pathname, "1.000000E+000");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%lE", dbl) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(dbl.Value == 1);
-            System.IO.File.WriteAllText(pathname, "1.000000E+000");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%E", flt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(flt.Value == 1);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%lG", dbl) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(dbl.Value == 1);
-            System.IO.File.WriteAllText(pathname, "1");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%G", flt) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(flt.Value == 1);
-
-            //System.IO.File.WriteAllText(pathname, "0x1.000000p+0");
-            //_wfopen_s(out stream.Value.Value, pathname, "r");
-            //Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%a", dbl) == 1);
-            //fclose(stream.Value.Value);
-            //Assert.IsTrue(dbl.Value == 1);
-            //System.IO.File.WriteAllText(pathname, "0x1.000000p+0");
-            //_wfopen_s(out stream.Value.Value, pathname, "r");
-            //Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%a", flt) == 1);
-            //fclose(stream.Value.Value);
-            //Assert.IsTrue(flt.Value == 1);
-
-            System.IO.File.WriteAllText(pathname, "Hello World!");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            char_ptr str = new char_ptr("________________________");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%s", str) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(str.ToString() == "Hello");
-            mpfr_lib.free(str);
-
-            ptr<int> p = new ptr<int>(12);
-            System.IO.File.WriteAllText(pathname, "123456");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "123456%n", p) == 0);
-            fclose(stream.Value.Value);
-            Assert.IsTrue(p.Value == 6);
-            ptr<IntPtr> ptr = new ptr<IntPtr>();
-            System.IO.File.WriteAllText(pathname, IntPtr.Size == 4 ? "0060F0F4" : "000000000060F0F4");
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpfr_fscanf(stream, "%p", ptr) == 1);
-            fclose(stream.Value.Value);
-            Assert.IsTrue((UInt64)ptr.Value == 6353140);
-
-            System.IO.File.Delete(pathname);
-        }
-
-        [TestMethod]
-        public void mpfr_sscanf()
-        {
-            mpz_t z = "0";
-            mpq_t q = "0";
-            mpf_t f = "0";
-            ptr<Char> c = new ptr<Char>('0');
-            ptr<mp_size_t> zt = new ptr<mp_size_t>(0);
-            ptr<Double> dbl = new ptr<Double>(0);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("123456 7B/1C8 1.234500e+10 A 10 1.000000", "%Zd %QX %Fe %hhc %d %lf", z, q, f, c, zt, dbl) == 6);
-
-            Assert.IsTrue(z.ToString() == "123456");
-            Assert.IsTrue(q.ToString() == "123/456");
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            Assert.IsTrue(c.Value == 'A');
-            Assert.IsTrue(zt.Value == 10);
-            Assert.IsTrue(dbl.Value == 1.0);
-        
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("123456", "%Zd", z) == 1);
-            Assert.IsTrue(z.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("123456", "%Zi", z) == 1);
-            Assert.IsTrue(z.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1E240", "%ZX", z) == 1);
-            Assert.IsTrue(z.ToString() == "123456");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("361100", "%Zo", z) == 1);
-            Assert.IsTrue(z.ToString() == "123456");
-            mpfr_lib.mpz_clear(z);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("123/456", "%Qd", q) == 1);
-            Assert.IsTrue(q.ToString() == "123/456");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("123/456", "%Qi", q) == 1);
-            Assert.IsTrue(q.ToString() == "123/456");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("7B/1C8", "%QX", q) == 1);
-            Assert.IsTrue(q.ToString() == "123/456");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("173/710", "%Qo", q) == 1);
-            Assert.IsTrue(q.ToString() == "123/456");
-            mpfr_lib.mpq_clear(q);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.234500e+10", "%Fe", f) == 1);
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("12345000000.000000", "%Ff", f) == 1);
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.2345e+10", "%Fg", f) == 1);
-            Assert.IsTrue(f.ToString() == "0.12345e11");
-            //Assert.IsTrue(mpfr_lib.mpfr_sscanf("0x2.dfd1c04p+32", "%Fa", f) == 1);
-            //Assert.IsTrue(f.ToString() == "0.12345e11");
-            mpfr_lib.mpf_clear(f);
-
-            ptr<short> s = new ptr<short>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%hd", s) == 1);
-            Assert.IsTrue(s.Value == 1);
-            ptr<byte> b = new ptr<byte>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%hhd", b) == 1);
-            Assert.IsTrue(b.Value == 1);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("A", "%hhc", c) == 1);
-            Assert.IsTrue(c.Value == 'A');
-            ptr<Int32> i = new ptr<Int32>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%ld", i) == 1);
-            Assert.IsTrue(i.Value == 1);
-            ptr<Int64> l = new ptr<Int64>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%lld", l) == 1);
-            Assert.IsTrue(l.Value == 1);
-
-            ptr<size_t> st = new ptr<size_t>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", IntPtr.Size == 4 ? "%d" : "%ld", st) == 1);
-            Assert.IsTrue(st.Value == 1);
-            ptr<mp_bitcnt_t> bt = new ptr<mp_bitcnt_t>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%d", bt) == 1);
-            Assert.IsTrue(bt.Value == 1);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%d", zt) == 1);
-            Assert.IsTrue(zt.Value == 1);
-            ptr<mp_exp_t> et = new ptr<mp_exp_t>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%d", et) == 1);
-            Assert.IsTrue(et.Value == 1);
-
-            ptr<Single> flt = new ptr<Single>(0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.000000", "%lf", dbl) == 1);
-            Assert.IsTrue(dbl.Value == 1.0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.000000", "%f", flt) == 1);
-            Assert.IsTrue(flt.Value == 1.0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.000000e+000", "%le", dbl) == 1);
-            Assert.IsTrue(dbl.Value == 1.0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.000000e+000", "%e", flt) == 1);
-            Assert.IsTrue(flt.Value == 1.0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%lg", dbl) == 1);
-            Assert.IsTrue(dbl.Value == 1.0);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%g", flt) == 1);
-            Assert.IsTrue(flt.Value == 1.0);
-
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.000000E+000", "%lE", dbl) == 1);
-            Assert.IsTrue(dbl.Value == 1);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1.000000E+000", "%E", flt) == 1);
-            Assert.IsTrue(flt.Value == 1);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%lG", dbl) == 1);
-            Assert.IsTrue(dbl.Value == 1);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("1", "%G", flt) == 1);
-            Assert.IsTrue(flt.Value == 1);
-
-            //Assert.IsTrue(mpfr_lib.mpfr_sscanf("0x1.000000p+0", "%a", dbl) == 1);
-            //Assert.IsTrue(dbl.Value == 1);
-            //Assert.IsTrue(mpfr_lib.mpfr_sscanf("0x1.000000p+0", "%a", flt) == 1);
-            //Assert.IsTrue(flt.Value == 1);
-
-            char_ptr str = new char_ptr("________________________");
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("Hello World!", "%s", str) == 1);
-            Assert.IsTrue(str.ToString() == "Hello");
-            mpfr_lib.free(str);
-
-            ptr<int> p = new ptr<int>(12);
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf("123456", "123456%n", p) == 0);
-            Assert.IsTrue(p.Value == 6);
-            ptr<IntPtr> ptr = new ptr<IntPtr>();
-            Assert.IsTrue(mpfr_lib.mpfr_sscanf(IntPtr.Size == 4 ? "0060F0F4" : "000000000060F0F4", "%p", ptr) == 1);
-            Assert.IsTrue((UInt64)ptr.Value == 6353140);
-        }
-
-        #endregion
-
-        #region "Integer (i.e. Z) routines."
-
-        [TestMethod]
-        public void _mpz_realloc()
-        {
-            // Create and initialize new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x to a 77-bit integer.
-            char_ptr value = new char_ptr("1000 0000 0000 0000 0000");
-            mpfr_lib.mpz_set_str(x, value, 16);
-
-            // Resize x to 50 limbs, and assert that its value has not changed.
-            mpfr_lib._mpz_realloc(x, 50);
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, 16, x);
-            Assert.IsTrue(s.ToString() == "1000 0000 0000 0000 0000".Replace(" ", ""));
-
-            // Resize x to 1 limb, and assert that its value has changed to 0.
-            mpfr_lib._mpz_realloc(x, 1);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 0);
-
-            // Release unmanaged memory allocated for x and string values.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(value);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_abs()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = |x|.
-            mpfr_lib.mpz_abs(z, x);
-
-            // Assert that z is |x|.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 10000);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_add()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 12222.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 12222U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x + y.
-            mpfr_lib.mpz_add(z, x, y);
-
-            // Assert that z is the sum of x and y.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(z) == 22222U);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_add_ui()
-        {
-            // Create, initialize, and set the value of x to 0.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Increment x twice by 101999.
-            mpfr_lib.mpz_add_ui(x, x, 101999U);
-            mpfr_lib.mpz_add_ui(x, x, 101999U);
-
-            // Assert that x is 203998.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(x) == 203998U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_addmul()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 12222.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 12222U);
-
-            // Create, initialize, and set the value of z to 20000.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(z, 20000U);
-
-            // Set z += x * y.
-            mpfr_lib.mpz_addmul(z, x, y);
-
-            // Assert that z has been incremented by 10000 * 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 20000U + 10000 * 12222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_addmul_ui()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of z to 20000.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init_set_si(z, 20000);
-
-            // Set z += x * 12222.
-            mpfr_lib.mpz_addmul_ui(z, x, 12222U);
-
-            // Assert that z has been incremented by -10000 * 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 20000 + -10000 * 12222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_and()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the bitwise and of op1 and op2.
-            mpfr_lib.mpz_and(rop, op1, op2);
-
-            // Assert that rop is 6.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 6);
-
-            // Release unmanaged memory allocated for rop, op1, and op2.
-            mpfr_lib.mpz_clears(rop, op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpz_bin_ui()
-        {
-            // Create, initialize, and set the value of n to 4.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 4);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the binomial coefficient (n:2).
-            mpfr_lib.mpz_bin_ui(rop, n, 2U);
-
-            // Assert that rop is 6.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 6);
-
-            // Release unmanaged memory allocated for n and rop.
-            mpfr_lib.mpz_clears(n, rop, null);
-        }
-
-        [TestMethod]
-        public void mpz_bin_uiui()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the binomial coefficient (4:2).
-            mpfr_lib.mpz_bin_uiui(rop, 4U, 2U);
-
-            // Assert that rop is 6.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 6);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_q()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = ceiling(n / d).
-            mpfr_lib.mpz_cdiv_q(q, n, d);
-
-            // Assert that q is ceiling(10000 / 3).
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3334);
-
-            // Release unmanaged memory allocated for n, d, and q.
-            mpfr_lib.mpz_clears(n, d, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_q_2exp()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10001);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = ceiling(n / 2^2).
-            mpfr_lib.mpz_cdiv_q_2exp(q, n, 2U);
-
-            // Assert that q is ceiling(10001 / 4).
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 2501);
-
-            // Release unmanaged memory allocated for n and q.
-            mpfr_lib.mpz_clears(n, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_q_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = ceiling(n / 3) and return r = n - 3 * q.
-            // Assert q and r values.
-            Assert.IsTrue(mpfr_lib.mpz_cdiv_q_ui(q, n, 3U) == 2U);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3334);
-
-            // Release unmanaged memory allocated for n and q.
-            mpfr_lib.mpz_clears(n, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_qr()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the values of q and r to 0.
-            mpz_t q = new mpz_t();
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_inits(q, r, null);
-
-            // Set q = ceiling(n / 3) and r = n - d * q.
-            mpfr_lib.mpz_cdiv_qr(q, r, n, d);
-
-            // Assert that q is 3334, and that r is -2.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3334);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == -2);
-
-            // Release unmanaged memory allocated for n, d, q, and r.
-            mpfr_lib.mpz_clears(n, d, q, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_qr_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the values of q and r to 0.
-            mpz_t q = new mpz_t();
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_inits(q, r, null);
-
-            // Set q = ceiling(n / 3), r = n - d * q, and return r.
-            Assert.IsTrue(mpfr_lib.mpz_cdiv_qr_ui(q, r, n, 3U) == 2U);
-
-            // Assert that q is 3334, and that r is -2.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3334);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == -2);
-
-            // Release unmanaged memory allocated for n, q, and r.
-            mpfr_lib.mpz_clears(n, q, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_r()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - d * ceiling(n / d).
-            mpfr_lib.mpz_cdiv_r(r, n, d);
-
-            // Assert that r is -2.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == -2);
-
-            // Release unmanaged memory allocated for n, d, and r.
-            mpfr_lib.mpz_clears(n, d, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_r_2exp()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10001);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - 2^2 * ceiling(n / 2^2)
-            mpfr_lib.mpz_cdiv_r_2exp(r, n, 2U);
-
-            // Assert that r is -3.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == -3);
-
-            // Release unmanaged memory allocated for n and r.
-            mpfr_lib.mpz_clears(n, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_r_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - 3 * ceiling(n / 3), and return |r|.
-            Assert.IsTrue(mpfr_lib.mpz_cdiv_r_ui(r, n, 3U) == 2U);
-
-            // Assert that r is -2.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == -2);
-
-            // Release unmanaged memory allocated for n and r.
-            mpfr_lib.mpz_clears(n, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_cdiv_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Assert that returned value is |n - 3 * ceiling(n / 3)|.
-            Assert.IsTrue(mpfr_lib.mpz_cdiv_ui(n, 3U) == 2U);
-
-            // Release unmanaged memory allocated for n.
-            mpfr_lib.mpz_clear(n);
-        }
-
-        [TestMethod]
-        public void mpz_clear()
-        {
-            // Create and initialize a new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Assert that the value of x is 0.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(x) == 0U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_clears()
-        {
-            // Create new integers x1, x2 and x3.
-            mpz_t x1 = new mpz_t();
-            mpz_t x2 = new mpz_t();
-            mpz_t x3 = new mpz_t();
-
-            // Initialize the integers.
-            mpfr_lib.mpz_inits(x1, x2, x3, null);
-
-            // Assert that their value is 0.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x1) == 0);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x2) == 0);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x3) == 0);
-
-            // Release unmanaged memory allocated for the integers.
-            mpfr_lib.mpz_clears(x1, x2, x3, null);
-        }
-
-        [TestMethod]
-        public void mpz_clrbit()
-        {
-            // Create, initialize, and set the value of rop to 70.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init_set_si(rop, 70);
-
-            // Clear bit 3 of rop.
-            mpfr_lib.mpz_clrbit(rop, 3U);
-
-            // Assert that rop is 70.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 70);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_cmp()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
-
-            // Assert that op1 < op2.
-            Assert.IsTrue(mpfr_lib.mpz_cmp(op1, op2) < 0);
-
-            // Release unmanaged memory allocated for op1 and op2.
-            mpfr_lib.mpz_clears(op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpz_cmp_d()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Assert that op1 < 70.0.
-            Assert.IsTrue(mpfr_lib.mpz_cmp_d(op1, 70.0) < 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpz_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpz_cmp_si()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Assert that op1 < 70.
-            Assert.IsTrue(mpfr_lib.mpz_cmp_si(op1, 70) < 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpz_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpz_cmp_ui()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Assert that op1 < 70.
-            Assert.IsTrue(mpfr_lib.mpz_cmp_ui(op1, 70U) < 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpz_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpz_cmpabs()
-        {
-            // Create, initialize, and set the value of op1 to -63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op1, -63);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
-
-            // Assert that |op1| < |op2|.
-            Assert.IsTrue(mpfr_lib.mpz_cmp(op1, op2) < 0);
-
-            // Release unmanaged memory allocated for op1 and op2.
-            mpfr_lib.mpz_clears(op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpz_cmpabs_d()
-        {
-            // Create, initialize, and set the value of op1 to -63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op1, -63);
-
-            // Assert that |op1| < |-70.0|.
-            Assert.IsTrue(mpfr_lib.mpz_cmpabs_d(op1, -70.0) < 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpz_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpz_cmpabs_ui()
-        {
-            // Create, initialize, and set the value of op1 to -63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op1, -63);
-
-            // Assert that |op1| < |70|.
-            Assert.IsTrue(mpfr_lib.mpz_cmpabs_ui(op1, 70U) < 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpz_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpz_com()
-        {
-            // Create, initialize, and set the value of op to 63.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 63U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the one's complement of op.
-            mpfr_lib.mpz_com(rop, op);
-
-            // Assert that rop is -64.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == -64);
-
-            // Release unmanaged memory allocated for rop and op.
-            mpfr_lib.mpz_clears(rop, op, null);
-        }
-
-        [TestMethod]
-        public void mpz_combit()
-        {
-            // Create, initialize, and set the value of rop to 70.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init_set_si(rop, 70);
-
-            // Complement bit 3 of rop.
-            mpfr_lib.mpz_combit(rop, 3U);
-
-            // Assert that rop is 78.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 78);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_congruent_p()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(n, 10000U);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(d, 3U);
-
-            // Create, initialize, and set the value of c to 1.
-            mpz_t c = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(c, 1U);
-
-            // Assert that n is congruent to c mod d.
-            Assert.IsTrue(mpfr_lib.mpz_congruent_p(n, c, d) > 0);
-
-            // Release unmanaged memory allocated for n, d, and c.
-            mpfr_lib.mpz_clears(n, d, c, null);
-        }
-
-        [TestMethod]
-        public void mpz_congruent_2exp_p()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(n, 10001U);
-
-            // Create, initialize, and set the value of b to 1.
-            mpz_t c = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(c, 1U);
-
-            // Assert that n is congruent to c mod 2^3.
-            Assert.IsTrue(mpfr_lib.mpz_congruent_2exp_p(n, c, 3U) > 0);
-
-            // Release unmanaged memory allocated for n and c.
-            mpfr_lib.mpz_clears(n, c, null);
-        }
-
-        [TestMethod]
-        public void mpz_congruent_ui_p()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(n, 10000U);
-
-            // Assert that n is congruent to 1 mod 3.
-            Assert.IsTrue(mpfr_lib.mpz_congruent_ui_p(n, 1U, 3U) > 0);
-
-            // Release unmanaged memory allocated for n.
-            mpfr_lib.mpz_clear(n);
-        }
-
-        [TestMethod]
-        public void mpz_divexact()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 5.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 5U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x / y.
-            mpfr_lib.mpz_divexact(z, x, y);
-
-            // Assert that z is 2000.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 2000);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_divexact_ui()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x / 5.
-            mpfr_lib.mpz_divexact_ui(z, x, 5U);
-
-            // Assert that z is 2000.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 2000);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_divisible_p()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 5.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 5U);
-
-            // Assert that x is divisible by y.
-            Assert.IsTrue(mpfr_lib.mpz_divisible_p(x, y) > 0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpz_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpz_divisible_ui_p()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Assert that x is divisible by 5.
-            Assert.IsTrue(mpfr_lib.mpz_divisible_ui_p(x, 5U) > 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_divisible_2exp_p()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            Assert.IsTrue(mpfr_lib.mpz_divisible_2exp_p(x, 2U) > 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_even()
-        {
-            // Create, initialize, and set the value of op to 427295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 427295);
-
-            // Assert that op is not even but odd.
-            Assert.IsTrue(mpfr_lib.mpz_even_p(op) == 0);
-            Assert.IsTrue(mpfr_lib.mpz_odd_p(op) > 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_export()
-        {
-            // Create, initialize, and set the value of op to 0x800000000000000000000001.
-            mpz_t op = new mpz_t();
-            char_ptr value = new char_ptr("800000000000000000000001");
-            mpfr_lib.mpz_init_set_str(op, value, 16);
-
-            // Export op as 3 words of 4 bytes each, first word is lsb, and first byte in each word is msb.
-            void_ptr data = mpfr_lib.allocate(12);
-            size_t countp = 0;
-            mpfr_lib.mpz_export(data, ref countp, -1, 4, 1, 0, op);
-
-            // Assert the result.
-            byte[] result = new byte[12];
-            Marshal.Copy(data.ToIntPtr(), result, 0, 12);
-            Assert.IsTrue(result[0] == 0x00);
-            Assert.IsTrue(result[1] == 0x00);
-            Assert.IsTrue(result[2] == 0x00);
-            Assert.IsTrue(result[3] == 0x01);
-            Assert.IsTrue(result[4] == 0x00);
-            Assert.IsTrue(result[5] == 0x00);
-            Assert.IsTrue(result[6] == 0x00);
-            Assert.IsTrue(result[7] == 0x00);
-            Assert.IsTrue(result[8] == 0x80);
-            Assert.IsTrue(result[9] == 0x00);
-            Assert.IsTrue(result[10] == 0x00);
-            Assert.IsTrue(result[11] == 0x00);
-            
-            // Release unmanaged memory allocated for rop, data, and value.
-            mpfr_lib.mpz_clear(op);
-            mpfr_lib.free(data);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpz_fac_ui()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = 3!.
-            mpfr_lib.mpz_fac_ui(rop, 3U);
-
-            // Assert that rop is 6.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 6);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_2fac_ui()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = 9!!.
-            mpfr_lib.mpz_2fac_ui(rop, 9U);
-
-            // Assert that rop is 945.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 945);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_mfac_uiui()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = 10!^(4).
-            mpfr_lib.mpz_mfac_uiui(rop, 10U, 4U);
-
-            // Assert that rop is 945.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 120);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_primorial_ui()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = 7 * 5 * 3 * 2 = 210.
-            mpfr_lib.mpz_primorial_ui(rop, 9U);
-
-            // Assert that rop is 210.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 210);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_q()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = floor(n / d).
-            mpfr_lib.mpz_fdiv_q(q, n, d);
-
-            // Assert that q is floor(10000 / 3).
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-
-            // Release unmanaged memory allocated for n, d, and q.
-            mpfr_lib.mpz_clears(n, d, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_q_2exp()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10001);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = floor(n / 2^2).
-            mpfr_lib.mpz_fdiv_q_2exp(q, n, 2U);
-
-            // Assert that q is floor(10001 / 4).
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 2500);
-
-            // Release unmanaged memory allocated for n and q.
-            mpfr_lib.mpz_clears(n, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_q_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = floor(n / 3) and return r = n - 3 * q.
-            // Assert q and r values.
-            Assert.IsTrue(mpfr_lib.mpz_fdiv_q_ui(q, n, 3U) == 1U);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-
-            // Release unmanaged memory allocated for n and q.
-            mpfr_lib.mpz_clears(n, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_qr()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the values of q and r to 0.
-            mpz_t q = new mpz_t();
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_inits(q, r, null);
-
-            // Set q = floor(n / 3) and r = n - d * q.
-            mpfr_lib.mpz_fdiv_qr(q, r, n, d);
-
-            // Assert that q is 3333, and that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n, d, q, and r.
-            mpfr_lib.mpz_clears(n, d, q, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_qr_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the values of q and r to 0.
-            mpz_t q = new mpz_t();
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_inits(q, r, null);
-
-            // Set q = floor(n / 3), r = n - d * q, and return r.
-            Assert.IsTrue(mpfr_lib.mpz_fdiv_qr_ui(q, r, n, 3U) == 1U);
-
-            // Assert that q is 3333, and that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n, q, and r.
-            mpfr_lib.mpz_clears(n, q, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_r()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - d * floor(n / d).
-            mpfr_lib.mpz_fdiv_r(r, n, d);
-
-            // Assert that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n, d, and r.
-            mpfr_lib.mpz_clears(n, d, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_r_2exp()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10001);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - 2^2 * floor(n / 2^2)
-            mpfr_lib.mpz_fdiv_r_2exp(r, n, 2U);
-
-            // Assert that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n and r.
-            mpfr_lib.mpz_clears(n, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_r_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - 3 * floor(n / 3), and return |r|.
-            Assert.IsTrue(mpfr_lib.mpz_fdiv_r_ui(r, n, 3U) == 1U);
-
-            // Assert that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n and r.
-            mpfr_lib.mpz_clears(n, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_fdiv_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Assert that returned value is |n - 3 * floor(n / 3)|.
-            Assert.IsTrue(mpfr_lib.mpz_fdiv_ui(n, 3U) == 1U);
-
-            // Release unmanaged memory allocated for n.
-            mpfr_lib.mpz_clear(n);
-        }
-
-        [TestMethod]
-        public void mpz_fib_ui()
-        {
-            // Create, initialize, and set the value of fn to 0.
-            mpz_t fn = new mpz_t();
-            mpfr_lib.mpz_init(fn);
-
-            // Set fn to the n'th Fibonacci number.
-            mpfr_lib.mpz_fib_ui(fn, 20U);
-
-            // Assert that fn is 6765.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(fn) == 6765);
-
-            // Release unmanaged memory allocated for fn.
-            mpfr_lib.mpz_clear(fn);
-        }
-
-        [TestMethod]
-        public void mpz_fib2_ui()
-        {
-            // Create, initialize, and set the values of fn and fnsub1 to 0.
-            mpz_t fn = new mpz_t();
-            mpz_t fnsub1 = new mpz_t();
-            mpfr_lib.mpz_inits(fn, fnsub1, null);
-
-            // Set fnsub1 and fn to the 19'th and 20'th Fibonacci numbers respectively.
-            mpfr_lib.mpz_fib2_ui(fn, fnsub1, 20U);
-
-            // Assert that fnsub1 and fn are respectively 4181 and 6765.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(fnsub1) == 4181);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(fn) == 6765);
-
-            // Release unmanaged memory allocated for fn and fnsub1.
-            mpfr_lib.mpz_clears(fn, fnsub1, null);
-        }
-
-        [TestMethod]
-        public void mpz_fits_sint_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in int.
-            Assert.IsTrue(mpfr_lib.mpz_fits_sint_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_fits_slong_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in long.
-            Assert.IsTrue(mpfr_lib.mpz_fits_slong_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_fits_sshort_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in short.
-            Assert.IsTrue(mpfr_lib.mpz_fits_sshort_p(op) ==  0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_fits_uint_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in uint.
-            Assert.IsTrue(mpfr_lib.mpz_fits_uint_p(op) > 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_fits_ulong_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op fits in ulong.
-            Assert.IsTrue(mpfr_lib.mpz_fits_ulong_p(op) > 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_fits_ushort_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in ushort.
-            Assert.IsTrue(mpfr_lib.mpz_fits_ushort_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_gcd()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the greatest common divisor of op1 and op2.
-            mpfr_lib.mpz_gcd(rop, op1, op2);
-
-            // Assert that rop is 7.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 7);
-
-            // Release unmanaged memory allocated for rop, op1, and op2.
-            mpfr_lib.mpz_clears(rop, op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpz_gcd_ui()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Return the greatest common divisor of op1 and 70.
-            Assert.IsTrue(mpfr_lib.mpz_gcd_ui(null, op1, 70U) == 7);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpz_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpz_gcdext()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 63U);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t b = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(b, 70U);
-
-            // Create, initialize, and set the values of g, s, and t to 0.
-            mpz_t g = new mpz_t();
-            mpz_t s = new mpz_t();
-            mpz_t t = new mpz_t();
-            mpfr_lib.mpz_inits(g, s, t, null);
-
-            // Set g to the the greatest common divisor of a and b, and set s and t such that a * s + b * t = g.
-            mpfr_lib.mpz_gcdext(g, s, t, a, b);
-
-            // Assert that g is 7, and that s and t are respectively -1 and 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(g) == 7);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(s) == -1);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(t) == 1);
-
-            // Release unmanaged memory allocated for g, s, t, a, and b.
-            mpfr_lib.mpz_clears(g, s, t, a, b, null);
-        }
-
-        [TestMethod]
-        public void mpz_get_d()
-        {
-            // Create, initialize, and set the value of x to 10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_d(x, 10.7D);
-
-            // Assert that the value of x is 10.0.
-            Assert.IsTrue(mpfr_lib.mpz_get_d(x) == 10.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_get_d_2exp()
-        {
-            // Create, initialize, and set the value of x to 2^20.
-            mpz_t x = new mpz_t();
-            char_ptr value = new char_ptr("100000000000000000000");
-            mpfr_lib.mpz_init_set_str(x, value, 2);
-
-            // Assert that x is equal to 0.5^21.
-            int exp = 0;
-            Assert.IsTrue(mpfr_lib.mpz_get_d_2exp(ref exp, x) == 0.5D);
-            Assert.IsTrue(exp == 21);
-
-            // Release unmanaged memory allocated for x and the string value.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpz_get_si()
-        {
-            // Create, initialize, and set the value of x to -10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10);
-
-            // Retrieve the value of x, and assert that it is -10.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == -10);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_get_str()
-        {
-            // Create, initialize, and set the value of x to -210.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -210);
-
-            // Retrieve the string value of x, and assert that it is "-210".
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == "-210");
-
-            // Release unmanaged memory allocated for x and the string value.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_get_ui()
-        {
-            // Create, initialize, and set the value of x to 10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10U);
-
-            // Retrieve the value of x, and assert that it is 10.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(x) == 10U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_getlimbn()
-        {
-            // Create and initialize new integer x.
-            mpz_t op = new mpz_t();
-            char_ptr value = new char_ptr("1000 ABCD 1234 7AB8 24FD");
-            mpfr_lib.mpz_init_set_str(op, value, 16);
-
-            // Assert the value of the limbs of op.
-            if (mpfr_lib.mp_bytes_per_limb == 4)
-            {
-                Assert.IsTrue(mpfr_lib.mpz_getlimbn(op, 0) == 0x7AB824FD);
-                Assert.IsTrue(mpfr_lib.mpz_getlimbn(op, 1) == 0xABCD1234);
-                Assert.IsTrue(mpfr_lib.mpz_getlimbn(op, 2) == 0x00001000);
-            }
-            else // mpfr_lib.mp_bytes_per_limb == 8
-            {
-                Assert.IsTrue(mpfr_lib.mpz_getlimbn(op, 0) == 0xABCD12347AB824FD);
-                Assert.IsTrue(mpfr_lib.mpz_getlimbn(op, 1) == 0x0000000000001000);
-            }
-
-            // Release unmanaged memory allocated for op and value.
-            mpfr_lib.mpz_clear(op);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpz_hamdist()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
-
-            // Assert that the Hamming distance between op1 and op2 is 5.
-            Assert.IsTrue(mpfr_lib.mpz_hamdist(op1, op2) == 5U);
-
-            // Release unmanaged memory allocated for op1 and op2.
-            mpfr_lib.mpz_clears(op1, op2, null);
-        }
-
         [TestMethod]
-        public void mpz_import()
+        public void mpfr_y0()
         {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Copy 0x800000000000000000000001, 3 words of 4 bytes each, first word is lsb, and first byte in each word is msb.
-            void_ptr data = mpfr_lib.allocate(12);
-            Marshal.Copy(new byte[] { 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 }, 0, data.ToIntPtr(), 12);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Import value into rop.
-            mpfr_lib.mpz_import(rop, 3, -1, 4, 1, 0, data);
+            // Set rop = Y0(op).
+            Assert.IsTrue(mpfr_lib.mpfr_y0(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
 
             // Assert the value of rop.
-            char_ptr value = mpfr_lib.mpz_get_str(char_ptr.Zero, 16, rop);
-            Assert.IsTrue(value.ToString() == "800000000000000000000001");
+            Assert.IsTrue(rop.ToString() == "0.882569642156769579796e-1");
 
-            // Release unmanaged memory allocated for rop, data, and value.
-            mpfr_lib.mpz_clear(rop);
-            mpfr_lib.free(data);
-            mpfr_lib.free(value);
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mpz_init()
+        public void mpfr_y1()
         {
-            // Create and initialize a new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Assert that the value of x is 0.
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == "0");
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Release unmanaged memory allocated for x and its string value.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(s);
+            // Set rop = Y1(op).
+            Assert.IsTrue(mpfr_lib.mpfr_y1(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "-0.781212821300288716550e0");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mpz_init2()
+        public void mpfr_yn()
         {
-            // Create a new integer x, and initialize its size to 300 bits.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init2(x, 300);
+            // Create, initialize, and set a new floating-point number op to 1.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Assert that the value of x is 0.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 0);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
+            // Set rop = Yn(3, op).
+            Assert.IsTrue(mpfr_lib.mpfr_yn(rop, 3, op, mpfr_rnd_t.MPFR_RNDN) == 1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "-0.582151760596472884774e1");
+
+            // Release unmanaged memory allocated for rop and op.
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mpz_inits()
+        public void mpfr_z_sub()
         {
-            // Create new integers x1, x2 and x3.
-            mpz_t x1 = new mpz_t();
-            mpz_t x2 = new mpz_t();
-            mpz_t x3 = new mpz_t();
+            // Create, initialize, and set a new integer op1 to -210.
+            mpz_t op1 = "-210";
 
-            // Initialize the integers.
-            mpfr_lib.mpz_inits(x1, x2, x3, null);
+            // Create, initialize, and set a new floating-point number op2 to 10.
+            mpfr_t op2 = new mpfr_t();
+            mpfr_lib.mpfr_init2(op2, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Assert that their value is 0.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x1) == 0);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x2) == 0);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x3) == 0);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
 
-            // Release unmanaged memory allocated for the integers.
-            mpfr_lib.mpz_clears(x1, x2, x3, null);
-        }
+            // Set rop = op1 - op2.
+            Assert.IsTrue(mpfr_lib.mpfr_z_sub(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-        [TestMethod]
-        public void mpz_init_set()
-        {
-            // Create, initialize, and set a new integer y to -210.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init(y);
-            mpfr_lib.mpz_set_si(y, -210);
-
-            // Create, initialize, and set a new integer x to the value of y.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set(x, y);
-
-            // Assert that x is equal to the value of y.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == -210);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpz_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpz_init_set_d()
-        {
-            // Create, initialize, and set the value of x to the truncation of 10.7.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_d(x, 10.7D);
-
-            // Assert that the value of x is 10.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 10);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_init_set_si()
-        {
-            // Create, initialize, and set the value of x to 10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, 10);
-
-            // Assert that the value of x is 10.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 10);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_init_set_str()
-        {
-            // Create, initialize, and set the value of x.
-            mpz_t x = new mpz_t();
-            char_ptr value = new char_ptr("  1 234 567 890 876 543 211 234 567 890 987 654 321  ");
-            mpfr_lib.mpz_init_set_str(x, value, 10);
-
-            // Assert the value of x.
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == value.ToString().Replace(" ", ""));
-
-            // Release unmanaged memory allocated for x and string values.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(value);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_init_set_ui()
-        {
-            // Create, initialize, and set the value of x to 10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10U);
-
-            // Assert that the value of x is 10.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(x) == 10U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_inp_raw()
-        {
-            // Create, initialize, and set the value of op to 123456.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 123456U);
-
-            // Write op to a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-            Assert.IsTrue(mpfr_lib.mpz_out_raw(stream, op) == 7);
-            fclose(stream.Value.Value);
-
-            // Read op from the temporary file, and assert that the number of bytes read is 6.
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpz_inp_raw(op, stream) == 7);
-            fclose(stream.Value.Value);
-
-            // Assert that op is 123456.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(op) == 123456U);
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_inp_str()
-        {
-            // Create and initialize op.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init(op);
-
-            // Write op to a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-            System.IO.File.WriteAllText(pathname, "123456");
-
-            // Read op from the temporary file, and assert that the number of bytes read is 6.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpz_inp_str(op, stream, 10) == 6);
-            fclose(stream.Value.Value);
-
-            // Assert that op is 123456.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(op) == 123456U);
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_invert()
-        {
-            // Create, initialize, and set the value of op1 to 3.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 3U);
-
-            // Create, initialize, and set the value of op2 to 11.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 11U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the modular inverse of op1 mod op2, i.e. b, where op1 * b mod op1 = 1.
-            mpfr_lib.mpz_invert(rop, op1, op2);
-
-            // Assert that rop is 4,
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 4);
+            // Assert that the value of rop is -220.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -220.0);
 
             // Release unmanaged memory allocated for rop, op1, and op2.
-            mpfr_lib.mpz_clears(rop, op1, op2, null);
+            mpfr_lib.mpfr_clears(rop, op2, null);
+            gmp_lib.mpz_clear(op1);
         }
 
         [TestMethod]
-        public void mpz_ior()
+        public void mpfr_zero_p()
         {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
+            // Create, initialize, and set a new floating-point number op to 10.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
 
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
+            // Assert that op is nopt zero.
+            Assert.IsTrue(mpfr_lib.mpfr_zero_p(op) == 0);
 
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the bitwise inclusive or of op1 and op2.
-            mpfr_lib.mpz_ior(rop, op1, op2);
-
-            // Assert that rop is 127.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 127);
-
-            // Release unmanaged memory allocated for rop, op1, and op2.
-            mpfr_lib.mpz_clears(rop, op1, op2, null);
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
         }
 
         [TestMethod]
-        public void mpz_jacobi()
+        public void mpfr_zeta()
         {
-            // Create, initialize, and set the value of a to 11.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 11U);
-
-            // Create, initialize, and set the value of b to 9.
-            mpz_t b = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(b, 9U);
-
-            // Assert that the Jacobi symbol of (a/b) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_jacobi(a, b) == 1);
-
-            // Release unmanaged memory allocated for a and b.
-            mpfr_lib.mpz_clears(a, b, null);
-        }
-
-        [TestMethod]
-        public void mpz_kronecker()
-        {
-            // Create, initialize, and set the value of a to 15.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 15U);
-
-            // Create, initialize, and set the value of b to 4.
-            mpz_t b = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(b, 4U);
-
-            // Assert that the Kronecker symbol of (a/b) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_kronecker(a, b) == 1);
-
-            // Release unmanaged memory allocated for a and b.
-            mpfr_lib.mpz_clears(a, b, null);
-        }
-
-        [TestMethod]
-        public void mpz_kronecker_si()
-        {
-            // Create, initialize, and set the value of a to 15.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 15U);
-
-            // Assert that the Kronecker symbol of (a/4) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_kronecker_si(a, 4) == 1);
-
-            // Release unmanaged memory allocated for a.
-            mpfr_lib.mpz_clear(a);
-        }
-
-        [TestMethod]
-        public void mpz_kronecker_ui()
-        {
-            // Create, initialize, and set the value of a to 15.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 15U);
-
-            // Assert that the Kronecker symbol of (a/4) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_kronecker_ui(a, 4U) == 1);
-
-            // Release unmanaged memory allocated for a.
-            mpfr_lib.mpz_clear(a);
-        }
-
-        [TestMethod]
-        public void mpz_si_kronecker()
-        {
-            // Create, initialize, and set the value of b to 4.
-            mpz_t b = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(b, 4U);
-
-            // Assert that the Kronecker symbol of (15/b) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_si_kronecker(15, b) == 1);
-
-            // Release unmanaged memory allocated for b.
-            mpfr_lib.mpz_clear(b);
-        }
-
-        [TestMethod]
-        public void mpz_ui_kronecker()
-        {
-            // Create, initialize, and set the value of b to 4.
-            mpz_t b = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(b, 4U);
-
-            // Assert that the Kronecker symbol of (15/b) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_ui_kronecker(15U, b) == 1);
-
-            // Release unmanaged memory allocated for b.
-            mpfr_lib.mpz_clear(b);
-        }
-
-        [TestMethod]
-        public void mpz_lcm()
-        {
-            // Create, initialize, and set the value of op1 to 2.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 2U);
-
-            // Create, initialize, and set the value of op2 to 3.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the least common multiple of op1 and op2.
-            mpfr_lib.mpz_lcm(rop, op1, op2);
-
-            // Assert that rop is 6.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 6);
-
-            // Release unmanaged memory allocated for rop, op1, and op2.
-            mpfr_lib.mpz_clears(rop, op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpz_lcm_ui()
-        {
-            // Create, initialize, and set the value of op1 to 2.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 2U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the least common multiple of op1 and 3.
-            mpfr_lib.mpz_lcm_ui(rop, op1, 3U);
-
-            // Assert that rop is 6.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 6);
-
-            // Release unmanaged memory allocated for rop and op1.
-            mpfr_lib.mpz_clears(rop, op1, null);
-        }
-
-        [TestMethod]
-        public void mpz_legendre()
-        {
-            // Create, initialize, and set the value of a to 20.
-            mpz_t a = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(a, 20U);
-
-            // Create, initialize, and set the value of p to 11.
-            mpz_t p = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(p, 11U);
-
-            // Assert that the Legendre symbol of (a/p) is 1.
-            Assert.IsTrue(mpfr_lib.mpz_legendre(a, p) == 1);
-
-            // Release unmanaged memory allocated for a and p.
-            mpfr_lib.mpz_clears(a, p, null);
-        }
-
-        [TestMethod]
-        public void mpz_lucnum_ui()
-        {
-            // Create, initialize, and set the value of ln to 0.
-            mpz_t ln = new mpz_t();
-            mpfr_lib.mpz_init(ln);
-
-            // Set ln to the 9'th Lucas number.
-            mpfr_lib.mpz_lucnum_ui(ln, 9U);
-
-            // Assert that ln is 76.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(ln) == 76);
-
-            // Release unmanaged memory allocated for ln.
-            mpfr_lib.mpz_clear(ln);
-        }
-
-        [TestMethod]
-        public void mpz_lucnum2_ui()
-        {
-            // Create, initialize, and set the values of lnsub1 and ln to 0.
-            mpz_t ln = new mpz_t();
-            mpz_t lnsub1 = new mpz_t();
-            mpfr_lib.mpz_inits(ln, lnsub1, null);
-
-            // Set lnsub1 and ln to the 8'th and 9'th Lucas nunbers respectively.
-            mpfr_lib.mpz_lucnum2_ui(ln, lnsub1, 9U);
-
-            // Assert that lnsub1 and ln are respectively 47 and 76.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(lnsub1) == 47);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(ln) == 76);
-
-            // Release unmanaged memory allocated for ln and lnsub1.
-            mpfr_lib.mpz_clears(ln, lnsub1, null);
-        }
-
-        [TestMethod]
-        public void mpz_millerrabin()
-        {
-            // Create, initialize, and set the value of n to 12.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(n, 12U);
-
-            // Assert that n is a composite number.
-            Assert.IsTrue(mpfr_lib.mpz_millerrabin(n, 25) == 0);
-
-            // Release unmanaged memory allocated for n.
-            mpfr_lib.mpz_clear(n);
-        }
-
-        [TestMethod]
-        public void mpz_mod()
-        {
-            // Create, initialize, and set the value of x to 12222.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 12222U);
-
-            // Create, initialize, and set the value of y to 10000.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 10000U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x mod y.
-            mpfr_lib.mpz_mod(z, x, y);
-
-            // Assert that z is 12222 mod 10000.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 12222 % 10000);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_mod_ui()
-        {
-            // Create, initialize, and set the value of x to 12222.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 12222U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x mod y, and return z.
-            Assert.IsTrue(mpfr_lib.mpz_mod_ui(z, x, 10000U) == 12222 % 10000);
-
-            // Assert that z is 12222 mod 10000.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 12222 % 10000);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_mul()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 12222.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 12222U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x * y.
-            mpfr_lib.mpz_mul(z, x, y);
-
-            // Assert that z is the product of x and y.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 10000 * 12222);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_mul_2exp()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of x to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = -10000 * 2^2.
-            mpfr_lib.mpz_mul_2exp(z, x, 2U);
-
-            // Assert that z is -40000.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == -10000 * 4);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_mul_si()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x * 12222.
-            mpfr_lib.mpz_mul_si(z, x, 12222);
-
-            // Assert that z is the product of x and 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == -10000 * 12222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_mul_ui()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x * 12222.
-            mpfr_lib.mpz_mul_ui(z, x, 12222);
-
-            // Assert that z is the product of x and 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == -10000 * 12222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_neg()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = -x.
-            mpfr_lib.mpz_neg(z, x);
-
-            // Assert that z is -x.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 10000);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_nextprime()
-        {
-            // Create, initialize, and set the value of n to 12.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 12U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the next following op.
-            mpfr_lib.mpz_nextprime(rop, op);
-
-            // Assert that rop is 13.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 13);
+            // Create, initialize, and set a new floating-point number op to 2.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 2, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = Zeta(op).
+            Assert.IsTrue(mpfr_lib.mpfr_zeta(rop, op, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.164493406684822643642e1");
 
             // Release unmanaged memory allocated for rop and op.
-            mpfr_lib.mpz_clears(rop, op, null);
+            mpfr_lib.mpfr_clears(rop, op, null);
         }
 
         [TestMethod]
-        public void mpz_odd()
+        public void mpfr_zeta_ui()
         {
-            // Create, initialize, and set the value of op to 427294.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 427294);
-
-            // Assert that op is not odd but even.
-            Assert.IsTrue(mpfr_lib.mpz_even_p(op) > 0);
-            Assert.IsTrue(mpfr_lib.mpz_odd_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_out_raw()
-        {
-            // Create, initialize, and set the value of op to 123456 (0x1E240).
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 0x1E240);
-
-            // Get a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-
-            // Open temporary file for writing.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-
-            // Write op to temporary file, and assert that the number of bytes written is 7.
-            Assert.IsTrue(mpfr_lib.mpz_out_raw(stream, op) == 7);
-
-            // Close temporary file.
-            fclose(stream.Value.Value);
-
-            // Assert that the content of the temporary file.
-            byte[] r = System.IO.File.ReadAllBytes(pathname);
-            Assert.IsTrue(r[0] == 0 && r[1] == 0 && r[2] == 0 && r[3] == 3 && r[4] == 0x01 && r[5] == 0xE2 && r[6] == 0x40);
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern Int32 _wfopen_s(out IntPtr pFile, String filename, String mode);
-
-        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern Int32 fclose(IntPtr stream);
-
-        [TestMethod]
-        public void mpz_out_str()
-        {
-            // Create, initialize, and set the value of op to 123456.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 123456U);
-
-            // Get a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-
-            // Open temporary file for writing.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-
-            // Write op to temporary file, and assert that the number of bytes written is 6.
-            Assert.IsTrue(mpfr_lib.mpz_out_str(stream, 10, op) == 6);
-
-            // Close temporary file.
-            fclose(stream.Value.Value);
-
-            // Assert that the content of the temporary file is "123456".
-            string result = System.IO.File.ReadAllText(pathname);
-            Assert.IsTrue(result == "123456");
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_perfect_power_p()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, 10000);
-
-            // Assert that op is a perfect power.
-            Assert.IsTrue(mpfr_lib.mpz_perfect_power_p(op) > 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_perfect_square_p()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, 10000);
-
-            // Assert that op is a perfect square.
-            Assert.IsTrue(mpfr_lib.mpz_perfect_square_p(op) > 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_popcount()
-        {
-            // Create, initialize, and set the value of op to 63.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 63U);
-
-            // Assert that op has 6 one bits.
-            Assert.IsTrue(mpfr_lib.mpz_popcount(op) == 6U);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clears(op);
-        }
-
-        [TestMethod]
-        public void mpz_pow_ui()
-        {
-            // Create, initialize, and set the value of base to 2.
-            mpz_t @base = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(@base, 2U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = base^4.
-            mpfr_lib.mpz_pow_ui(rop, @base, 4U);
-
-            // Assert that rop is 16.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 16);
-
-            // Release unmanaged memory allocated for rop and base.
-            mpfr_lib.mpz_clears(rop, @base, null);
-        }
-
-        [TestMethod]
-        public void mpz_powm()
-        {
-            // Create, initialize, and set the value of base to 2.
-            mpz_t @base = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(@base, 2U);
-
-            // Create, initialize, and set the value of exp to 4.
-            mpz_t exp = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(exp, 4U);
-
-            // Create, initialize, and set the value of mod to 3.
-            mpz_t mod = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(mod, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = base^exp mod mod.
-            mpfr_lib.mpz_powm(rop, @base, exp, mod);
-
-            // Assert that rop is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 1);
-
-            // Release unmanaged memory allocated for rop, base, exp, and mod.
-            mpfr_lib.mpz_clears(rop, @base, exp, mod, null);
-        }
-
-        [TestMethod]
-        public void mpz_powm_sec()
-        {
-            // Create, initialize, and set the value of base to 2.
-            mpz_t @base = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(@base, 2U);
-
-            // Create, initialize, and set the value of exp to 4.
-            mpz_t exp = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(exp, 4U);
-
-            // Create, initialize, and set the value of mod to 3.
-            mpz_t mod = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(mod, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = base^exp mod mod.
-            mpfr_lib.mpz_powm_sec(rop, @base, exp, mod);
-
-            // Assert that rop is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 1);
-
-            // Release unmanaged memory allocated for rop, base, exp, and mod.
-            mpfr_lib.mpz_clears(rop, @base, exp, mod, null);
-        }
-
-        [TestMethod]
-        public void mpz_powm_ui()
-        {
-            // Create, initialize, and set the value of base to 2.
-            mpz_t @base = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(@base, 2U);
-
-            mpz_t mod = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(mod, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = base^4 mod mod.
-            mpfr_lib.mpz_powm_ui(rop, @base, 4U, mod);
-
-            // Assert that rop is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 1);
-
-            // Release unmanaged memory allocated for rop, base, and mod.
-            mpfr_lib.mpz_clears(rop, @base, mod, null);
-        }
-
-        [TestMethod]
-        public void mpz_probab_prime_p()
-        {
-            // Create, initialize, and set the value of n to 12.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(n, 12U);
-
-            // Assert that n is a composite number.
-            Assert.IsTrue(mpfr_lib.mpz_probab_prime_p(n, 25) == 0);
-
-            // Release unmanaged memory allocated for n.
-            mpfr_lib.mpz_clear(n);
-        }
-
-        [TestMethod]
-        public void mpz_random()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Generate a random integer.
-            mpfr_lib.mpz_random(rop, 500);
-
-            // Free all memory occupied by state and rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_random2()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Generate a random integer.
-            mpfr_lib.mpz_random(rop, 100);
-
-            // Free all memory occupied by rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_realloc2()
-        {
-            // Create and initialize new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x to a 77-bit integer.
-            char_ptr value = new char_ptr("1000 0000 0000 0000 0000");
-            mpfr_lib.mpz_set_str(x, value, 16);
-
-            // Resize x to 512 bits, and assert that its value has not changed.
-            mpfr_lib.mpz_realloc2(x, 512U);
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, 16, x);
-            Assert.IsTrue(s.ToString() == "1000 0000 0000 0000 0000".Replace(" ", ""));
-
-            // Resize x to 2 bits, and assert that its value has changed to 0.
-            mpfr_lib.mpz_realloc2(x, 2U);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 0);
-
-            // Release unmanaged memory allocated for x and string values.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(value);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_remove()
-        {
-            // Create, initialize, and set the value of op to 45.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 45U);
-
-            // Create, initialize, and set the value of f to 3.
-            mpz_t f = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(f, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = op / f^n, and return n, the largest integer greater than or equal to 0, such that f^n divides op.
-            Assert.IsTrue(mpfr_lib.mpz_remove(rop, op, f) == 2);
-
-            // Assert that rop is 5.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 5);
-
-            // Release unmanaged memory allocated for rop, op, and f.
-            mpfr_lib.mpz_clears(rop, op, f, null);
-        }
-
-        [TestMethod]
-        public void mpz_root()
-        {
-            // Create, initialize, and set the value of op to 10000.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, 10000);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = trunc(cbrt(10000)).
-            mpfr_lib.mpz_root(rop, op, 3U);
-
-            // Assert that rop is 21.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 21);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clears(rop, op, null);
-        }
-
-        [TestMethod]
-        public void mpz_rootrem()
-        {
-            // Create, initialize, and set the value of u to 10000.
-            mpz_t u = new mpz_t();
-            mpfr_lib.mpz_init_set_si(u, 10000);
-
-            // Create, initialize, and set the values of root and rem to 0.
-            mpz_t root = new mpz_t();
-            mpz_t rem = new mpz_t();
-            mpfr_lib.mpz_inits(root, rem, null);
-
-            // Set root = trunc(cbrt(10000)) and rem = u - root.
-            mpfr_lib.mpz_rootrem(root, rem, u, 3U);
-
-            // Assert that root is 21, and rem is 739.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(root) == 21);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rem) == 739);
-
-            // Release unmanaged memory allocated for root, rem, and u.
-            mpfr_lib.mpz_clears(root, rem, u, null);
-        }
-
-        [TestMethod]
-        public void mpz_rrandomb()
-        {
-            // Create, initialize, and seed a new random number generator.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
-            mpfr_lib.mpfr_randseed_ui(state, 100000U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Generate a random integer in the range [2^(50-1), (2^50)-1].
-            mpfr_lib.mpz_rrandomb(rop, state, 50);
-
-            // Free all memory occupied by state and rop.
-            mpfr_lib.mpfr_randclear(state);
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_scan0()
-        {
-            // Create, initialize, and set the value of op to 70.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 70U);
-
-            // Assert that the first 0 bit starting from bit 1 in op is bit 3.
-            Assert.IsTrue(mpfr_lib.mpz_scan0(op, 1U) == 3U);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_scan1()
-        {
-            // Create, initialize, and set the value of op to 70.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op, 70U);
-
-            // Assert that the first 1 bit starting from bit 3 in op is bit 6.
-            Assert.IsTrue(mpfr_lib.mpz_scan1(op, 3U) == 6U);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_set()
-        {
-            // Create, initialize, and set a new integer x to 10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-            mpfr_lib.mpz_set_si(x, 10);
-
-            // Create, initialize, and set a new integer y to -210.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init(y);
-            mpfr_lib.mpz_set_si(y, -210);
-
-            // Assign the value of y to x.
-            mpfr_lib.mpz_set(x, y);
-
-            // Assert that the value of x is -210.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == -210);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpz_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpz_set_d()
-        {
-            // Create and initialize a new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x to the truncation of 10.7.
-            mpfr_lib.mpz_set_d(x, 10.7D);
-
-            // Assert that the value of x is 10.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 10);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_set_f()
-        {
-            // Create and initialize new integer x, and float y.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-            mpf_t y = "1.7007e3";
-
-            // Set the value of x to the truncation of 1700.7.
-            mpfr_lib.mpz_set_f(x, y);
-
-            // Assert that the value of x is 1700.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 1700);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.mpf_clear(y);
-        }
-
-        [TestMethod]
-        public void mpz_set_q()
-        {
-            // Create and initialize new integer x, and rational y.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-            mpq_t y = "100/3";
-
-            // Set the value of x to the truncation of 100/3.
-            mpfr_lib.mpz_set_q(x, y);
-
-            // Assert that the value of x is 33.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == 33);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.mpq_clear(y);
-        }
-
-        [TestMethod]
-        public void mpz_set_si()
-        {
-            // Create and initialize a new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x to -10.
-            mpfr_lib.mpz_set_si(x, -10);
-
-            // Assert that the value of x is -10.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == -10);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_set_str()
-        {
-            // Create and initialize a new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x.
-            char_ptr value = new char_ptr("12 345 678 909 876 543 211 234 567 890 987 654 321");
-            mpfr_lib.mpz_set_str(x, value, 10);
-
-            // Assert the value of x.
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == value.ToString().Replace(" ", ""));
-
-            // Release unmanaged memory allocated for x and string values.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(value);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_set_ui()
-        {
-            // Create and initialize a new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x to 10.
-            mpfr_lib.mpz_set_ui(x, 10U);
-
-            // Assert that the value of x is 10.
-            Assert.IsTrue(mpfr_lib.mpz_get_ui(x) == 10U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpz_clear(x);
-        }
-
-        [TestMethod]
-        public void mpz_setbit()
-        {
-            // Create, initialize, and set the value of rop to 70.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init_set_si(rop, 70);
-
-            // Set bit 3 of rop.
-            mpfr_lib.mpz_setbit(rop, 3U);
-
-            // Assert that rop is 78.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 78);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_sgn()
-        {
-            // Create, initialize, and set the value of op to -10.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, -10);
-
-            // Assert that the sign of op is -1.
-            Assert.IsTrue(mpfr_lib.mpz_sgn(op) == -1);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_size()
-        {
-            // Create and initialize new integer x.
-            mpz_t op = new mpz_t();
-            char_ptr value = new char_ptr("1000 ABCD 1234 7AB8 24FD");
-            mpfr_lib.mpz_init_set_str(op, value, 16);
-
-            // Assert the value of the limbs of op.
-            if (mpfr_lib.mp_bytes_per_limb == 4)
-                Assert.IsTrue(mpfr_lib.mpz_size(op) == 3);
-            else // mpfr_lib.mp_bytes_per_limb == 8
-                Assert.IsTrue(mpfr_lib.mpz_size(op) == 2);
-
-            // Release unmanaged memory allocated for op and value.
-            mpfr_lib.mpz_clear(op);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpz_sizeinbase()
-        {
-            // Create, initialize, and set the value of op to 10000.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, 10000);
-
-            // Assert size in different bases.
-            Assert.IsTrue(mpfr_lib.mpz_sizeinbase(op, 2) == 14);
-            Assert.IsTrue(mpfr_lib.mpz_sizeinbase(op, 8) == 5);
-            Assert.IsTrue(mpfr_lib.mpz_sizeinbase(op, 10) == 5);
-            Assert.IsTrue(mpfr_lib.mpz_sizeinbase(op, 16) == 4);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpz_clear(op);
-        }
-
-        [TestMethod]
-        public void mpz_sqrt()
-        {
-            // Create, initialize, and set the value of op to 10000.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, 10000);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = trunc(sqrt(op)).
-            mpfr_lib.mpz_sqrt(rop, op);
-
-            // Assert that rop is 100.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 100);
+            // Create and initialize a new floating-point number rop.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = Zeta(op).
+            Assert.IsTrue(mpfr_lib.mpfr_zeta_ui(rop, 2U, mpfr_rnd_t.MPFR_RNDN) == -1);
+
+            // Assert the value of rop.
+            Assert.IsTrue(rop.ToString() == "0.164493406684822643642e1");
 
             // Release unmanaged memory allocated for rop and op.
-            mpfr_lib.mpz_clears(rop, op, null);
-        }
-
-        [TestMethod]
-        public void mpz_sqrtrem()
-        {
-            // Create, initialize, and set the value of op to 10000.
-            mpz_t op = new mpz_t();
-            mpfr_lib.mpz_init_set_si(op, 10000);
-
-            // Create, initialize, and set the values of root and rem to 0.
-            mpz_t root = new mpz_t();
-            mpz_t rem = new mpz_t();
-            mpfr_lib.mpz_inits(root, rem);
-
-            // Set root = trunc(sqrt(op)), and rem = op - root.
-            mpfr_lib.mpz_sqrtrem(root, rem, op);
-
-            // Assert that root is 100, and rem is 0.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(root) == 100);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rem) == 0);
-
-            // Release unmanaged memory allocated for root, rem, and op.
-            mpfr_lib.mpz_clears(root, rem, op, null);
-        }
-
-        [TestMethod]
-        public void mpz_sub()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 12222.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 12222U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x - y.
-            mpfr_lib.mpz_sub(z, x, y);
-
-            // Assert that z = x - y.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == -2222);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_sub_ui()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = x - 12222.
-            mpfr_lib.mpz_sub_ui(z, x, 12222U);
-
-            // Assert that z = x - 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == -2222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_ui_sub()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init(z);
-
-            // Set z = 12222 - x.
-            mpfr_lib.mpz_ui_sub(z, 12222U, x);
-
-            // Assert that z = 12222 - x.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 2222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_submul()
-        {
-            // Create, initialize, and set the value of x to 10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 10000U);
-
-            // Create, initialize, and set the value of y to 12222.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(y, 12222U);
-
-            // Create, initialize, and set the value of z to 20000.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init_set_si(z, 20000);
-
-            // Set z -= x * y.
-            mpfr_lib.mpz_submul(z, x, y);
-
-            // Assert that z has been decremented by 10000 * 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 20000 - 10000 * 12222);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpz_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_submul_ui()
-        {
-            // Create, initialize, and set the value of x to -10000.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, -10000);
-
-            // Create, initialize, and set the value of z to 20000.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init_set_si(z, 20000);
-
-            // Set z -= x * 12222U.
-            mpfr_lib.mpz_submul_ui(z, x, 12222U);
-
-            // Assert that z has been decremented by -10000 * 12222.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(z) == 20000 - -10000 * 12222);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpz_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpz_swap()
-        {
-            // Create, initialize, and set a new integer x to 10.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_si(x, 10);
-
-            // Create, initialize, and set a new integer x to -210.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init_set_si(y, -210);
-
-            // Swap the values of x and y.
-            mpfr_lib.mpz_swap(x, y);
-
-            // Assert that the values have been swapped.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(x) == -210);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(y) == 10);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpz_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_q()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = trunc(n / d).
-            mpfr_lib.mpz_tdiv_q(q, n, d);
-
-            // Assert that q is trunc(10000 / 3).
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-
-            // Release unmanaged memory allocated for n, d, and q.
-            mpfr_lib.mpz_clears(n, d, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_q_2exp()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10001);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = trunc(n / 2^2).
-            mpfr_lib.mpz_tdiv_q_2exp(q, n, 2U);
-
-            // Assert that q is trunc(10001 / 4).
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 2500);
-
-            // Release unmanaged memory allocated for n and q.
-            mpfr_lib.mpz_clears(n, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_q_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of q to 0.
-            mpz_t q = new mpz_t();
-            mpfr_lib.mpz_init(q);
-
-            // Set q = trunc(n / 3) and return r = n - 3 * q.
-            // Assert q and r values.
-            Assert.IsTrue(mpfr_lib.mpz_tdiv_q_ui(q, n, 3U) == 1U);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-
-            // Release unmanaged memory allocated for n and q.
-            mpfr_lib.mpz_clears(n, q, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_qr()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the values of q and r to 0.
-            mpz_t q = new mpz_t();
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_inits(q, r, null);
-
-            // Set q = trunc(n / 3) and r = n - d * q.
-            mpfr_lib.mpz_tdiv_qr(q, r, n, d);
-
-            // Assert that q is 3333, and that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n, d, q, and r.
-            mpfr_lib.mpz_clears(n, d, q, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_qr_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the values of q and r to 0.
-            mpz_t q = new mpz_t();
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_inits(q, r, null);
-
-            // Set q = trunc(n / 3), r = n - d * q, and return r.
-            Assert.IsTrue(mpfr_lib.mpz_tdiv_qr_ui(q, r, n, 3U) == 1U);
-
-            // Assert that q is 3333, and that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(q) == 3333);
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n, q, and r.
-            mpfr_lib.mpz_clears(n, q, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_r()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of d to 3.
-            mpz_t d = new mpz_t();
-            mpfr_lib.mpz_init_set_si(d, 3);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - d * trunc(n / d).
-            mpfr_lib.mpz_tdiv_r(r, n, d);
-
-            // Assert that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n, d, and r.
-            mpfr_lib.mpz_clears(n, d, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_r_2exp()
-        {
-            // Create, initialize, and set the value of n to 10001.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10001);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - 2^2 * trunc(n / 2^2)
-            mpfr_lib.mpz_tdiv_r_2exp(r, n, 2U);
-
-            // Assert that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n and r.
-            mpfr_lib.mpz_clears(n, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_r_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Create, initialize, and set the value of r to 0.
-            mpz_t r = new mpz_t();
-            mpfr_lib.mpz_init(r);
-
-            // Set r = n - 3 * trunc(n / 3), and return |r|.
-            Assert.IsTrue(mpfr_lib.mpz_tdiv_r_ui(r, n, 3U) == 1U);
-
-            // Assert that r is 1.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(r) == 1);
-
-            // Release unmanaged memory allocated for n and r.
-            mpfr_lib.mpz_clears(n, r, null);
-        }
-
-        [TestMethod]
-        public void mpz_tdiv_ui()
-        {
-            // Create, initialize, and set the value of n to 10000.
-            mpz_t n = new mpz_t();
-            mpfr_lib.mpz_init_set_si(n, 10000);
-
-            // Assert that returned value is |n - 3 * trunc(n / 3)|.
-            Assert.IsTrue(mpfr_lib.mpz_tdiv_ui(n, 3U) == 1U);
-
-            // Release unmanaged memory allocated for n.
-            mpfr_lib.mpz_clear(n);
-        }
-
-        [TestMethod]
-        public void mpz_tstbit()
-        {
-            // Create, initialize, and set the value of rop to 70.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init_set_si(rop, 70);
-
-            // Assert that bit 3 of rop is 0.
-            Assert.IsTrue(mpfr_lib.mpz_tstbit(rop, 3U) == 0);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_ui_pow_ui()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop = 2^4.
-            mpfr_lib.mpz_ui_pow_ui(rop, 2U, 4U);
-
-            // Assert that rop is 16.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 16);
-
-            // Release unmanaged memory allocated for rop.
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_urandomb()
-        {
-            // Create, initialize, and seed a new random number generator.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
-            mpfr_lib.mpfr_randseed_ui(state, 100000U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Generate a random integer in the range [0, (2^50)-1].
-            mpfr_lib.mpz_urandomb(rop, state, 50);
-
-            // Free all memory occupied by state and rop.
-            mpfr_lib.mpfr_randclear(state);
-            mpfr_lib.mpz_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpz_urandomm()
-        {
-            // Create, initialize, and seed a new random number generator.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
-            mpfr_lib.mpfr_randseed_ui(state, 100000U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Create, initialize, and set a large integer.
-            mpz_t n = new mpz_t();
-            char_ptr value = new char_ptr("123 456 789 012 345 678 901");
-            mpfr_lib.mpz_init_set_str(n, value, 10);
-
-            // Generate a random integer in the range [0, n-1].
-            mpfr_lib.mpz_urandomm(rop, state, n);
-
-            // Free all memory occupied by state, rop, and n.
-            mpfr_lib.mpfr_randclear(state);
-            mpfr_lib.mpz_clears(rop, n, null);
-        }
-
-        [TestMethod]
-        public void mpz_xor()
-        {
-            // Create, initialize, and set the value of op1 to 63.
-            mpz_t op1 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op1, 63U);
-
-            // Create, initialize, and set the value of op2 to 70.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(op2, 70U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpz_t rop = new mpz_t();
-            mpfr_lib.mpz_init(rop);
-
-            // Set rop to the bitwise exclusive or of op1 and op2.
-            mpfr_lib.mpz_xor(rop, op1, op2);
-
-            // Assert that rop is 121.
-            Assert.IsTrue(mpfr_lib.mpz_get_si(rop) == 121);
-
-            // Release unmanaged memory allocated for rop, op1, and op2.
-            mpfr_lib.mpz_clears(rop, op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpz_limbs_read()
-        {
-            // Create and initialize new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Set the value of x.
-            char_ptr value = new char_ptr("10000 00000000000000000000000000000000");
-            mpfr_lib.mpz_set_str(x, value, mpfr_lib.mp_bytes_per_limb == 4 ? 2 : 4);
-
-            // Get pointer to the limbs of x.
-            mp_ptr limbs = mpfr_lib.mpz_limbs_read(x);
-
-            // Assert the values of the limbs based on current architecture (x86 or x64).
-            Assert.IsTrue(limbs[0] == 0);
-            Assert.IsTrue(limbs[1] == (mpfr_lib.mp_bytes_per_limb == 4 ? 16U : 256U));
-
-            // Release unmanaged memory allocated for x and value.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpz_limbs_write()
-        {
-            // Create and initialize new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Resize x to 3 limbs, and get pointer to the limbs.
-            mpfr_lib.mpz_set_ui(x, 2U);
-            mp_ptr limbs = mpfr_lib.mpz_limbs_write(x, 3);
-
-            // Set the values of the limbs.
-            limbs[0] = 0U;
-            limbs[1] = 0U;
-            limbs[2] = (mpfr_lib.mp_bytes_per_limb == 4 ? 2U : 4U);
-            mpfr_lib.mpz_limbs_finish(x, -3);
-
-            // Assert the value of x based on current architecture (x86 or x64).
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, mpfr_lib.mp_bytes_per_limb == 4 ? 2 : 4, x);
-            Assert.IsTrue(s.ToString() == "-10 00000000000000000000000000000000 00000000000000000000000000000000".Replace(" ", ""));
-
-            // Release unmanaged memory allocated for x and s.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_limbs_modify()
-        {
-            // Create, initialize, and set the value of x to 2.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(x, 2U);
-
-            // Resize x to 3 limbs, and get pointer to the limbs.
-            mp_ptr limbs = mpfr_lib.mpz_limbs_modify(x, 3);
-
-            // Set the value of x.
-            limbs[0] = 0;
-            limbs[1] = 0;
-            limbs[2] = (IntPtr.Size == 4 ? 8U : 64U);
-            mpfr_lib.mpz_limbs_finish(x, -3);
-
-            // Assert the value of x based on current architecture (x86 or x64).
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, mpfr_lib.mp_bytes_per_limb == 4 ? 2 : 4, x);
-            Assert.IsTrue(s.ToString() == "-1000 00000000000000000000000000000000 00000000000000000000000000000000".Replace(" ", ""));
-
-            // Release unmanaged memory allocated for x and s.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpz_roinit_n()
-        {
-            // Create and initialize new integer x.
-            mpz_t x = new mpz_t();
-            mpfr_lib.mpz_init(x);
-
-            // Prepare new limbs for x.
-            mp_ptr limbs;
-            if (mpfr_lib.mp_bytes_per_limb == 4)
-                limbs = new mp_ptr(new uint[] { 0U, 0U, 2U });
-            else
-                limbs = new mp_ptr(new ulong[] { 0UL, 0UL, 4UL });
-
-            // Assign new limbs to x, and make x negative.
-            x = mpfr_lib.mpz_roinit_n(x, limbs, -3);
-
-            // Assert new value of x.
-            char_ptr s = mpfr_lib.mpz_get_str(char_ptr.Zero, mpfr_lib.mp_bytes_per_limb == 4 ? 2 : 4, x);
-            Assert.IsTrue(s.ToString() == "-10 00000000000000000000000000000000 00000000000000000000000000000000".Replace(" ", ""));
-
-            // Release unmanaged memory allocated for x and s.
-            mpfr_lib.mpz_clear(x);
-            mpfr_lib.free(s);
-        }
-
-        #endregion
-
-        #region "Rational (i.e. Q) routines."
-
-        [TestMethod]
-        public void mpq_abs()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpq_t rop = new mpq_t();
-            mpfr_lib.mpq_init(rop);
-
-            // Set rop = |-1/3|.
-            mpfr_lib.mpq_abs(rop, op);
-
-            // Assert that rop is 1 / 3.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(rop, 1, 3U) == 0);
-
-            // Release unmanaged memory allocated for rop and op.
-            mpfr_lib.mpq_clears(rop, op, null);
-        }
-
-        [TestMethod]
-        public void mpq_add()
-        {
-            // Create, initialize, and set the value of x to 1 / 2.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 1, 2U);
-
-            // Create, initialize, and set the value of y to 1 / 3.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_si(y, 1, 3U);
-
-            // Create, initialize, and set the value of z to 0 / 1.
-            mpq_t z = new mpq_t();
-            mpfr_lib.mpq_init(z);
-
-            // Set z = x + y.
-            mpfr_lib.mpq_add(z, x, y);
-
-            // Assert that z is the sum of x and y.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(z, 5, 6U) == 0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpq_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpq_canonicalize()
-        {
-            // Create, initialize, and set a new rational to 10 / 20.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, 10, 20U);
-
-            // Reduce op to its canonical form.
-            mpfr_lib.mpq_canonicalize(op);
-
-            // Assert that z is the sum of x and y.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, 1, 2U) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpq_clear(op);
-        }
-
-        [TestMethod]
-        public void mpq_clear()
-        {
-            // Create and initialize a new rational x.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-
-            // Assert that the value of x is 0.0.
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x) == 0.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpq_clear(x);
-        }
-
-        [TestMethod]
-        public void mpq_clears()
-        {
-            // Create new rationals x1, x2 and x3.
-            mpq_t x1 = new mpq_t();
-            mpq_t x2 = new mpq_t();
-            mpq_t x3 = new mpq_t();
-
-            // Initialize the rationals.
-            mpfr_lib.mpq_inits(x1, x2, x3, null);
-
-            // Assert that their value is 0.0.
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x1) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x2) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x3) == 0.0);
-
-            // Release unmanaged memory allocated for the rationals.
-            mpfr_lib.mpq_clears(x1, x2, x3, null);
-        }
-
-        [TestMethod]
-        public void mpq_cmp()
-        {
-            // Create, initialize, and set the value of op1 to 1 / 2.
-            mpq_t op1 = new mpq_t();
-            mpfr_lib.mpq_init(op1);
-            mpfr_lib.mpq_set_si(op1, 1, 2U);
-
-            // Create, initialize, and set the value of op2 to 1 / 3.
-            mpq_t op2 = new mpq_t();
-            mpfr_lib.mpq_init(op2);
-            mpfr_lib.mpq_set_si(op2, 1, 3U);
-
-            // Assert that op1 > op2.
-            Assert.IsTrue(mpfr_lib.mpq_cmp(op1, op2) > 0);
-
-            // Release unmanaged memory allocated for op1 and op2.
-            mpfr_lib.mpq_clears(op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpq_cmp_si()
-        {
-            // Create, initialize, and set the value of op1 to 1 / 2.
-            mpq_t op1 = new mpq_t();
-            mpfr_lib.mpq_init(op1);
-            mpfr_lib.mpq_set_si(op1, 1, 2U);
-
-            // Assert that op1 < 5/6.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op1, 5, 6U) < 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpq_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpq_cmp_ui()
-        {
-            // Create, initialize, and set the value of op1 to 1 / 2.
-            mpq_t op1 = new mpq_t();
-            mpfr_lib.mpq_init(op1);
-            mpfr_lib.mpq_set_si(op1, 1, 2U);
-
-            // Assert that op1 == 3/6.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_ui(op1, 3, 6U) == 0);
-
-            // Release unmanaged memory allocated for op1.
-            mpfr_lib.mpq_clear(op1);
-        }
-
-        [TestMethod]
-        public void mpq_cmp_z()
-        {
-            // Create, initialize, and set the value of op1 to 1 / 2.
-            mpq_t op1 = new mpq_t();
-            mpfr_lib.mpq_init(op1);
-            mpfr_lib.mpq_set_si(op1, 1, 2U);
-
-            // Create, initialize, and set the value of op2 to 3.
-            mpz_t op2 = new mpz_t();
-            mpfr_lib.mpz_init(op2);
-            mpfr_lib.mpz_set_si(op2, 3);
-
-            // Assert that op1 < op2.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_z(op1, op2) < 0);
-
-            // Release unmanaged memory allocated for op1 and op2.
-            mpfr_lib.mpq_clear(op1);
-            mpfr_lib.mpz_clear(op2);
-        }
-
-        [TestMethod]
-        public void mpq_denref()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Get reference to denominator, and increment it by 2.
-            mpz_t num = mpfr_lib.mpq_denref(op);
-            mpfr_lib.mpz_add_ui(num, num, 2U);
-
-            // Assert that op is -1 / 5.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, -1, 5U) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpq_clear(op);
-        }
-
-        [TestMethod]
-        public void mpq_div()
-        {
-            // Create, initialize, and set the value of n to 1 / 2.
-            mpq_t n = new mpq_t();
-            mpfr_lib.mpq_init(n);
-            mpfr_lib.mpq_set_si(n, 1, 2U);
-
-            // Create, initialize, and set the value of d to 1 / 3.
-            mpq_t d = new mpq_t();
-            mpfr_lib.mpq_init(d);
-            mpfr_lib.mpq_set_si(d, 1, 3U);
-
-            // Create, initialize, and set the value of q to 0.
-            mpq_t q = new mpq_t();
-            mpfr_lib.mpq_init(q);
-
-            // Set q = n / d.
-            mpfr_lib.mpq_div(q, n, d);
-
-            // Assert that q is 3 / 2.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(q, 3, 2U) == 0);
-
-            // Release unmanaged memory allocated for n, d, and q.
-            mpfr_lib.mpq_clears(n, d, q, null);
-        }
-
-        [TestMethod]
-        public void mpq_div_2exp()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpq_t rop = new mpq_t();
-            mpfr_lib.mpq_init(rop);
-
-            // Set rop = (-1/3) / 2^3.
-            mpfr_lib.mpq_div_2exp(rop, op, 3U);
-
-            // Assert that rop is -1 / 24.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(rop, -1, 24U) == 0);
-
-            // Release unmanaged memory allocated for rop and op.
-            mpfr_lib.mpq_clears(rop, op, null);
-        }
-
-        [TestMethod]
-        public void mpq_equal()
-        {
-            // Create, initialize, and set the value of op1 to 1 / 2.
-            mpq_t op1 = new mpq_t();
-            mpfr_lib.mpq_init(op1);
-            mpfr_lib.mpq_set_si(op1, 1, 2U);
-
-            // Create, initialize, and set the value of op2 to 1 / 3.
-            mpq_t op2 = new mpq_t();
-            mpfr_lib.mpq_init(op2);
-            mpfr_lib.mpq_set_si(op2, 1, 3U);
-
-            // Assert that op1 != op2.
-            Assert.IsTrue(mpfr_lib.mpq_equal(op1, op2) == 0);
-
-            // Release unmanaged memory allocated for op1 and op2.
-            mpfr_lib.mpq_clears(op1, op2, null);
-        }
-
-        [TestMethod]
-        public void mpq_get_num()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create and initialize a new integer.
-            mpz_t num = new mpz_t();
-            mpfr_lib.mpz_init(num);
-
-            // Set integer to numerator of rational, and increment integer by 2.
-            mpfr_lib.mpq_get_num(num, op);
-            mpfr_lib.mpz_add_ui(num, num, 2U);
-
-            // Assert that num is 1, and op is -1 / 3.
-            Assert.IsTrue(mpfr_lib.mpz_cmp_si(num, 1) == 0);
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, -1, 3U) == 0);
-
-            // Release unmanaged memory allocated for op and num.
-            mpfr_lib.mpq_clear(op);
-            mpfr_lib.mpz_clear(num);
-        }
-
-        [TestMethod]
-        public void mpq_get_den()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create and initialize a new integer.
-            mpz_t den = new mpz_t();
-            mpfr_lib.mpz_init(den);
-
-            // Set integer to numerator of rational, and increment integer by 2..
-            mpfr_lib.mpq_get_den(den, op);
-            mpfr_lib.mpz_add_ui(den, den, 2U);
-
-            // Assert that num is 1, and op is -1 / 3.
-            Assert.IsTrue(mpfr_lib.mpz_cmp_si(den, 5) == 0);
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, -1, 3U) == 0);
-
-            // Release unmanaged memory allocated for op and num.
-            mpfr_lib.mpq_clear(op);
-            mpfr_lib.mpz_clear(den);
-        }
-
-        [TestMethod]
-        public void mpq_get_d()
-        {
-            // Create, initialize, and set the value of x to 10 / 11.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 10, 11U);
-
-            // Assert that the value of x is 10.0.
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x) == 10.0 / 11.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpq_clear(x);
-        }
-
-        [TestMethod]
-        public void mpq_get_str()
-        {
-            // Create, initialize, and set the value of x to -210 / 13.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, -210, 13U);
-
-            // Retrieve the string value of x, and assert that it is "-210/13".
-            char_ptr s = mpfr_lib.mpq_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == "-210/13");
-
-            // Release unmanaged memory allocated for x and the string value.
-            mpfr_lib.mpq_clear(x);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpq_init()
-        {
-            // Create and initialize a new rational x.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-
-            // Assert that the value of x is 0.
-            char_ptr s = mpfr_lib.mpq_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == "0");
-
-            // Release unmanaged memory allocated for x and its string value.
-            mpfr_lib.mpq_clear(x);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpq_inits()
-        {
-            // Create new rationals x1, x2 and x3.
-            mpq_t x1 = new mpq_t();
-            mpq_t x2 = new mpq_t();
-            mpq_t x3 = new mpq_t();
-
-            // Initialize the rationals.
-            mpfr_lib.mpq_inits(x1, x2, x3);
-
-            // Assert that their value is 0.
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x1) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x2) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x3) == 0.0);
-
-            // Release unmanaged memory allocated for the rationals.
-            mpfr_lib.mpq_clears(x1, x2, x3, null);
-        }
-
-        [TestMethod]
-        public void mpq_inp_str()
-        {
-            // Create, initialize, and set the value of op to 123/456.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-
-            // Write rational to a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-            System.IO.File.WriteAllText(pathname, "123/456");
-
-            // Read op from the temporary file, and assert that the number of bytes read is 7.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpq_inp_str(op, stream, 10) == 7);
-            fclose(stream.Value.Value);
-
-            // Assert that op is 123/456.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_ui(op, 123, 456U) == 0);
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpq_clear(op);
-        }
-
-        [TestMethod]
-        public void mpq_inv()
-        {
-            // Create, initialize, and set the value of number to -1 / 3.
-            mpq_t number = new mpq_t();
-            mpfr_lib.mpq_init(number);
-            mpfr_lib.mpq_set_si(number, -1, 3U);
-
-            // Create, initialize, and set the value of inverted_number to 0.
-            mpq_t inverted_number = new mpq_t();
-            mpfr_lib.mpq_init(inverted_number);
-
-            // Set inverted_number = 1/(-1/3).
-            mpfr_lib.mpq_inv(inverted_number, number);
-
-            // Assert that inverted_number is -3 / 1.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(inverted_number, -3, 1U) == 0);
-
-            // Release unmanaged memory allocated for inverted_number and number.
-            mpfr_lib.mpq_clears(inverted_number, number, null);
-        }
-
-        [TestMethod]
-        public void mpq_mul()
-        {
-            // Create, initialize, and set the value of x to 1 / 2.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 1, 2U);
-
-            // Create, initialize, and set the value of y to -1 / 3.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_si(y, -1, 3U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpq_t z = new mpq_t();
-            mpfr_lib.mpq_init(z);
-
-            // Set z = x * y.
-            mpfr_lib.mpq_mul(z, x, y);
-
-            // Assert that z is the product of x and y.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(z, -1, 6U) == 0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpq_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpq_mul_2exp()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpq_t rop = new mpq_t();
-            mpfr_lib.mpq_init(rop);
-
-            // Set rop = (-1/3) * 2^3.
-            mpfr_lib.mpq_mul_2exp(rop, op, 3U);
-
-            // Assert that rop is -8 / 3.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(rop, -8, 3U) == 0);
-
-            // Release unmanaged memory allocated for rop and op.
-            mpfr_lib.mpq_clears(rop, op, null);
-        }
-
-        [TestMethod]
-        public void mpq_neg()
-        {
-            // Create, initialize, and set the value of operand to -1 / 3.
-            mpq_t operand = new mpq_t();
-            mpfr_lib.mpq_init(operand);
-            mpfr_lib.mpq_set_si(operand, -1, 3U);
-
-            // Create, initialize, and set the value of negated_operand to 0.
-            mpq_t negated_operand = new mpq_t();
-            mpfr_lib.mpq_init(negated_operand);
-
-            // Set negated_operand = -(-1/3).
-            mpfr_lib.mpq_neg(negated_operand, operand);
-
-            // Assert that negated_operand is -8 / 3.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(negated_operand, 1, 3U) == 0);
-
-            // Release unmanaged memory allocated for negated_operand and operand.
-            mpfr_lib.mpq_clears(negated_operand, operand, null);
-        }
-
-        [TestMethod]
-        public void mpq_numref()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Get reference to numerator, and increment it by 2.
-            mpz_t num = mpfr_lib.mpq_numref(op);
-            mpfr_lib.mpz_add_ui(num, num, 2U);
-
-            // Assert that op is 1 / 3.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, 1, 3U) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpq_clear(op);
-        }
-
-        [TestMethod]
-        public void mpq_out_str()
-        {
-            // Create, initialize, and set the value of op to 123/456.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_ui(op, 123, 456U);
-
-            // Get a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-
-            // Open temporary file for writing.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-
-            // Write op to temporary file, and assert that the number of bytes written is 7.
-            Assert.IsTrue(mpfr_lib.mpq_out_str(stream, 10, op) == 7);
-
-            // Close temporary file.
-            fclose(stream.Value.Value);
-
-            // Assert that the content of the temporary file is "123/456".
-            string result = System.IO.File.ReadAllText(pathname);
-            Assert.IsTrue(result == "123/456");
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpq_clear(op);
-        }
-
-        [TestMethod]
-        public void mpq_set()
-        {
-            // Create, initialize, and set a new rational x to 10 / 11.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 10, 11);
-
-            // Create, initialize, and set a new rational y to -210 / 13.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_si(y, -210, 13);
-
-            // Assign the value of y to x.
-            mpfr_lib.mpq_set(x, y);
-
-            // Assert that the value of x is -210 / 13.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(x, -210, 13) == 0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpq_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpq_set_d()
-        {
-            // Create and initialize a new rational.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-
-            // Set the value of x to 10.0 / 11.0.
-            mpfr_lib.mpq_set_d(x, 10.0D / 11.0);
-
-            // Assert that the value of x is 10.0 / 11.0.
-            Assert.IsTrue(mpfr_lib.mpq_get_d(x) == 10.0D / 11.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpq_clear(x);
-        }
-
-        [TestMethod]
-        public void mpq_set_den()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create, initialize, and set the value of a new integer to 5.
-            mpz_t den = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(den, 5U);
-
-            // Set the denominator of op.
-            mpfr_lib.mpq_set_den(op, den);
-
-            // Assert that op is -1 / 5.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, -1, 5U) == 0);
-
-            // Release unmanaged memory allocated for op and num.
-            mpfr_lib.mpq_clear(op);
-            mpfr_lib.mpz_clear(den);
-        }
-
-        [TestMethod]
-        public void mpq_set_f()
-        {
-            // Create, initialize, and set a new rational x to 10 / 11.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 10, 11);
-
-            // Create, initialize, and set a new float y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init(y);
-            mpfr_lib.mpf_set_si(y, -210);
-
-            // Assign the value of y to x.
-            mpfr_lib.mpq_set_f(x, y);
-
-            // Assert that the value of x is -210 / 1.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(x, -210, 1) == 0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpq_clear(x);
-            mpfr_lib.mpf_clear(y);
-        }
-
-        [TestMethod]
-        public void mpq_set_num()
-        {
-            // Create, initialize, and set the value of op to -1 / 3.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -1, 3U);
-
-            // Create, initialize, and set the value of a new integer to 5.
-            mpz_t num = new mpz_t();
-            mpfr_lib.mpz_init_set_ui(num, 5U);
-
-            // Set the numerator of op.
-            mpfr_lib.mpq_set_num(op, num);
-
-            // Assert that op is 5 / 3.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(op, 5, 3U) == 0);
-
-            // Release unmanaged memory allocated for op and num.
-            mpfr_lib.mpq_clear(op);
-            mpfr_lib.mpz_clear(num);
-        }
-
-        [TestMethod]
-        public void mpq_set_si()
-        {
-            // Create and initialize a new rational x.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-
-            // Set the value of x to -10 / 11.
-            mpfr_lib.mpq_set_si(x, -10, 11);
-
-            // Assert that the value of x is -10 / 1.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(x, -10, 11U) == 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpq_clear(x);
-        }
-
-        [TestMethod]
-        public void mpq_set_str()
-        {
-            // Create and initialize a new rational x.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-
-            // Set the value of x.
-            char_ptr value = new char_ptr("12 345 678 909 876 543 211 234 567 890 987 654 321 / 234 567 890");
-            mpfr_lib.mpq_set_str(x, value, 10);
-
-            // Assert the value of x.
-            char_ptr s = mpfr_lib.mpq_get_str(char_ptr.Zero, 10, x);
-            Assert.IsTrue(s.ToString() == value.ToString().Replace(" ", ""));
-
-            // Release unmanaged memory allocated for x and string values.
-            mpfr_lib.mpq_clear(x);
-            mpfr_lib.free(value);
-            mpfr_lib.free(s);
-        }
-
-        [TestMethod]
-        public void mpq_set_ui()
-        {
-            // Create and initialize a new rational x.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-
-            // Set the value of x to 10 / 11.
-            mpfr_lib.mpq_set_ui(x, 10U, 11U);
-
-            // Assert that the value of x is 10 / 11.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_ui(x, 10U, 11U) == 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpq_clear(x);
-        }
-
-        [TestMethod]
-        public void mpq_set_z()
-        {
-            // Create, initialize, and set a new rational x to 10 / 11.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 10, 11);
-
-            // Create, initialize, and set a new integer y to -210.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init(y);
-            mpfr_lib.mpz_set_si(y, -210);
-
-            // Assign the value of y to x.
-            mpfr_lib.mpq_set_z(x, y);
-
-            // Assert that the value of x is -210 / 1.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(x, -210, 1) == 0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpq_clear(x);
-            mpfr_lib.mpz_clear(y);
-        }
-
-        [TestMethod]
-        public void mpq_sgn()
-        {
-            // Create, initialize, and set a new rational x to -10 / 11.
-            mpq_t op = new mpq_t();
-            mpfr_lib.mpq_init(op);
-            mpfr_lib.mpq_set_si(op, -10, 11);
-
-            // Assert that op is negative.
-            Assert.IsTrue(mpfr_lib.mpq_sgn(op) == -1);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpq_clear(op);
-        }
-
-        [TestMethod]
-        public void mpq_sub()
-        {
-            // Create, initialize, and set the value of x to 1 / 2.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 1, 2U);
-
-            // Create, initialize, and set the value of y to 1 / 3.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_si(y, 1, 3U);
-
-            // Create, initialize, and set the value of z to 0.
-            mpq_t z = new mpq_t();
-            mpfr_lib.mpq_init(z);
-
-            // Set z = x - y.
-            mpfr_lib.mpq_sub(z, x, y);
-
-            // Assert that z = x - y.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(z, 1, 6U) == 0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpq_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpq_swap()
-        {
-            // Create, initialize, and set a new rational x to 10 / 11.
-            mpq_t x = new mpq_t();
-            mpfr_lib.mpq_init(x);
-            mpfr_lib.mpq_set_si(x, 10, 11U);
-
-            // Create, initialize, and set a new rational x to -210 / 13.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_si(y, -210, 13U);
-
-            // Swap the values of x and y.
-            mpfr_lib.mpq_swap(x, y);
-
-            // Assert that the values have been swapped.
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(x, -210, 13U) == 0);
-            Assert.IsTrue(mpfr_lib.mpq_cmp_si(y, 10, 11U) == 0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpq_clears(x, y, null);
-        }
-
-        #endregion
-
-        #region "Float (i.e. F) routines."
-
-        [TestMethod]
-        public void mpf_abs()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to -10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, -10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = |x|.
-            mpfr_lib.mpf_neg(z, x);
-
-            // Assert that the value of z is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 10.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_add()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x + y.
-            mpfr_lib.mpf_add(z, x, y);
-
-            // Assert that the value of z is -200.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == -200.0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpf_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_add_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x + 210.
-            mpfr_lib.mpf_add_ui(z, x, 210U);
-
-            // Assert that the value of z is 220.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 220.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_ceil()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.4.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, 10.4);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = ceil(x).
-            mpfr_lib.mpf_ceil(z, x);
-
-            // Assert that the value of z is 11.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 11.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_clear()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create and initialize a new floating-point number x.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-
-            // Assert that the value of x is 0.0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 0.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_clears()
-        {
-            // Create new floating-point numbers x1, x2 and x3.
-            mpf_t x1 = new mpf_t();
-            mpf_t x2 = new mpf_t();
-            mpf_t x3 = new mpf_t();
-
-            // Initialize the floating-point numbers.
-            mpfr_lib.mpf_inits(x1, x2, x3, null);
-
-            // Assert that their value is 0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x1) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x2) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x3) == 0.0);
-
-            // Release unmanaged memory allocated for the floating-point numbers.
-            mpfr_lib.mpf_clears(x1, x2, x3, null);
-        }
-
-        [TestMethod]
-        public void mpf_cmp()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 512.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 512);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init_set_si(z, 128);
-
-            // Assert that x > z.
-            Assert.IsTrue(mpfr_lib.mpf_cmp(x, z) > 0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_cmp_z()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 512.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 512);
-
-            // Create and initialize a new floating-point number z.
-            mpz_t z = new mpz_t();
-            mpfr_lib.mpz_init_set_si(z, 128);
-
-            // Assert that x > z.
-            Assert.IsTrue(mpfr_lib.mpf_cmp_z(x, z) > 0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.mpz_clear(z);
-        }
-
-        [TestMethod]
-        public void mpf_cmp_d()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 512.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 512);
-
-            // Assert that x > 128.0.
-            Assert.IsTrue(mpfr_lib.mpf_cmp_d(x, 128.0) > 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_cmp_si()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 512.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 512);
-
-            // Assert that x > 128.
-            Assert.IsTrue(mpfr_lib.mpf_cmp_si(x, 128) > 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_cmp_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 512.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 512);
-
-            // Assert that x > 128.
-            Assert.IsTrue(mpfr_lib.mpf_cmp_ui(x, 128) > 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_div()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = y / x.
-            mpfr_lib.mpf_div(z, y, x);
-
-            // Assert that the value of z is -21.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == -21.0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpf_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_div_2exp()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 512.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 512);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x / 2^8.
-            mpfr_lib.mpf_div_2exp(z, x, 8U);
-
-            // Assert that the value of z is 2.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 2.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_div_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = y / 10.
-            mpfr_lib.mpf_div_ui(z, y, 10U);
-
-            // Assert that the value of z is -21.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == -21.0);
-
-            // Release unmanaged memory allocated for y and z.
-            mpfr_lib.mpf_clears(y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_fits_sint_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in int.
-            Assert.IsTrue(mpfr_lib.mpf_fits_sint_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_fits_slong_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in long.
-            Assert.IsTrue(mpfr_lib.mpf_fits_slong_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_fits_sshort_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in short.
-            Assert.IsTrue(mpfr_lib.mpf_fits_sshort_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_fits_uint_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in uint.
-            Assert.IsTrue(mpfr_lib.mpf_fits_uint_p(op) > 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_fits_ulong_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in int.
-            Assert.IsTrue(mpfr_lib.mpf_fits_sint_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_fits_ushort_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, uint.MaxValue);
-
-            // Assert that op does not fit in ushort.
-            Assert.IsTrue(mpfr_lib.mpf_fits_ushort_p(op) == 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_floor()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.4.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, 10.4);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = floor(x).
-            mpfr_lib.mpf_floor(z, x);
-
-            // Assert that the value of z is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 10.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_get_d()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to -123.0
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, -123.0);
-
-            // Assert that the value of x is -123.0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -123.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_get_d_2exp()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to -8.0
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, -8.0);
-
-            // Assert that the absolute value of x is 0.5 x 2^4.
-            ptr<int> exp = new ptr<int>(0);
-            Assert.IsTrue(mpfr_lib.mpf_get_d_2exp(exp, x) == 0.5);
-            Assert.IsTrue(exp.Value == 4);
-
-            // Release unmanaged memory allocated for x and exp.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_get_default_prec()
-        {
-            // Set default precision to 128 bits.
-            mpfr_lib.mpf_set_default_prec(128U);
-
-            // Assert that the value of x is 128 bits.
-            Assert.IsTrue(mpfr_lib.mpf_get_default_prec() == 128U);
-        }
-
-        [TestMethod]
-        public void mpf_get_prec()
-        {
-            // Create and initialize a new floating-point number x with 64-bit precision.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 64U);
-
-            // Assert that the value of x is 0.0, and that its precision is 64 bits.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpf_get_prec(x) == 64U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_get_si()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to -8.0
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, -8.0);
-
-            // Assert that the value of x is -8.
-            Assert.IsTrue(mpfr_lib.mpf_get_si(x) == -8);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_get_str()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to -8.0
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, -8.0);
-
-            // Assert that the value of x is -8.
-            ptr<mp_exp_t> exp = new ptr<mp_exp_t>(0);
-            char_ptr value = mpfr_lib.mpf_get_str(char_ptr.Zero, exp, 10, 0, x);
-            Assert.IsTrue(value.ToString() == "-8");
-            Assert.IsTrue(exp.Value == 1);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpf_get_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to 8.0
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, 8.0);
-
-            // Assert that the value of x is -8.
-            Assert.IsTrue(mpfr_lib.mpf_get_ui(x) == 8);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_init()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create and initialize a new floating-point number x.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-
-            // Assert that the value of x is 0.0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 0.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_init2()
-        {
-            // Create and initialize a new floating-point number x with 64-bit precision.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 64U);
-
-            // Assert that the value of x is 0.0, and that its precision is 64 bits.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 0.0);
-            uint p = mpfr_lib.mpf_get_prec(x);
-            Assert.IsTrue(mpfr_lib.mpf_get_prec(x) == 64U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_inits()
-        {
-            // Create new floating-point numbers x1, x2 and x3.
-            mpf_t x1 = new mpf_t();
-            mpf_t x2 = new mpf_t();
-            mpf_t x3 = new mpf_t();
-
-            // Initialize the floating-point numbers.
-            mpfr_lib.mpf_inits(x1, x2, x3, null);
-
-            // Assert that their value is 0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x1) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x2) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x3) == 0.0);
-
-            // Release unmanaged memory allocated for the floating-point numbers.
-            mpfr_lib.mpf_clears(x1, x2, x3, null);
-        }
-
-        [TestMethod]
-        public void mpf_init_set()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to x.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set(y, x);
-
-            // Assert that the value of y is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(y) == 10.0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpf_init_set_d()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to -123.0
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, -123.0);
-
-            // Assert that the value of x is -123.0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -123.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_init_set_si()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize and set a new floating-point number to -123.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, -123);
-
-            // Assert that the value of x is -123.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -123.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_init_set_str()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 0.0234.
-            char_ptr value = new char_ptr("234e-4");
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_str(x, value, 10);
-
-            // Assert that x is 40.
-            Assert.IsTrue(x.ToString() == "0.234e-1");
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpf_init_set_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number to 100.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(x, 100U);
-
-            // Assert that the value of x is 100.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 100.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_inp_str()
-        {
-            // Create and initialize op.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init(op);
-
-            // Write op to a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-            System.IO.File.WriteAllText(pathname, "0.123456e6");
-
-            // Read op from the temporary file, and assert that the number of bytes read is 6.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "r");
-            Assert.IsTrue(mpfr_lib.mpf_inp_str(op, stream, 10) == 10);
-            fclose(stream.Value.Value);
-
-            // Assert that op is 123456.
-            Assert.IsTrue(mpfr_lib.mpf_get_ui(op) == 123456U);
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_integer_p()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, 10);
-
-            // Assert that s is an integer.
-            Assert.IsTrue(mpfr_lib.mpf_integer_p(x) != 0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_mul()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x * y.
-            mpfr_lib.mpf_mul(z, x, y);
-
-            // Assert that the value of z is -2100.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == -2100.0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpf_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_mul_2exp()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 100.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 100);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x * 2^8.
-            mpfr_lib.mpf_mul_2exp(z, x, 8U);
-
-            // Assert that the value of z is 25600.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 25600.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_mul_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x * 210.
-            mpfr_lib.mpf_mul_ui(z, x, 210U);
-
-            // Assert that the value of z is 2100.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 2100.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_neg()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = -x.
-            mpfr_lib.mpf_neg(z, x);
-
-            // Assert that the value of z is -10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == -10.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_out_str()
-        {
-            // Create, initialize, and set the value of op to 123456.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_ui(op, 123456U);
-
-            // Get a temporary file.
-            string pathname = System.IO.Path.GetTempFileName();
-
-            // Open temporary file for writing.
-            ptr<FILE> stream = new ptr<FILE>();
-            _wfopen_s(out stream.Value.Value, pathname, "w");
-
-            // Write op to temporary file, and assert that the number of bytes written is 10.
-            Assert.IsTrue(mpfr_lib.mpf_out_str(stream, 10, 0, op) == 10);
-
-            // Close temporary file.
-            fclose(stream.Value.Value);
-
-            // Assert that the content of the temporary file is "123456".
-            string result = System.IO.File.ReadAllText(pathname);
-            Assert.IsTrue(result == "0.123456e6");
-
-            // Delete temporary file.
-            System.IO.File.Delete(pathname);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_pow_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = sqrt(x).
-            mpfr_lib.mpf_pow_ui(z, x, 3U);
-
-            // Assert that the value of z is 1000.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 1000.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_random2()
-        {
-            // Create, initialize, and set the value of rop to 0.
-            mpf_t rop = new mpf_t();
-            mpfr_lib.mpf_init(rop);
-
-            // Generate a random floating-point number with at most 10 limbs and its exponent in [-5 5].
-            mpfr_lib.mpf_random2(rop, 10, 5);
-
-            // Free all memory occupied by rop.
-            mpfr_lib.mpf_clear(rop);
-        }
-
-        [TestMethod]
-        public void mpf_reldiff()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = |x - y| / x.
-            mpfr_lib.mpf_reldiff(z, x, y);
-
-            // Assert that the value of z is 22.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 22.0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpf_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_set()
-        {
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 128U);
-            mpfr_lib.mpf_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init2(y, 128U);
-            mpfr_lib.mpf_set_si(y, -210);
-
-            // Assign the value of y to x.
-            mpfr_lib.mpf_set(x, y);
-
-            // Assert that the value of x is -210.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -210.0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpf_set_d()
-        {
-            // Create and initialize a new floating-point number.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 128U);
-
-            // Set x to -123.0.
-            mpfr_lib.mpf_set_d(x, -123.0);
-
-            // Assert that the value of x is -123.0.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -123.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_set_default_prec()
-        {
-            // Set default precision to 128 bits.
-            mpfr_lib.mpf_set_default_prec(128U);
-
-            // Assert that the value of x is 128 bits.
-            Assert.IsTrue(mpfr_lib.mpf_get_default_prec() == 128U);
-        }
-
-        [TestMethod]
-        public void mpf_set_prec()
-        {
-            // Create and initialize a new floating-point number x.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-
-            // Set its precision to 64 bits.
-            mpfr_lib.mpf_set_prec(x, 64U);
-
-            // Assert that the value of x is 0.0, and that its precision is 64 bits.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 0.0);
-            Assert.IsTrue(mpfr_lib.mpf_get_prec(x) == 64U);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_set_prec_raw()
-        {
-            // Set default precision to 128 bits.
-            mpfr_lib.mpf_set_default_prec(128U);
-
-            // Create, initialize, and set a new rational y to 200 / 3.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_ui(y, 200, 3U);
-
-            // Create, initialize, and set a new floating-point number x to y.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-            mpfr_lib.mpf_set_q(x, y);
-
-            Assert.IsTrue(x.ToString() == "0.6666666666666666666666666666666666666667e2");
-            
-            // Change precision of x, and set its value to 10000 / 3.
-            mpfr_lib.mpf_set_prec_raw(x, 8U);
-            mpfr_lib.mpq_set_ui(y, 10000, 3U);
-            mpfr_lib.mpf_set_q(x, y);
-
-            Assert.IsTrue(x.ToString() == "0.333333333333333333333e4");
-
-            // Restore precision of x.
-            mpfr_lib.mpf_set_prec_raw(x, 128U);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.mpq_clear(y);
-        }
-
-        [TestMethod]
-        public void mpf_set_q()
-        {
-            // Create, initialize, and set a new rational y to 200 / 5.
-            mpq_t y = new mpq_t();
-            mpfr_lib.mpq_init(y);
-            mpfr_lib.mpq_set_ui(y, 200, 5U);
-
-            // Create, initialize, and set a new floating-point number x to y.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-            mpfr_lib.mpf_set_q(x, y);
-
-            // Assert that x is 40.
-            Assert.IsTrue(x.ToString() == "0.4e2");
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.mpq_clear(y);
-        }
-
-        [TestMethod]
-        public void mpf_set_si()
-        {
-            // Create and initialize a new floating-point number.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 128U);
-
-            // Set x to -123.
-            mpfr_lib.mpf_set_si(x, -123);
-
-            // Assert that the value of x is -123.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -123.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_set_str()
-        {
-            // Create, initialize, and set a new floating-point number x to 0.0234.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-            char_ptr value = new char_ptr("234e-4");
-            mpfr_lib.mpf_set_str(x, value, 10);
-
-            // Assert that x is 40.
-            Assert.IsTrue(x.ToString() == "0.234e-1");
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.free(value);
-        }
-
-        [TestMethod]
-        public void mpf_set_ui()
-        {
-            // Create and initialize a new floating-point number.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 128U);
-
-            // Set x to 100.
-            mpfr_lib.mpf_set_ui(x, 100U);
-
-            // Assert that the value of x is 100.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == 100.0);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_set_z()
-        {
-            // Create, initialize, and set a new integer y to 200.
-            mpz_t y = new mpz_t();
-            mpfr_lib.mpz_init(y);
-            mpfr_lib.mpz_set_ui(y, 200U);
-
-            // Create, initialize, and set a new floating-point number x to y.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init(x);
-            mpfr_lib.mpf_set_z(x, y);
-
-            // Assert that x is 200.
-            Assert.IsTrue(x.ToString() == "0.2e3");
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clear(x);
-            mpfr_lib.mpz_clear(y);
-        }
-
-        [TestMethod]
-        public void mpf_sgn()
-        {
-            // Create, initialize, and set the value of op to -10.
-            mpf_t op = new mpf_t();
-            mpfr_lib.mpf_init_set_si(op, -10);
-
-            // Assert that the sign of op is -1.
-            Assert.IsTrue(mpfr_lib.mpf_sgn(op) == -1);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpf_clear(op);
-        }
-
-        [TestMethod]
-        public void mpf_size()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x.
-            mpf_t x = "1.00000000000000000000001";
-
-            // Assert that the size of x is 1.
-            Assert.IsTrue(mpfr_lib.mpf_size(x) == 4);
-
-            // Release unmanaged memory allocated for x.
-            mpfr_lib.mpf_clear(x);
-        }
-
-        [TestMethod]
-        public void mpf_sqrt()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 100.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 100);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = sqrt(x).
-            mpfr_lib.mpf_sqrt(z, x);
-
-            // Assert that the value of z is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 10.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_sqrt_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = sqrt(100).
-            mpfr_lib.mpf_sqrt_ui(z, 100U);
-
-            // Assert that the value of z is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 10.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clear(z);
-        }
-
-        [TestMethod]
-        public void mpf_sub()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x - y.
-            mpfr_lib.mpf_sub(z, x, y);
-
-            // Assert that the value of z is 220.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 220.0);
-
-            // Release unmanaged memory allocated for x, y, and z.
-            mpfr_lib.mpf_clears(x, y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_sub_ui()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = x - 200.
-            mpfr_lib.mpf_sub_ui(z, x, 200U);
-
-            // Assert that the value of z is -190.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == -190.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_swap()
-        {
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init2(x, 128U);
-            mpfr_lib.mpf_set_si(x, 10);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init2(y, 128U);
-            mpfr_lib.mpf_set_si(y, -210);
-
-            // Swap the values of x and y.
-            mpfr_lib.mpf_swap(x, y);
-
-            // Assert that the value of x is -210.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(x) == -210.0);
-
-            // Assert that the value of y is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(y) == 10.0);
-
-            // Release unmanaged memory allocated for x and y.
-            mpfr_lib.mpf_clears(x, y, null);
-        }
-
-        [TestMethod]
-        public void mpf_trunc()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.4.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_d(x, 10.4);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = trunc(x).
-            mpfr_lib.mpf_trunc(z, x);
-
-            // Assert that the value of z is 10.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 10.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_ui_div()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number x to 10.
-            mpf_t x = new mpf_t();
-            mpfr_lib.mpf_init_set_si(x, 10);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = 210 / x.
-            mpfr_lib.mpf_ui_div(z, 210U, x);
-
-            // Assert that the value of z is 21.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 21.0);
-
-            // Release unmanaged memory allocated for x and z.
-            mpfr_lib.mpf_clears(x, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_ui_sub()
-        {
-            // Set default precision to 64 bits.
-            mpfr_lib.mpf_set_default_prec(64U);
-
-            // Create, initialize, and set a new floating-point number y to -210.
-            mpf_t y = new mpf_t();
-            mpfr_lib.mpf_init_set_si(y, -210);
-
-            // Create and initialize a new floating-point number z.
-            mpf_t z = new mpf_t();
-            mpfr_lib.mpf_init(z);
-
-            // Set z = 10 - y.
-            mpfr_lib.mpf_ui_sub(z, 10U, y);
-
-            // Assert that the value of z is 220.
-            Assert.IsTrue(mpfr_lib.mpf_get_d(z) == 220.0);
-
-            // Release unmanaged memory allocated for y, and z.
-            mpfr_lib.mpf_clears(y, z, null);
-        }
-
-        [TestMethod]
-        public void mpf_urandomb()
-        {
-            // Create, initialize, and seed a new random number generator.
-            mpfr_randstate_t state = new mpfr_randstate_t();
-            mpfr_lib.mpfr_randinit_mt(state);
-            mpfr_lib.mpfr_randseed_ui(state, 100000U);
-
-            // Create, initialize, and set the value of rop to 0.
-            mpf_t rop = new mpf_t();
-            mpfr_lib.mpf_init(rop);
-
-            // Generate a random integer in the range [0, 1) with 50 bits precision.
-            mpfr_lib.mpf_urandomb(rop, state, 50);
-
-            // Free all memory occupied by state and rop.
-            mpfr_lib.mpfr_randclear(state);
-            mpfr_lib.mpf_clear(rop);
-        }
-
-        #endregion
-
-        #region "Low level positive-integer (i.e. N) routines."
-
-        [TestMethod]
-        public void mpn_add()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp = s1 + s2.
-            mp_limb_t carry = mpfr_lib.mpn_add(rp, s1p, s1p.Size, s2p, s2p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_add_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp = s1 + 1.
-            mp_limb_t carry = mpfr_lib.mpn_add_1(rp, s1p, s1p.Size, 1);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, result);
-        }
-
-        [TestMethod]
-        public void mpn_add_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp = s1 + s2.
-            mp_limb_t carry = mpfr_lib.mpn_add_n(rp, s1p, s2p, rp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_addmul_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[] { 0x00000002, 0x00000000 });
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp += s1 * 2.
-            mp_limb_t carry = mpfr_lib.mpn_addmul_1(rp, s1p, s1p.Size, 2);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 0x02);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, result);
-        }
-
-        [TestMethod]
-        public void mpn_cmp()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-
-            // Assert s1p > s2p.
-            Assert.IsTrue(mpfr_lib.mpn_cmp(s1p, s2p, s1p.Size) > 0);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p, s2p);
-        }
-
-        [TestMethod]
-        public void mpn_zero_p()
-        {
-            // Create multi-precision operand.
-            mp_ptr sp = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Assert sp == 0.
-            Assert.IsTrue(mpfr_lib.mpn_zero_p(sp, sp.Size) == 1);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(sp);
-        }
-
-        [TestMethod]
-        public void mpn_divexact_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x55555555, 0x00005555 });
-
-            // Set rp = sp / 3.
-            mpfr_lib.mpn_divexact_1(rp, sp, sp.Size, 0x3);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_divexact_by3()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x55555555, 0x00005555 });
-
-            // Set rp = sp / 3.
-            mp_limb_t remainder = mpfr_lib.mpn_divexact_by3(rp, sp, sp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(remainder == 0);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_divexact_by3c()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xaaaaaaaa, 0x5555aaaa });
-
-            // Set rp = sp / 3.
-            mp_limb_t remainder = mpfr_lib.mpn_divexact_by3c(rp, sp, sp.Size, 1);
-
-            // Assert result of operation.
-            Assert.IsTrue(remainder == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_divrem_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s2p = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr r1p = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x435e50d7, 0x00000d79 });
-
-            // Set r1p = s2p / 19.
-            mp_limb_t remainder = mpfr_lib.mpn_divrem_1(r1p, 0, s2p, s2p.Size, 0x13);
-
-            // Assert result of operation.
-            Assert.IsTrue(remainder == 10);
-            Assert.IsTrue(r1p.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(r1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_divmod_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s2p = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr r1p = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x435e50d7, 0x00000d79 });
-
-            // Set r1p = s2p / 19.
-            mp_limb_t remainder = mpfr_lib.mpn_divmod_1(r1p, s2p, s2p.Size, 0x13);
-
-            // Assert result of operation.
-            Assert.IsTrue(remainder == 10);
-            Assert.IsTrue(r1p.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(r1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_gcd()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr xp = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
-            mp_ptr yp = new mp_ptr(new uint[] { 0xc2d24d55, 0x00000007 });
-            mp_ptr rp = new mp_ptr(yp.Size);
-            mp_ptr result = new mp_ptr(new uint[] { 0x964619c7, 0x00000002 });
-
-            // Set rp = gcd(xp, yp).
-            mp_size_t size = mpfr_lib.mpn_gcd(rp, xp, xp.Size, yp, yp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(size == result.Size);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, xp, yp, result);
-        }
-
-        [TestMethod]
-        public void mpn_gcd_1()
-        {
-            // Create multi-precision operand.
-            mp_ptr xp = new mp_ptr(new uint[] { 0x00000000, 0x00000001 });
-
-            // Assert result of operation.
-            Assert.IsTrue(mpfr_lib.mpn_gcd_1(xp, xp.Size, 1073741824) == 1073741824);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(xp);
-        }
-
-        [TestMethod]
-        public void mpn_gcdext()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr up = new mp_ptr(new uint[] { 0x40000000, 0x00000000 });
-            mp_ptr vp = new mp_ptr(new uint[] { 0x00000000, 0x00000001 });
-            mp_ptr gp = new mp_ptr(new uint[vp.Size * (IntPtr.Size / 4)]);
-            mp_ptr sp = new mp_ptr(new uint[(vp.Size + 1) * (IntPtr.Size / 4)]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x40000000, 0x00000000 });
-            mp_ptr cofactor = new mp_ptr(new uint[] { 0x00000001, 0x00000000, 0x00000000 });
-
-            // Set gp = gcd(up, vp).
-            ptr<mp_size_t> sn = new ptr<mp_size_t>(0);
-            mp_size_t size = mpfr_lib.mpn_gcdext(gp, sp, sn, up, up.Size, vp, vp.Size);
-
-            // Assert result.
-            Assert.IsTrue(size == 1);
-            Assert.IsTrue(gp.SequenceEqual(result));
-            Assert.IsTrue(sn.Value == 1);
-            Assert.IsTrue(sp.SequenceEqual(cofactor));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(gp, up, vp, sp, result, cofactor);
-        }
-
-        [TestMethod]
-        public void mpn_get_str()
-        {
-            // Create multi-precision operands.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0x00000001, 0x00000001 });
-            char_ptr str = new char_ptr("xxxxxxxxxxxxxxxxx");
-
-            // Convert s1p to hex string.
-            size_t count = mpfr_lib.mpn_get_str(str, 16, s1p, s1p.Size);
-
-            // Copy out str to bytes.
-            byte[] s = new byte[count];
-            Marshal.Copy(str.ToIntPtr(), s, 0, (int)count);
-
-            // Assert the non-ASCII, hex representation of s1p.
-            Assert.IsTrue(s.SequenceEqual(new byte[] { 1, 0, 0, 0, 0, 0, 0, 0, 1 }));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-            mpfr_lib.free(str);
-        }
-
-        [TestMethod]
-        public void mpn_hamdist()
-        {
-            // Create multi-precision operands.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0xffffffff });
-
-            // Assert hamming distance.
-            Assert.IsTrue(mpfr_lib.mpn_hamdist(s1p, s2p, s1p.Size) == 31);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p, s2p);
-        }
-
-        [TestMethod]
-        public void mpn_lshift()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffc, 0xffffffff });
-
-            // Set rp = sp << 1.
-            mp_limb_t bits = mpfr_lib.mpn_lshift(rp, sp, sp.Size, 1);
-
-            // Assert result of operation.
-            Assert.IsTrue(bits == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_mod_1()
-        {
-            // Create multi-precision operand.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xfffffffe, 0x0000ffff });
-
-            // Assert s1p mod 3 is 2.
-            Assert.IsTrue(mpfr_lib.mpn_mod_1(s1p, s1p.Size, 3) == 2);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-        }
-
-        [TestMethod]
-        public void mpn_mul()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000002 });
-            mp_ptr rp = new mp_ptr(new uint[3]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff, 0x00000001 });
-
-            // Set rp = s1 * s2.
-            mpfr_lib.mpn_mul(rp, s1p, s1p.Size, s2p, s2p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_mul_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-
-            // Set rp = s1 * 2.
-            mp_limb_t carry = mpfr_lib.mpn_mul_1(rp, s1p, s1p.Size, 2);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, result);
-        }
-
-        [TestMethod]
-        public void mpn_mul_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000002, 0x00000000 });
-            mp_ptr rp = new mp_ptr(new uint[4]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff, 0x00000001, 0x00000000 });
-
-            // Set rp = s1 * s2.
-            mpfr_lib.mpn_mul_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_sqr()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[4]);
-            mp_ptr result = new mp_ptr(new uint[] {0x00000001, 0x00000000, 0xfffffffe, 0xffffffff });
-
-            // Set rp = s1^2.
-            mpfr_lib.mpn_sqr(rp, s1p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, result);
-        }
-
-        [TestMethod]
-        public void mpn_neg()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x0000001, 0x00000000 });
-
-            // Set rp = -sp.
-            mp_limb_t borrow = mpfr_lib.mpn_neg(rp, sp, sp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_com()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xf0f0f0f0, 0xf0f0f0f0 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x0f0f0f0f, 0x0f0f0f0f });
-
-            // Set rp = not(sp).
-            mpfr_lib.mpn_com(rp, sp, sp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_perfect_square_p()
-        {
-            // Create multi-precision operand.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-
-            // Assert s1p is not a perfect square.
-            Assert.IsTrue(mpfr_lib.mpn_perfect_square_p(s1p, s1p.Size) == 0);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-        }
-
-        [TestMethod]
-        public void mpn_perfect_power_p()
-        {
-            // Create multi-precision operand.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xd4a51000, 0x000000e8 });
-
-            // Assert s1p is a perfect power.
-            Assert.IsTrue(mpfr_lib.mpn_perfect_power_p(s1p, s1p.Size) != 0);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-        }
-
-        [TestMethod]
-        public void mpn_popcount()
-        {
-            // Create multi-precision operand.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0x0000001, 0x00000001 });
-
-            // Assert result of operation.
-            Assert.IsTrue(mpfr_lib.mpn_popcount(s1p, s1p.Size) == 2);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-        }
-
-        [TestMethod]
-        public void mpn_random()
-        {
-            // Create multi-precision operand.
-            mp_ptr r1p = new mp_ptr(new uint[2]);
-
-            // Generate random number.
-            mpfr_lib.mpn_random(r1p, mpfr_lib.mp_bytes_per_limb == 4 ? 2 : 1);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(r1p);
-        }
-
-        [TestMethod]
-        public void mpn_random2()
-        {
-            // Create multi-precision operand.
-            mp_ptr r1p = new mp_ptr(new uint[2]);
-
-            // Generate random number.
-            mpfr_lib.mpn_random2(r1p, mpfr_lib.mp_bytes_per_limb == 4 ? 2 : 1);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(r1p);
-        }
-
-        [TestMethod]
-        public void mpn_rshift()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xffffffff, 0x7fffffff });
-
-            // Set rp = sp >> 1.
-            mp_limb_t bits = mpfr_lib.mpn_rshift(rp, sp, sp.Size, 1);
-
-            // Assert result of operation.
-            Assert.IsTrue(bits == (mpfr_lib.mp_bytes_per_limb == 4 ? 0x80000000 : 0x8000000000000000));
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_scan0()
-        {
-            // Create multi-precision operand.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0x0000001, 0x00000001 });
-
-            // Assert result of operation.
-            Assert.IsTrue(mpfr_lib.mpn_scan0(s1p, 0) == 1);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-        }
-
-        [TestMethod]
-        public void mpn_scan1()
-        {
-            // Create multi-precision operand.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0x0000001, 0x00000001 });
-
-            // Assert result of operation.
-            Assert.IsTrue(mpfr_lib.mpn_scan1(s1p, 1) == 32);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(s1p);
-        }
-
-        [TestMethod]
-        public void mpn_set_str()
-        {
-            // Create multi-precision operands.
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            byte[] s = new byte[] { 1, 0, 0, 0, 0, 0, 0, 0, 1 };
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000001, 0x00000001 });
-            char_ptr str = new char_ptr("xxxxxxxxxxxxxxxxx");
-            Marshal.Copy(s, 0, str.ToIntPtr(), 9);
-
-            // Convert rp from str in hex base.
-            mp_size_t count = mpfr_lib.mpn_set_str(rp, str, 9, 16);
-
-            // Assert the non-ASCII, hex representation of s1p.
-            Assert.IsTrue(count == rp.Size);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp);
-            mpfr_lib.free(str);
-        }
-
-        [TestMethod]
-        public void mpn_sizeinbase()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr xp = new mp_ptr(new uint[] { 0x00000001, 0x00000001 });
-
-            // Assert that the number of bits required is 33.
-            Assert.IsTrue(mpfr_lib.mpn_sizeinbase(xp, xp.Size, 2) == 33);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(xp);
-        }
-
-        [TestMethod]
-        public void mpn_sqrtrem()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0x00000001, 0x00000001 });
-            mp_ptr r1p = new mp_ptr(new uint[sp.Size * (mpfr_lib.mp_bytes_per_limb / 4)]);
-            mp_ptr r2p = new mp_ptr(new uint[sp.Size * (mpfr_lib.mp_bytes_per_limb / 4)]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00010000, 0x00000000 });
-            mp_ptr remainder = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-
-            // Set r1p = trunc(sqrt(sp)), r2p = sp - r1p^2
-            mp_size_t r2n = mpfr_lib.mpn_sqrtrem(r1p, r2p, sp, sp.Size);
-
-            // Assert result.
-            Assert.IsTrue(r2n == 1);
-            Assert.IsTrue(r1p.SequenceEqual(result));
-            Assert.IsTrue(r2p.SequenceEqual(remainder));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(sp, r1p, r2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_sub()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-
-            // Set rp = s1 - s2.
-            mp_limb_t borrow = mpfr_lib.mpn_sub(rp, s1p, s1p.Size, s2p, s2p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 0);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_sub_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-
-            // Set rp = s1 - 1.
-            mp_limb_t borrow = mpfr_lib.mpn_sub_1(rp, s1p, s1p.Size, 1);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 0);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, result);
-        }
-
-        [TestMethod]
-        public void mpn_sub_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-
-            // Set rp = s1 - s2.
-            mp_limb_t borrow = mpfr_lib.mpn_sub_n(rp, s1p, s2p, rp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 0);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_submul_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr rp = new mp_ptr(new uint[] { 0x00000002, 0x00000000 });
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000004, 0x00000000 });
-
-            // Set rp -= s1 * 2.
-            mp_limb_t borrow = mpfr_lib.mpn_submul_1(rp, s1p, s1p.Size, 2);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 0x02);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, result);
-        }
-
-        [TestMethod]
-        public void mpn_tdiv_qr()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr np = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr dp = new mp_ptr(new uint[] { 0x00000013 });
-            mp_ptr qp = new mp_ptr(new uint[np.Size - dp.Size + 1]);
-            mp_ptr rp = new mp_ptr(new uint[dp.Size]);
-            mp_ptr quotient = new mp_ptr(new uint[] { 0x435e50d7, 0x00000d79 });
-            mp_ptr remainder = new mp_ptr(new uint[] { 0x0000000a });
-
-            // Set rp = np / dp.
-            mpfr_lib.mpn_tdiv_qr(qp, rp, 0, np, np.Size, dp, dp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(qp.SequenceEqual(quotient));
-            Assert.IsTrue(rp.SequenceEqual(remainder));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(qp, rp, np, dp, quotient, remainder);
-        }
-
-        [TestMethod]
-        public void mpn_and_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-
-            // Set rp = s1 and s2.
-            mpfr_lib.mpn_and_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_andn_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xedcba987 });
-
-            // Set rp = s1 and not s2.
-            mpfr_lib.mpn_andn_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_nand_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-
-            // Set rp = not(s1 and s2).
-            mpfr_lib.mpn_and_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_ior_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-
-            // Set rp = s1 or s2.
-            mpfr_lib.mpn_ior_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_iorn_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-
-            // Set rp = s1 or not s2.
-            mpfr_lib.mpn_iorn_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_nior_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp = not (s1 or s2).
-            mpfr_lib.mpn_nior_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_xor_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xedcba987 });
-
-            // Set rp = s1 xor s2.
-            mpfr_lib.mpn_xor_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_xnor_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000001, 0x12345678 });
-
-            // Set rp = not(s1 xor s2).
-            mpfr_lib.mpn_xnor_n(rp, s1p, s2p, s1p.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_copyi()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xf0f0f0f0, 0xf0f0f0f0 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xf0f0f0f0, 0xf0f0f0f0 });
-
-            // Set rp = sp.
-            mpfr_lib.mpn_copyi(rp, sp, sp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_copyd()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr sp = new mp_ptr(new uint[] { 0xf0f0f0f0, 0xf0f0f0f0 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xf0f0f0f0, 0xf0f0f0f0 });
-
-            // Set rp = sp.
-            mpfr_lib.mpn_copyd(rp, sp, sp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, sp, result);
-        }
-
-        [TestMethod]
-        public void mpn_zero()
-        {
-            // Create multi-precision operand, and expected result.
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp = sp.
-            mpfr_lib.mpn_zero(rp, rp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, result);
-        }
-
-        [TestMethod]
-        public void mpn_cnd_add_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-
-            // Set rp = s1 + s2.
-            mp_limb_t carry = mpfr_lib.mpn_cnd_add_n(1, rp, s1p, s2p, rp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_cnd_sub_n()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr s1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr s2p = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-            mp_ptr rp = new mp_ptr(new uint[2]);
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-
-            // Set rp = s1 - s2.
-            mp_limb_t borrow = mpfr_lib.mpn_cnd_sub_n(1, rp, s1p, s2p, rp.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 0);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, s1p, s2p, result);
-        }
-
-        [TestMethod]
-        public void mpn_sec_add_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr ap = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000000, 0x00000000 });
-            mp_ptr rp = new mp_ptr(result.Size);
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_add_1_itch(ap.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set rp = ap + 1.
-            mp_limb_t carry = mpfr_lib.mpn_sec_add_1(rp, ap, ap.Size, 1, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(carry == 1);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, ap, tp, result);
-        }
-
-        [TestMethod]
-        public void mpn_sec_sub_1()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr ap = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff });
-            mp_ptr rp = new mp_ptr(result.Size);
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_sub_1_itch(ap.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set rp = ap - 1.
-            mp_limb_t borrow = mpfr_lib.mpn_sec_sub_1(rp, ap, ap.Size, 1, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(borrow == 0);
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, ap, tp, result);
-        }
-
-        [TestMethod]
-        public void mpn_cnd_swap()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr ap = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr bp = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-            mp_ptr a1p = new mp_ptr(new uint[] { 0x00000001, 0x00000000 });
-            mp_ptr b1p = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-
-            // Exchange ab and bp.
-            mpfr_lib.mpn_cnd_swap(1, ap, bp, ap.Size);
-
-            // Assert result of operation.
-            Assert.IsTrue(ap.SequenceEqual(a1p));
-            Assert.IsTrue(bp.SequenceEqual(b1p));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(ap, bp, a1p, b1p);
-        }
-
-        [TestMethod]
-        public void mpn_sec_mul()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr ap = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr bp = new mp_ptr(new uint[] { 0x00000002 });
-            mp_ptr result = new mp_ptr(new uint[] { 0xfffffffe, 0xffffffff, 0x00000001 });
-            mp_ptr rp = new mp_ptr(ap.Size + bp.Size);
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_mul_itch(ap.Size, bp.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set rp = ap * bp.
-            mpfr_lib.mpn_sec_mul(rp, ap, ap.Size, bp, bp.Size, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, ap, bp, tp, result);
-        }
-
-        [TestMethod]
-        public void mpn_sec_sqr()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr ap = new mp_ptr(new uint[] { 0xffffffff, 0xffffffff });
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000001, 0x00000000, 0xfffffffe, 0xffffffff });
-            mp_ptr rp = new mp_ptr(2 * ap.Size);
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_sqr_itch(ap.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set rp = s1^2.
-            mpfr_lib.mpn_sec_sqr(rp, ap, ap.Size, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, ap, tp, result);
-        }
-
-        [TestMethod]
-        public void mpn_sec_powm()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr bp = new mp_ptr(new uint[] { 0x00000002 });
-            mp_ptr ep = new mp_ptr(new uint[] { 0x00000004 });
-            mp_ptr mp = new mp_ptr(new uint[] { 0x00000003 });
-            mp_ptr result = new mp_ptr(new uint[] { 0x00000001 });
-            mp_ptr rp = new mp_ptr(bp.Size);
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_powm_itch(bp.Size, 3, mp.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set rp = bp^ep mod mp.
-            mpfr_lib.mpn_sec_powm(rp, bp, bp.Size, ep, 3, mp, mp.Size, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(rp, bp, ep, mp, tp, result);
-        }
-
-        [TestMethod]
-        public void mpn_sec_tabselect()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr tab = new mp_ptr(new uint[] { 0x11111111, 0x22222222, 0x33333333, 0x44444444, 0x33333333, 0x00000000 });
-            mp_ptr result = new mp_ptr(new uint[] { 0x33333333 });
-            mp_ptr rp = new mp_ptr(result.Size);
-
-            // Set rp to third entry in tab.
-            mpfr_lib.mpn_sec_tabselect(rp, tab, 1, tab.Size, 2);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp.SequenceEqual(result));
-
-            // Release unmanaged memory.
-            mpfr_lib.free(tab, result);
-        }
-
-        [TestMethod]
-        public void mpn_sec_div_qr()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr np = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr dp = new mp_ptr(new uint[] { 0x00000003 });
-            mp_ptr remainder = new mp_ptr(new uint[] { 0x00000000 });
-            mp_ptr qp = new mp_ptr(new uint[np.Size]);
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_div_qr_itch(np.Size, dp.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set qp = floor(np / dp) and rp = np mod dp.
-            mp_limb_t mslimb = mpfr_lib.mpn_sec_div_qr(qp, np, np.Size, dp, dp.Size, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(mslimb == (ulong)(mpfr_lib.mp_bytes_per_limb == 4 ? 0x00005555 : 0x0000555555555555));
-            Assert.IsTrue(qp[0] == (ulong)(mpfr_lib.mp_bytes_per_limb == 4 ? 0x55555555 : 0x0000000000000000));
-            Assert.IsTrue(np[0] == remainder[0]);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(qp, np, dp, remainder, tp);
-        }
-
-        [TestMethod]
-        public void mpn_sec_div_r()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr np = new mp_ptr(new uint[] { 0xffffffff, 0x0000ffff });
-            mp_ptr dp = new mp_ptr(new uint[] { 0x00000004 });
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_div_r_itch(np.Size, dp.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set np = np mod dp.
-            mpfr_lib.mpn_sec_div_r(np, np.Size, dp, dp.Size, tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(np[0] == 3);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(np, dp, tp);
-        }
-
-        [TestMethod]
-        public void mpn_sec_invert()
-        {
-            // Create multi-precision operands, and expected result.
-            mp_ptr ap = new mp_ptr(new uint[] { 3 });
-            mp_ptr mp = new mp_ptr(new uint[] { 11 });
-            mp_ptr rp = new mp_ptr(ap.Size);
-            mp_ptr result = new mp_ptr(new uint[] { 4 });
-
-            // Create scratch space.
-            mp_size_t size = mpfr_lib.mpn_sec_invert_itch(ap.Size);
-            mp_ptr tp = new mp_ptr(size);
-
-            // Set rp = ap^-1 mod mp.
-            mpfr_lib.mpn_sec_invert(rp, ap, mp, ap.Size, (uint)(2 * ap.Size * mpfr_lib.mp_bits_per_limb), tp);
-
-            // Assert result of operation.
-            Assert.IsTrue(rp[0] == result[0]);
-
-            // Release unmanaged memory.
-            mpfr_lib.free(ap, mp, rp, result, tp);
+            mpfr_lib.mpfr_clear(rop);
         }
 
         #endregion

@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using Math.Gmp.Native;
 
 namespace Math.Mpfr.Native
 {
 
-    internal class va_list
+    public class va_list
     {
 
         private IntPtr arguments;
@@ -34,9 +35,9 @@ namespace Math.Mpfr.Native
         /// <param name="args"></param>
         public va_list(params object[] args)
         {
-            va_args = new va_arg[args.Length];
+            va_args = new va_arg[args[args.Length - 1] == null ? args.Length - 1 : args.Length];
             
-            for (int j = 0; j < args.Length; j++)
+            for (int j = 0; j < va_args.Length; j++)
             {
                 string name = args[j].GetType().Name;
                 if (name == "ptr`1")
@@ -80,6 +81,11 @@ namespace Math.Mpfr.Native
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_bitcnt_t)args[i]);
                         break;
 
+                    case "mpfr_prec_t":
+                        args_size += 4;
+                        va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_prec_t)args[i]);
+                        break;
+
                     case "mp_size_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_size_t)args[i]);
@@ -88,6 +94,26 @@ namespace Math.Mpfr.Native
                     case "mp_exp_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_exp_t)args[i]);
+                        break;
+
+                    case "mpfr_exp_t":
+                        args_size += 4;
+                        va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_exp_t)args[i]);
+                        break;
+
+                    case "mpfr_sign_t":
+                        args_size += 4;
+                        va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_sign_t)args[i]);
+                        break;
+
+                    case "mpfr_rnd_t":
+                        args_size += 4;
+                        va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_rnd_t)args[i]);
+                        break;
+
+                    case "mpfr_kind_t":
+                        args_size += 4;
+                        va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_kind_t)args[i]);
                         break;
 
                     case "Int64":
@@ -120,6 +146,11 @@ namespace Math.Mpfr.Native
                     case "mpf_t":
                         args_size += IntPtr.Size;
                         va_args[j].write = (i) => Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, ((mpf_t)args[i]).ToIntPtr());
+                        break;
+
+                    case "mpfr_t":
+                        args_size += IntPtr.Size;
+                        va_args[j].write = (i) => Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, ((mpfr_t)args[i]).ToIntPtr());
                         break;
 
                     case "mp_ptr":
@@ -352,13 +383,32 @@ namespace Math.Mpfr.Native
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
                             Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
                             mp_bitcnt_t data = ((ptr<mp_bitcnt_t>)args[i]).Value;
-                            Marshal.WriteInt32(data_ptr, 0, (Int32)data._value);
+                            Marshal.WriteInt32(data_ptr, 0, (Int32)data.Value);
                         };
                         va_args[j].read = (i) =>
                         {
                             ptr<mp_bitcnt_t> data = (ptr<mp_bitcnt_t>)args[i];
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
-                            data.Value._value = (uint)Marshal.ReadInt32(data_ptr);
+                            data.Value.Value = (uint)Marshal.ReadInt32(data_ptr);
+                        };
+                        readables.Push(j);
+                        break;
+
+                    case "ptr<mpfr_prec_t>":
+                        args_size += IntPtr.Size;
+                        data_size += 4;
+                        va_args[j].write = (i) =>
+                        {
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
+                            mpfr_prec_t data = ((ptr<mpfr_prec_t>)args[i]).Value;
+                            Marshal.WriteInt32(data_ptr, 0, (Int32)data.Value);
+                        };
+                        va_args[j].read = (i) =>
+                        {
+                            ptr<mpfr_prec_t> data = (ptr<mpfr_prec_t>)args[i];
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            data.Value.Value = (uint)Marshal.ReadInt32(data_ptr);
                         };
                         readables.Push(j);
                         break;
@@ -371,13 +421,13 @@ namespace Math.Mpfr.Native
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
                             Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
                             mp_size_t data = ((ptr<mp_size_t>)args[i]).Value;
-                            Marshal.WriteInt32(data_ptr, 0, data._value);
+                            Marshal.WriteInt32(data_ptr, 0, data.Value);
                         };
                         va_args[j].read = (i) =>
                         {
                             ptr<mp_size_t> data = (ptr<mp_size_t>)args[i];
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
-                            data.Value._value = Marshal.ReadInt32(data_ptr);
+                            data.Value.Value = Marshal.ReadInt32(data_ptr);
                         };
                         readables.Push(j);
                         break;
@@ -390,13 +440,51 @@ namespace Math.Mpfr.Native
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
                             Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
                             mp_exp_t data = ((ptr<mp_exp_t>)args[i]).Value;
-                            Marshal.WriteInt32(data_ptr, 0, data._value);
+                            Marshal.WriteInt32(data_ptr, 0, data.Value);
                         };
                         va_args[j].read = (i) =>
                         {
                             ptr<mp_exp_t> data = (ptr<mp_exp_t>)args[i];
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
-                            data.Value._value = Marshal.ReadInt32(data_ptr);
+                            data.Value.Value = Marshal.ReadInt32(data_ptr);
+                        };
+                        readables.Push(j);
+                        break;
+
+                    case "ptr<mpfr_exp_t>":
+                        args_size += IntPtr.Size;
+                        data_size += 4;
+                        va_args[j].write = (i) =>
+                        {
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
+                            mpfr_exp_t data = ((ptr<mpfr_exp_t>)args[i]).Value;
+                            Marshal.WriteInt32(data_ptr, 0, data.Value);
+                        };
+                        va_args[j].read = (i) =>
+                        {
+                            ptr<mpfr_exp_t> data = (ptr<mpfr_exp_t>)args[i];
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            data.Value.Value = Marshal.ReadInt32(data_ptr);
+                        };
+                        readables.Push(j);
+                        break;
+
+                    case "ptr<mpfr_sign_t>":
+                        args_size += IntPtr.Size;
+                        data_size += 4;
+                        va_args[j].write = (i) =>
+                        {
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
+                            mpfr_sign_t data = ((ptr<mpfr_sign_t>)args[i]).Value;
+                            Marshal.WriteInt32(data_ptr, 0, data.Value);
+                        };
+                        va_args[j].read = (i) =>
+                        {
+                            ptr<mpfr_sign_t> data = (ptr<mpfr_sign_t>)args[i];
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            data.Value.Value = Marshal.ReadInt32(data_ptr);
                         };
                         readables.Push(j);
                         break;
@@ -469,18 +557,18 @@ namespace Math.Mpfr.Native
                             Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
                             mp_limb_t data = ((ptr<mp_limb_t>)args[i]).Value;
                             if (IntPtr.Size == 4)
-                                Marshal.WriteInt32(data_ptr, 0, (Int32)data._value);
+                                Marshal.WriteInt32(data_ptr, 0, (Int32)data.Value);
                             else
-                                Marshal.WriteInt64(data_ptr, 0, (Int64)data._value);
+                                Marshal.WriteInt64(data_ptr, 0, (Int64)data.Value);
                         };
                         va_args[j].read = (i) =>
                         {
                             ptr<mp_limb_t> data = (ptr<mp_limb_t>)args[i];
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
                             if (IntPtr.Size == 4)
-                                data.Value._value = (UInt32)Marshal.ReadInt32(data_ptr);
+                                data.Value.Value = (UInt32)Marshal.ReadInt32(data_ptr);
                             else
-                                data.Value._value = (UInt64)Marshal.ReadInt64(data_ptr);
+                                data.Value.Value = (UInt64)Marshal.ReadInt64(data_ptr);
                         };
                         readables.Push(j);
                         break;
@@ -494,18 +582,18 @@ namespace Math.Mpfr.Native
                             Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
                             size_t data = ((ptr<size_t>)args[i]).Value;
                             if (IntPtr.Size == 4)
-                                Marshal.WriteInt32(data_ptr, 0, (Int32)data._value);
+                                Marshal.WriteInt32(data_ptr, 0, (Int32)data.Value);
                             else
-                                Marshal.WriteInt64(data_ptr, 0, (Int64)data._value);
+                                Marshal.WriteInt64(data_ptr, 0, (Int64)data.Value);
                         };
                         va_args[j].read = (i) =>
                         {
                             ptr<size_t> data = (ptr<size_t>)args[i];
                             IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
                             if (IntPtr.Size == 4)
-                                data.Value._value = (UInt32)Marshal.ReadInt32(data_ptr);
+                                data.Value.Value = (UInt32)Marshal.ReadInt32(data_ptr);
                             else
-                                data.Value._value = (UInt64)Marshal.ReadInt64(data_ptr);
+                                data.Value.Value = (UInt64)Marshal.ReadInt64(data_ptr);
                         };
                         readables.Push(j);
                         break;
@@ -536,8 +624,8 @@ namespace Math.Mpfr.Native
             }
 
             // Write arguments to unmanaged memory.
-            arguments = mpfr_lib.allocate((size_t)(args_size + data_size)).ToIntPtr();
-            for (int i = 0; i < args.Length; i++)
+            arguments = gmp_lib.allocate((size_t)(args_size + data_size)).ToIntPtr();
+            for (int i = 0; i < va_args.Length; i++)
                 va_args[i].write(i);
 
         }
@@ -554,7 +642,7 @@ namespace Math.Mpfr.Native
         {
             foreach (int i in readables)
                 va_args[i].read(i);
-            mpfr_lib.free(arguments);
+            gmp_lib.free(arguments);
         }
 
     }
