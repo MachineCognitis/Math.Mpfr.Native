@@ -11,6 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "Documentation\Documentation.shfbproj", "{CE631E64-52BF-4527-99AD-1EAEB76550A8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{145D16A4-B3B6-49C6-B0DD-E4E0A2A00E4A} = {145D16A4-B3B6-49C6-B0DD-E4E0A2A00E4A}
+	EndProjectSection
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "docs", "docs\docs.shproj", "{39B1E62E-D491-495F-8E90-B7D09B76D8A1}"
 EndProject

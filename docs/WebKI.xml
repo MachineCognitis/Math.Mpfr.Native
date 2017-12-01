@@ -1,38 +1,78 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <HelpKI>
+  <HelpKINode Title="Byte to intmax_t conversion" Url="html/8205c841-b911-9214-b065-f097399878c4.htm" />
   <HelpKINode Title="Byte to mpfr_exp_t conversion" Url="html/6d23d780-2a39-edf3-4d28-0ab0767aee3b.htm" />
   <HelpKINode Title="Byte to mpfr_prec_t conversion" Url="html/b1da62d4-3db5-e728-2a2a-eccf69753d87.htm" />
   <HelpKINode Title="Byte to mpfr_sign_t conversion" Url="html/6a804d15-19ad-8e55-0264-98722fb01a4b.htm" />
+  <HelpKINode Title="Byte to uintmax_t conversion" Url="html/ba39075f-46bc-3279-286e-eb261388c39a.htm" />
   <HelpKINode Title="Equality operator">
+    <HelpKINode Title="intmax_t.Equality Operator " Url="html/777bed27-0921-56a8-bf28-9c80f220c714.htm" />
     <HelpKINode Title="mpfr_exp_t.Equality Operator " Url="html/137c63fd-af26-db53-d27c-822bf96eb129.htm" />
     <HelpKINode Title="mpfr_prec_t.Equality Operator " Url="html/c81f5a44-35ee-c177-0f88-55719928fee4.htm" />
     <HelpKINode Title="mpfr_sign_t.Equality Operator " Url="html/40f8a0be-cfa5-7bd1-017a-281e82c73478.htm" />
+    <HelpKINode Title="uintmax_t.Equality Operator " Url="html/464d9421-5bdf-591a-d85c-b75ec7e6c2e6.htm" />
   </HelpKINode>
   <HelpKINode Title="Equals method">
+    <HelpKINode Title="intmax_t.Equals Method " Url="html/e61bd793-5070-ab58-dcc2-d529d7f6f9f2.htm" />
     <HelpKINode Title="mpfr_exp_t.Equals Method " Url="html/0b40b6ce-bf3b-9748-32b7-4be18755d176.htm" />
     <HelpKINode Title="mpfr_prec_t.Equals Method " Url="html/9e1fa2e7-ae07-d41d-975c-35d3eb781eed.htm" />
     <HelpKINode Title="mpfr_sign_t.Equals Method " Url="html/18d6e7fd-94ab-a812-ec5f-64bbd5bb21ad.htm" />
+    <HelpKINode Title="uintmax_t.Equals Method " Url="html/bca3516c-c093-b753-09f4-bc15f4435f35.htm" />
   </HelpKINode>
   <HelpKINode Title="GetHashCode method">
+    <HelpKINode Title="intmax_t.GetHashCode Method " Url="html/25d157dc-dbb9-0ddf-bd1b-a155a2caf8e6.htm" />
     <HelpKINode Title="mpfr_exp_t.GetHashCode Method " Url="html/80a3889a-0e33-5087-c1bb-4bd460ba55cb.htm" />
     <HelpKINode Title="mpfr_prec_t.GetHashCode Method " Url="html/7b306b39-7580-8740-f8dc-16f189e3c3ec.htm" />
     <HelpKINode Title="mpfr_sign_t.GetHashCode Method " Url="html/d6e068ff-e32c-19a5-77c2-1bc392c96444.htm" />
+    <HelpKINode Title="uintmax_t.GetHashCode Method " Url="html/4d6dc63a-3f51-4c24-7766-b74e764d0174.htm" />
   </HelpKINode>
   <HelpKINode Title="Inequality operator">
+    <HelpKINode Title="intmax_t.Inequality Operator " Url="html/84c281ef-3cc7-91a8-fb6f-1d9f9f193314.htm" />
     <HelpKINode Title="mpfr_exp_t.Inequality Operator " Url="html/9323cf6a-d0d3-cb8f-d08b-2208fb392b03.htm" />
     <HelpKINode Title="mpfr_prec_t.Inequality Operator " Url="html/9e319e3e-2629-aad2-2628-db3823dc5de8.htm" />
     <HelpKINode Title="mpfr_sign_t.Inequality Operator " Url="html/c2823416-fe35-f671-2ff1-c172545aa353.htm" />
+    <HelpKINode Title="uintmax_t.Inequality Operator " Url="html/4f2f17ec-f9f0-e28a-bed4-d212737ab9d5.htm" />
   </HelpKINode>
+  <HelpKINode Title="Int16 to intmax_t conversion" Url="html/3f4cb627-a933-5db3-cd57-08ca58d57e36.htm" />
   <HelpKINode Title="Int16 to mpfr_exp_t conversion" Url="html/eec8e41e-e670-9646-f3d1-78956f7f8cc7.htm" />
   <HelpKINode Title="Int16 to mpfr_prec_t conversion" Url="html/888dbc78-021e-f2ce-b237-005aa96e808a.htm" />
   <HelpKINode Title="Int16 to mpfr_sign_t conversion" Url="html/349b1944-3307-6578-90de-74df2e71eedd.htm" />
+  <HelpKINode Title="Int16 to uintmax_t conversion" Url="html/cde3c7c1-943c-6ebc-867d-83bce9ae6a55.htm" />
+  <HelpKINode Title="Int32 to intmax_t conversion" Url="html/96fd6eeb-2341-fe99-764a-2553bbde0d88.htm" />
   <HelpKINode Title="Int32 to mpfr_exp_t conversion" Url="html/1a4a4492-9497-8d92-b21b-963b5d6184e9.htm" />
   <HelpKINode Title="Int32 to mpfr_prec_t conversion" Url="html/46b34061-d70e-dbcb-c148-23667de3b7e8.htm" />
   <HelpKINode Title="Int32 to mpfr_sign_t conversion" Url="html/bc235894-f447-00b5-4ee1-dced261f6db5.htm" />
+  <HelpKINode Title="Int32 to uintmax_t conversion" Url="html/bfeae8e3-e0a9-14e5-4b7b-965916f8e2b2.htm" />
+  <HelpKINode Title="Int64 to intmax_t conversion" Url="html/fa4072ac-a253-1e9c-dac3-a08c872a8632.htm" />
   <HelpKINode Title="Int64 to mpfr_exp_t conversion" Url="html/ecdb8821-0ae3-86b5-4aa1-9393ca96c11f.htm" />
   <HelpKINode Title="Int64 to mpfr_prec_t conversion" Url="html/4f40cd3e-b082-3d52-f91c-fd570f5d4677.htm" />
   <HelpKINode Title="Int64 to mpfr_sign_t conversion" Url="html/3d4c9fa6-5012-7567-0394-083ce5a5e7d5.htm" />
+  <HelpKINode Title="Int64 to uintmax_t conversion" Url="html/567f29ee-0963-b297-f097-1ae4bfae107a.htm" />
+  <HelpKINode Title="intmax_t structure">
+    <HelpKINode Title="intmax_t Structure" Url="html/1944bb82-ac43-cedf-234b-c240bf4b6892.htm" />
+    <HelpKINode Title="about intmax_t structure" Url="html/1944bb82-ac43-cedf-234b-c240bf4b6892.htm" />
+    <HelpKINode Title="constructor" Url="html/36aa005b-16cd-5e35-8e51-f7a190c03ea2.htm" />
+    <HelpKINode Title="fields" Url="html/f9b6a1a0-61d1-bcea-048b-6138a512b411.htm" />
+    <HelpKINode Title="methods" Url="html/ded755e7-90d0-23e4-12e6-2a6ce4b4d34e.htm" />
+    <HelpKINode Title="operators and type conversions" Url="html/c75684a5-6925-ae5a-4765-c211dd65990f.htm" />
+  </HelpKINode>
+  <HelpKINode Title="intmax_t to Byte conversion" Url="html/67d27b11-8d05-b801-95d2-9a0a97adb73d.htm" />
+  <HelpKINode Title="intmax_t to Int16 conversion" Url="html/4270892f-2b9b-93bd-d3aa-91fa1ba287ca.htm" />
+  <HelpKINode Title="intmax_t to Int32 conversion" Url="html/b7a50729-38ad-8cf4-e108-b0ebd0dc0c89.htm" />
+  <HelpKINode Title="intmax_t to Int64 conversion" Url="html/19cf42e5-0d3c-ba5f-6f39-a91f600eddee.htm" />
+  <HelpKINode Title="intmax_t to SByte conversion" Url="html/53b7cd62-7aa3-c156-48c0-e48b331b275e.htm" />
+  <HelpKINode Title="intmax_t to UInt16 conversion" Url="html/31eb7adf-3698-e420-0408-f6a1bbdf7bc9.htm" />
+  <HelpKINode Title="intmax_t to UInt32 conversion" Url="html/c8b82f3f-b2a3-2bea-5abc-2f7a9790a53d.htm" />
+  <HelpKINode Title="intmax_t to UInt64 conversion" Url="html/93859310-ed4f-234b-d2b1-c32bbff5b8f3.htm" />
+  <HelpKINode Title="intmax_t.Equality operator" Url="html/777bed27-0921-56a8-bf28-9c80f220c714.htm" />
+  <HelpKINode Title="intmax_t.Equals method" Url="html/e61bd793-5070-ab58-dcc2-d529d7f6f9f2.htm" />
+  <HelpKINode Title="intmax_t.GetHashCode method" Url="html/25d157dc-dbb9-0ddf-bd1b-a155a2caf8e6.htm" />
+  <HelpKINode Title="intmax_t.Inequality operator" Url="html/84c281ef-3cc7-91a8-fb6f-1d9f9f193314.htm" />
+  <HelpKINode Title="intmax_t.intmax_t constructor" Url="html/36aa005b-16cd-5e35-8e51-f7a190c03ea2.htm" />
+  <HelpKINode Title="intmax_t.ToString method" Url="html/3b4776be-d587-d126-22bc-31c1aef97d3f.htm" />
+  <HelpKINode Title="intmax_t.Value field" Url="html/82cdaaac-14d1-a9c2-a5ef-ac057599bb5b.htm" />
   <HelpKINode Title="Math.Mpfr.Native namespace" Url="html/d4b41450-8301-1af6-67c3-6d6f7e206516.htm" />
+  <HelpKINode Title="Math.Mpfr.Native.intmax_t structure" Url="html/1944bb82-ac43-cedf-234b-c240bf4b6892.htm" />
   <HelpKINode Title="Math.Mpfr.Native.mpfr_exp_t structure" Url="html/4fb31d6c-ce9a-372e-8a66-40570e3ff922.htm" />
   <HelpKINode Title="Math.Mpfr.Native.mpfr_kind_t enumeration" Url="html/033956a2-b224-fa0a-ad06-5a8e303074b1.htm" />
   <HelpKINode Title="Math.Mpfr.Native.mpfr_lib class" Url="html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm" />
@@ -40,6 +80,7 @@
   <HelpKINode Title="Math.Mpfr.Native.mpfr_rnd_t enumeration" Url="html/3a4a909f-0c87-700e-42d0-7159d6a6bf37.htm" />
   <HelpKINode Title="Math.Mpfr.Native.mpfr_sign_t structure" Url="html/8ae95b09-da57-1e2d-68bf-0b925067634a.htm" />
   <HelpKINode Title="Math.Mpfr.Native.mpfr_t class" Url="html/0b5248b5-b205-46b1-13fd-9f42922b22bd.htm" />
+  <HelpKINode Title="Math.Mpfr.Native.uintmax_t structure" Url="html/e6a6975b-1afa-9be1-42d5-97787c506fc4.htm" />
   <HelpKINode Title="Math.Mpfr.Native.va_list class" Url="html/434d2691-37f0-18ed-1a50-d1a758f082f4.htm" />
   <HelpKINode Title="mpfr_abs method" Url="html/bc540e78-10be-6930-d200-b40bd9ffcbf6.htm" />
   <HelpKINode Title="mpfr_acos method" Url="html/999085d3-d288-ccc1-7c0b-a63d57843fb2.htm" />
@@ -164,6 +205,7 @@
   <HelpKINode Title="mpfr_fma method" Url="html/6c2f55c3-4587-ef37-4bc0-3b15818d4f1e.htm" />
   <HelpKINode Title="mpfr_fmod method" Url="html/b740cf03-1bd7-66c7-fd39-9941a3839dab.htm" />
   <HelpKINode Title="mpfr_fms method" Url="html/c77f2400-b224-ea52-c15e-2409ef3f73db.htm" />
+  <HelpKINode Title="mpfr_fprintf method" Url="html/3a3bf9af-6860-39d7-3f2d-a338152afd77.htm" />
   <HelpKINode Title="mpfr_frac method" Url="html/7e6e8fe7-9ca6-29e0-c29f-82c0f817f328.htm" />
   <HelpKINode Title="mpfr_free_cache method" Url="html/701a5250-eda6-84c9-fa2f-958c778342fa.htm" />
   <HelpKINode Title="mpfr_free_str method" Url="html/f8961e1c-bf2c-262e-89dd-ceab8c64095f.htm" />
@@ -185,8 +227,10 @@
   <HelpKINode Title="mpfr_get_patches method" Url="html/e1641c56-7b43-b089-9928-9cc61129f4d5.htm" />
   <HelpKINode Title="mpfr_get_prec method" Url="html/aca2f906-d9e2-1323-a69c-608133b3712a.htm" />
   <HelpKINode Title="mpfr_get_si method" Url="html/04872bcf-5288-c676-78f7-aacde23c4aa6.htm" />
+  <HelpKINode Title="mpfr_get_sj method" Url="html/31e70d38-c591-f6dc-a546-a0a6d2bda206.htm" />
   <HelpKINode Title="mpfr_get_str method" Url="html/2bcb1ed1-5c28-d901-976d-68070ef8eb8b.htm" />
   <HelpKINode Title="mpfr_get_ui method" Url="html/955a4b1b-c369-89a4-3e5c-d49ee91c8ebc.htm" />
+  <HelpKINode Title="mpfr_get_uj method" Url="html/91d96006-2456-0bc7-1324-98862e959a49.htm" />
   <HelpKINode Title="mpfr_get_version method" Url="html/2366daaf-eb97-f0ab-e6e8-c8a874b80838.htm" />
   <HelpKINode Title="mpfr_get_z method" Url="html/7bb119e2-543f-b7f3-ebb6-edfd190a9473.htm" />
   <HelpKINode Title="mpfr_get_z_2exp method" Url="html/f09eba35-c284-fcf5-ed9b-cafbe1cefaf8.htm" />
@@ -209,6 +253,7 @@
   <HelpKINode Title="mpfr_init_set_str method" Url="html/aeea412a-c11c-acb4-5cd3-421112339b39.htm" />
   <HelpKINode Title="mpfr_init_set_ui method" Url="html/930c95fe-f8ba-7d3b-f46c-f2a53defae2a.htm" />
   <HelpKINode Title="mpfr_init_set_z method" Url="html/42b5209f-b4c6-30b6-81e7-f9a8d6450ea8.htm" />
+  <HelpKINode Title="mpfr_inp_str method" Url="html/99f6eee1-6198-16db-37c6-01f106261c9e.htm" />
   <HelpKINode Title="mpfr_integer_p method" Url="html/9936f101-9853-0f26-0578-ee555770e920.htm" />
   <HelpKINode Title="mpfr_j0 method" Url="html/d8ebec85-64f5-1c0b-a201-d6a6c95b5442.htm" />
   <HelpKINode Title="mpfr_j1 method" Url="html/f2bae0fa-8243-e9c8-f343-dd79a426a2c8.htm" />
@@ -222,6 +267,7 @@
   <HelpKINode Title="mpfr_lib class">
     <HelpKINode Title="mpfr_lib Class" Url="html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm" />
     <HelpKINode Title="about mpfr_lib class" Url="html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm" />
+    <HelpKINode Title="fields" Url="html/95e51630-7f30-7ca8-b941-50832ab61c67.htm" />
     <HelpKINode Title="methods" Url="html/a7a80831-af71-f620-cdb0-ffff5b5d9dbb.htm" />
   </HelpKINode>
   <HelpKINode Title="mpfr_lib.mpfr_abs method" Url="html/bc540e78-10be-6930-d200-b40bd9ffcbf6.htm" />
@@ -324,6 +370,7 @@
   <HelpKINode Title="mpfr_lib.mpfr_fma method" Url="html/6c2f55c3-4587-ef37-4bc0-3b15818d4f1e.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_fmod method" Url="html/b740cf03-1bd7-66c7-fd39-9941a3839dab.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_fms method" Url="html/c77f2400-b224-ea52-c15e-2409ef3f73db.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_fprintf method" Url="html/3a3bf9af-6860-39d7-3f2d-a338152afd77.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_frac method" Url="html/7e6e8fe7-9ca6-29e0-c29f-82c0f817f328.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_free_cache method" Url="html/701a5250-eda6-84c9-fa2f-958c778342fa.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_free_str method" Url="html/f8961e1c-bf2c-262e-89dd-ceab8c64095f.htm" />
@@ -345,8 +392,10 @@
   <HelpKINode Title="mpfr_lib.mpfr_get_patches method" Url="html/e1641c56-7b43-b089-9928-9cc61129f4d5.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_prec method" Url="html/aca2f906-d9e2-1323-a69c-608133b3712a.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_si method" Url="html/04872bcf-5288-c676-78f7-aacde23c4aa6.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_get_sj method" Url="html/31e70d38-c591-f6dc-a546-a0a6d2bda206.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_str method" Url="html/2bcb1ed1-5c28-d901-976d-68070ef8eb8b.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_ui method" Url="html/955a4b1b-c369-89a4-3e5c-d49ee91c8ebc.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_get_uj method" Url="html/91d96006-2456-0bc7-1324-98862e959a49.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_version method" Url="html/2366daaf-eb97-f0ab-e6e8-c8a874b80838.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_z method" Url="html/7bb119e2-543f-b7f3-ebb6-edfd190a9473.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_get_z_2exp method" Url="html/f09eba35-c284-fcf5-ed9b-cafbe1cefaf8.htm" />
@@ -368,6 +417,7 @@
   <HelpKINode Title="mpfr_lib.mpfr_init_set_str method" Url="html/aeea412a-c11c-acb4-5cd3-421112339b39.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_init_set_ui method" Url="html/930c95fe-f8ba-7d3b-f46c-f2a53defae2a.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_init_set_z method" Url="html/42b5209f-b4c6-30b6-81e7-f9a8d6450ea8.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_inp_str method" Url="html/99f6eee1-6198-16db-37c6-01f106261c9e.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_integer_p method" Url="html/9936f101-9853-0f26-0578-ee555770e920.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_j0 method" Url="html/d8ebec85-64f5-1c0b-a201-d6a6c95b5442.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_j1 method" Url="html/f2bae0fa-8243-e9c8-f343-dd79a426a2c8.htm" />
@@ -402,11 +452,14 @@
   <HelpKINode Title="mpfr_lib.mpfr_nextbelow method" Url="html/d83d90a8-3097-614e-b2f5-61a3052c2fbb.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_nexttoward method" Url="html/ef3e7397-3a3a-c6bb-73c8-77eb155ea542.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_number_p method" Url="html/fa9512e8-2baa-6139-1eb1-d0c5611dc432.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_out_str method" Url="html/703945a5-f2aa-fe08-9698-9078de4b9956.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_overflow_p method" Url="html/cf2665f7-7d81-bb30-14db-133b00ee1cbf.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_pow method" Url="html/ea82180e-98f3-d06c-cb9d-2fb79700fa92.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_pow_si method" Url="html/4fbae091-968c-898e-bc99-ffb97865ce79.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_pow_ui method" Url="html/95c2d299-e7cd-176d-494b-10888797ff2f.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_pow_z method" Url="html/062c7450-b72f-5e5f-92df-8caa8139f539.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_PREC_MAX field" Url="html/49652a3e-439a-531b-a50d-b66875f99733.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_PREC_MIN field" Url="html/171bee53-85ad-d75d-4ac8-7d5cccd390da.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_prec_round method" Url="html/d47fb7c8-f72d-aeda-f3c8-b645ce153bf1.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_printf method" Url="html/1464ba85-72de-fabc-68e3-9677dfbb9932.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_print_rnd_mode method" Url="html/b9876021-bddf-b6b4-7417-8f77407da42b.htm" />
@@ -446,9 +499,13 @@
   <HelpKINode Title="mpfr_lib.mpfr_set_q method" Url="html/03e7d89e-61be-5184-4d8a-27c6de4211de.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_si method" Url="html/6fc4597e-bde7-5f46-10cf-ac6cfee23210.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_si_2exp method" Url="html/f3ebf40a-02f1-f6a1-1040-4e56f080938d.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_set_sj method" Url="html/31f89dce-de27-d200-093f-6375e5b70649.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_set_sj_2exp method" Url="html/fadb81cb-73cb-e145-12c5-aa06b7632f59.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_str method" Url="html/70127747-765e-8cbb-cb0c-61a1a6b06b67.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_ui method" Url="html/efadcf58-8091-67a8-3ac1-503435f3b120.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_ui_2exp method" Url="html/99f8b993-6132-278b-fa61-8bece2addfb5.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_set_uj method" Url="html/4ec7c891-83e6-ce49-374e-3fabe788d296.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_set_uj_2exp method" Url="html/d931c0f7-1d17-4efa-7893-ff4db2e8fea6.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_underflow method" Url="html/807527b3-0787-560d-bac4-1a234ace6b59.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_z method" Url="html/984ab1a1-cf05-b46b-6216-004b82cd1090.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_set_zero method" Url="html/cbd492db-0565-fe13-9364-95a875e55b6c.htm" />
@@ -488,6 +545,13 @@
   <HelpKINode Title="mpfr_lib.mpfr_urandom method" Url="html/a2512f25-62c8-40e8-318c-359e326a9a44.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_urandomb method" Url="html/bf74e506-fb35-76e7-ff68-c5e410852d08.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_vasprintf method" Url="html/34f44af9-f26c-849b-836f-8beb413fbd08.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_VERSION field" Url="html/72c1efde-7668-7640-488b-de8f5655edde.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_VERSION_MAJOR field" Url="html/041313da-72f1-405f-ef7c-de21a045e147.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_VERSION_MINOR field" Url="html/7b8d96e7-940a-f5e8-f7dd-b4282951ba23.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_VERSION_NUM method" Url="html/c39c8cf1-fc2e-e841-150f-b7a09c4bba13.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_VERSION_PATCHLEVEL field" Url="html/146f4100-7de0-62ab-c3fb-6c38da578ff8.htm" />
+  <HelpKINode Title="mpfr_lib.MPFR_VERSION_STRING field" Url="html/f53657ee-c175-54f3-6bd5-6fcdcb096ebf.htm" />
+  <HelpKINode Title="mpfr_lib.mpfr_vfprintf method" Url="html/92759bb8-61d5-ac78-2c6b-0d5d79ad3293.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_vprintf method" Url="html/86b0ccc8-9cb2-d3d2-920c-ca50e8fbb68a.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_vsnprintf method" Url="html/b8a3197f-4d81-91e6-517a-1380d05fc77a.htm" />
   <HelpKINode Title="mpfr_lib.mpfr_vsprintf method" Url="html/fe7d462a-d1aa-d269-c2f3-f955ff04a0c0.htm" />
@@ -524,11 +588,14 @@
   <HelpKINode Title="mpfr_nextbelow method" Url="html/d83d90a8-3097-614e-b2f5-61a3052c2fbb.htm" />
   <HelpKINode Title="mpfr_nexttoward method" Url="html/ef3e7397-3a3a-c6bb-73c8-77eb155ea542.htm" />
   <HelpKINode Title="mpfr_number_p method" Url="html/fa9512e8-2baa-6139-1eb1-d0c5611dc432.htm" />
+  <HelpKINode Title="mpfr_out_str method" Url="html/703945a5-f2aa-fe08-9698-9078de4b9956.htm" />
   <HelpKINode Title="mpfr_overflow_p method" Url="html/cf2665f7-7d81-bb30-14db-133b00ee1cbf.htm" />
   <HelpKINode Title="mpfr_pow method" Url="html/ea82180e-98f3-d06c-cb9d-2fb79700fa92.htm" />
   <HelpKINode Title="mpfr_pow_si method" Url="html/4fbae091-968c-898e-bc99-ffb97865ce79.htm" />
   <HelpKINode Title="mpfr_pow_ui method" Url="html/95c2d299-e7cd-176d-494b-10888797ff2f.htm" />
   <HelpKINode Title="mpfr_pow_z method" Url="html/062c7450-b72f-5e5f-92df-8caa8139f539.htm" />
+  <HelpKINode Title="MPFR_PREC_MAX field" Url="html/49652a3e-439a-531b-a50d-b66875f99733.htm" />
+  <HelpKINode Title="MPFR_PREC_MIN field" Url="html/171bee53-85ad-d75d-4ac8-7d5cccd390da.htm" />
   <HelpKINode Title="mpfr_prec_round method" Url="html/d47fb7c8-f72d-aeda-f3c8-b645ce153bf1.htm" />
   <HelpKINode Title="mpfr_prec_t structure">
     <HelpKINode Title="mpfr_prec_t Structure" Url="html/17fd6845-f3b5-5c4a-18fd-4d45a9abf415.htm" />
@@ -600,9 +667,13 @@
   <HelpKINode Title="mpfr_set_q method" Url="html/03e7d89e-61be-5184-4d8a-27c6de4211de.htm" />
   <HelpKINode Title="mpfr_set_si method" Url="html/6fc4597e-bde7-5f46-10cf-ac6cfee23210.htm" />
   <HelpKINode Title="mpfr_set_si_2exp method" Url="html/f3ebf40a-02f1-f6a1-1040-4e56f080938d.htm" />
+  <HelpKINode Title="mpfr_set_sj method" Url="html/31f89dce-de27-d200-093f-6375e5b70649.htm" />
+  <HelpKINode Title="mpfr_set_sj_2exp method" Url="html/fadb81cb-73cb-e145-12c5-aa06b7632f59.htm" />
   <HelpKINode Title="mpfr_set_str method" Url="html/70127747-765e-8cbb-cb0c-61a1a6b06b67.htm" />
   <HelpKINode Title="mpfr_set_ui method" Url="html/efadcf58-8091-67a8-3ac1-503435f3b120.htm" />
   <HelpKINode Title="mpfr_set_ui_2exp method" Url="html/99f8b993-6132-278b-fa61-8bece2addfb5.htm" />
+  <HelpKINode Title="mpfr_set_uj method" Url="html/4ec7c891-83e6-ce49-374e-3fabe788d296.htm" />
+  <HelpKINode Title="mpfr_set_uj_2exp method" Url="html/d931c0f7-1d17-4efa-7893-ff4db2e8fea6.htm" />
   <HelpKINode Title="mpfr_set_underflow method" Url="html/807527b3-0787-560d-bac4-1a234ace6b59.htm" />
   <HelpKINode Title="mpfr_set_z method" Url="html/984ab1a1-cf05-b46b-6216-004b82cd1090.htm" />
   <HelpKINode Title="mpfr_set_zero method" Url="html/cbd492db-0565-fe13-9364-95a875e55b6c.htm" />
@@ -682,6 +753,13 @@
   <HelpKINode Title="mpfr_urandom method" Url="html/a2512f25-62c8-40e8-318c-359e326a9a44.htm" />
   <HelpKINode Title="mpfr_urandomb method" Url="html/bf74e506-fb35-76e7-ff68-c5e410852d08.htm" />
   <HelpKINode Title="mpfr_vasprintf method" Url="html/34f44af9-f26c-849b-836f-8beb413fbd08.htm" />
+  <HelpKINode Title="MPFR_VERSION field" Url="html/72c1efde-7668-7640-488b-de8f5655edde.htm" />
+  <HelpKINode Title="MPFR_VERSION_MAJOR field" Url="html/041313da-72f1-405f-ef7c-de21a045e147.htm" />
+  <HelpKINode Title="MPFR_VERSION_MINOR field" Url="html/7b8d96e7-940a-f5e8-f7dd-b4282951ba23.htm" />
+  <HelpKINode Title="MPFR_VERSION_NUM method" Url="html/c39c8cf1-fc2e-e841-150f-b7a09c4bba13.htm" />
+  <HelpKINode Title="MPFR_VERSION_PATCHLEVEL field" Url="html/146f4100-7de0-62ab-c3fb-6c38da578ff8.htm" />
+  <HelpKINode Title="MPFR_VERSION_STRING field" Url="html/f53657ee-c175-54f3-6bd5-6fcdcb096ebf.htm" />
+  <HelpKINode Title="mpfr_vfprintf method" Url="html/92759bb8-61d5-ac78-2c6b-0d5d79ad3293.htm" />
   <HelpKINode Title="mpfr_vprintf method" Url="html/86b0ccc8-9cb2-d3d2-920c-ca50e8fbb68a.htm" />
   <HelpKINode Title="mpfr_vsnprintf method" Url="html/b8a3197f-4d81-91e6-517a-1380d05fc77a.htm" />
   <HelpKINode Title="mpfr_vsprintf method" Url="html/fe7d462a-d1aa-d269-c2f3-f955ff04a0c0.htm" />
@@ -694,33 +772,68 @@
   <HelpKINode Title="mpfr_zeta_ui method" Url="html/151f699b-8244-1456-cc48-08e34cfafd8d.htm" />
   <HelpKINode Title="mpfr_z_sub method" Url="html/2a169b21-3c25-3c21-b67d-9b1fb4a89986.htm" />
   <HelpKINode Title="RetrieveArgumentValues method" Url="html/4933b34c-6ca2-3188-ce88-46a31f67837f.htm" />
+  <HelpKINode Title="SByte to intmax_t conversion" Url="html/8a52da08-6eb0-3b6a-6846-5438315d0ace.htm" />
   <HelpKINode Title="SByte to mpfr_exp_t conversion" Url="html/7d0ebae7-f0f3-4f3e-0677-d4c02177eee3.htm" />
   <HelpKINode Title="SByte to mpfr_prec_t conversion" Url="html/9c7c7a19-5802-cb0d-f6dc-e1702fe0caf3.htm" />
   <HelpKINode Title="SByte to mpfr_sign_t conversion" Url="html/1031370f-1492-77f7-fc14-7efb5e875c5e.htm" />
+  <HelpKINode Title="SByte to uintmax_t conversion" Url="html/74bc08eb-5529-ceef-fb33-a7730f3c46fa.htm" />
   <HelpKINode Title="String to mpfr_t conversion" Url="html/8de398a4-77e1-678d-6e24-6b6513c3476b.htm" />
   <HelpKINode Title="ToIntPtr method">
     <HelpKINode Title="mpfr_t.ToIntPtr Method " Url="html/c86d7f67-200a-16df-47b2-6d6e9962d8c2.htm" />
     <HelpKINode Title="va_list.ToIntPtr Method " Url="html/ca1e880d-9f46-3083-81c2-de6d5a0d9ce5.htm" />
   </HelpKINode>
   <HelpKINode Title="ToString method">
+    <HelpKINode Title="intmax_t.ToString Method " Url="html/3b4776be-d587-d126-22bc-31c1aef97d3f.htm" />
     <HelpKINode Title="mpfr_exp_t.ToString Method " Url="html/a2402cbd-6af2-14a4-9f2b-3cbda8fdb9d6.htm" />
     <HelpKINode Title="mpfr_prec_t.ToString Method " Url="html/27dd642f-5c54-1002-2b8f-3f06636604d7.htm" />
     <HelpKINode Title="mpfr_sign_t.ToString Method " Url="html/508f72f2-c428-8fdc-4280-8c589310ed71.htm" />
     <HelpKINode Title="mpfr_t.ToString Method " Url="html/72e5389e-4049-6eaf-c41f-daa68184e030.htm" />
+    <HelpKINode Title="uintmax_t.ToString Method " Url="html/9f5807c9-3572-5272-1450-6acc91b0a774.htm" />
   </HelpKINode>
+  <HelpKINode Title="UInt16 to intmax_t conversion" Url="html/aaf05e8b-8721-4ea4-7dc9-5c34c2d3ec1f.htm" />
   <HelpKINode Title="UInt16 to mpfr_exp_t conversion" Url="html/e0edffb8-f5fe-53a6-5267-b584d1a8f070.htm" />
   <HelpKINode Title="UInt16 to mpfr_prec_t conversion" Url="html/96c7ee43-1061-447f-f6ea-35b88819dcb5.htm" />
   <HelpKINode Title="UInt16 to mpfr_sign_t conversion" Url="html/f1a82d8e-dfc6-810d-88e3-59f023bc5736.htm" />
+  <HelpKINode Title="UInt16 to uintmax_t conversion" Url="html/60509f52-13e1-0efe-d500-0284731ab3d0.htm" />
+  <HelpKINode Title="UInt32 to intmax_t conversion" Url="html/49b20a9e-d648-cb64-d65d-e987340f5eca.htm" />
   <HelpKINode Title="UInt32 to mpfr_exp_t conversion" Url="html/504c1d1f-afbc-cb51-90a7-7fb768ec4663.htm" />
   <HelpKINode Title="UInt32 to mpfr_prec_t conversion" Url="html/29284f6c-c2f6-1609-2dca-6826b2bc22ef.htm" />
   <HelpKINode Title="UInt32 to mpfr_sign_t conversion" Url="html/f7b3d102-f579-ed1c-bbd7-bb4e6a18bc8d.htm" />
+  <HelpKINode Title="UInt32 to uintmax_t conversion" Url="html/c7820fa6-544b-c47e-ada4-ad52e563e48f.htm" />
+  <HelpKINode Title="UInt64 to intmax_t conversion" Url="html/0090d77a-47e7-3df3-bcbc-b4bf2dd1ef7e.htm" />
   <HelpKINode Title="UInt64 to mpfr_exp_t conversion" Url="html/cc9d7f95-bdc0-398a-af8a-5ce0a265d019.htm" />
   <HelpKINode Title="UInt64 to mpfr_prec_t conversion" Url="html/8698a70f-9e2c-1038-cd0a-29c03266225c.htm" />
   <HelpKINode Title="UInt64 to mpfr_sign_t conversion" Url="html/c94bbae3-5af7-704f-58f1-ca1d8cf5b917.htm" />
+  <HelpKINode Title="UInt64 to uintmax_t conversion" Url="html/e5a92e66-35b9-5799-c708-c485f01d342c.htm" />
+  <HelpKINode Title="uintmax_t structure">
+    <HelpKINode Title="uintmax_t Structure" Url="html/e6a6975b-1afa-9be1-42d5-97787c506fc4.htm" />
+    <HelpKINode Title="about uintmax_t structure" Url="html/e6a6975b-1afa-9be1-42d5-97787c506fc4.htm" />
+    <HelpKINode Title="constructor" Url="html/69b80de9-9e6e-4f28-7b58-9818e40754b2.htm" />
+    <HelpKINode Title="fields" Url="html/bd21bed0-45cc-90e8-935c-95e67899f849.htm" />
+    <HelpKINode Title="methods" Url="html/9bd555e6-1c1e-720c-8c35-eac592b71571.htm" />
+    <HelpKINode Title="operators and type conversions" Url="html/b353b3dd-9f03-7337-4386-0cc6a54b091d.htm" />
+  </HelpKINode>
+  <HelpKINode Title="uintmax_t to Byte conversion" Url="html/a580e119-4baf-249e-b70f-f497fb8b1f0d.htm" />
+  <HelpKINode Title="uintmax_t to Int16 conversion" Url="html/f46370c8-0c6b-d301-8077-bf952b73373c.htm" />
+  <HelpKINode Title="uintmax_t to Int32 conversion" Url="html/8b734d3a-3534-f611-df3c-3c7662b2ce38.htm" />
+  <HelpKINode Title="uintmax_t to Int64 conversion" Url="html/722f6d4f-d643-1708-57a5-f301609cf676.htm" />
+  <HelpKINode Title="uintmax_t to SByte conversion" Url="html/9355618a-2aef-82a1-ae5c-3f1c34d1262e.htm" />
+  <HelpKINode Title="uintmax_t to UInt16 conversion" Url="html/629138f3-d1d9-3a2e-36f8-0f5bb43d1d40.htm" />
+  <HelpKINode Title="uintmax_t to UInt32 conversion" Url="html/7950856a-9c2c-bf84-22be-0db6b0f08acc.htm" />
+  <HelpKINode Title="uintmax_t to UInt64 conversion" Url="html/c3dcaf08-1eae-011f-1432-fe737c76554e.htm" />
+  <HelpKINode Title="uintmax_t.Equality operator" Url="html/464d9421-5bdf-591a-d85c-b75ec7e6c2e6.htm" />
+  <HelpKINode Title="uintmax_t.Equals method" Url="html/bca3516c-c093-b753-09f4-bc15f4435f35.htm" />
+  <HelpKINode Title="uintmax_t.GetHashCode method" Url="html/4d6dc63a-3f51-4c24-7766-b74e764d0174.htm" />
+  <HelpKINode Title="uintmax_t.Inequality operator" Url="html/4f2f17ec-f9f0-e28a-bed4-d212737ab9d5.htm" />
+  <HelpKINode Title="uintmax_t.ToString method" Url="html/9f5807c9-3572-5272-1450-6acc91b0a774.htm" />
+  <HelpKINode Title="uintmax_t.uintmax_t constructor" Url="html/69b80de9-9e6e-4f28-7b58-9818e40754b2.htm" />
+  <HelpKINode Title="uintmax_t.Value field" Url="html/26029bb2-d0bd-0a76-79a5-d7202c4ddf3c.htm" />
   <HelpKINode Title="Value field">
+    <HelpKINode Title="intmax_t.Value Field" Url="html/82cdaaac-14d1-a9c2-a5ef-ac057599bb5b.htm" />
     <HelpKINode Title="mpfr_exp_t.Value Field" Url="html/38158e5f-d07d-3f74-0da3-417e11564eb9.htm" />
     <HelpKINode Title="mpfr_prec_t.Value Field" Url="html/af2e768e-ff4c-1867-a7a9-ef244d6aaddc.htm" />
     <HelpKINode Title="mpfr_sign_t.Value Field" Url="html/3edd2e96-dd78-2f4b-9ec1-ba54b7d138eb.htm" />
+    <HelpKINode Title="uintmax_t.Value Field" Url="html/26029bb2-d0bd-0a76-79a5-d7202c4ddf3c.htm" />
   </HelpKINode>
   <HelpKINode Title="va_list class">
     <HelpKINode Title="va_list Class" Url="html/434d2691-37f0-18ed-1a50-d1a758f082f4.htm" />

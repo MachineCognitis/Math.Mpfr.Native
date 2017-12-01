@@ -70,12 +70,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="intmax_t.cs" />
     <Compile Include="mpfr_kind_t.cs" />
     <Compile Include="mpfr_sign_t.cs" />
     <Compile Include="mpfr_exp_t.cs" />
     <Compile Include="mpfr_rnd_t.cs" />
     <Compile Include="mpfr_t.cs" />
     <Compile Include="mpfr_prec_t.cs" />
+    <Compile Include="uintmax_t.cs" />
     <Compile Include="va_list.cs" />
     <Compile Include="mpfr_lib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -138,6 +138,129 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void uintmax_t_test()
+        {
+            uintmax_t v;
+
+            byte zero = 0;
+            sbyte minusOne = -1;
+
+            // Check implicit and explict conversions to uintmax_t.
+            v = (byte)zero;
+            v = (uintmax_t)(sbyte)zero;
+            v = (ushort)zero;
+            v = (uintmax_t)(short)zero;
+            v = (uint)zero;
+            v = (uintmax_t)(int)zero;
+            v = (ulong)zero;
+            v = (uintmax_t)(long)zero;
+
+            // Check implicit and explict conversions from uintmax_t.
+            byte b = (byte)v;
+            sbyte sb = (sbyte)v;
+            ushort us = (ushort)v;
+            short s = (short)v;
+            uint ui = (uint)v;
+            int i = (int)v;
+            ulong ul = v;
+            long l = (long)v;
+
+            // Check conversions to uintmax_t.
+            Assert.IsTrue((uintmax_t)byte.MaxValue == (ulong)byte.MaxValue);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(sbyte)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue((uintmax_t)ushort.MaxValue == (ulong)ushort.MaxValue);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(short)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue((uintmax_t)uint.MaxValue == (ulong)uint.MaxValue);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(int)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue((uintmax_t)ulong.MaxValue == (ulong)ulong.MaxValue);
+            Assert.IsTrue(((uintmax_t)(long)minusOne) == ulong.MaxValue);
+
+            // Check conversions from uintmax_t.
+            Assert.IsTrue(Test(() => b = (byte)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => i = (int)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(((ulong)(new uintmax_t(ulong.MaxValue))) == ulong.MaxValue);
+            Assert.IsTrue(((long)(new uintmax_t(ulong.MaxValue))) == -1L);
+
+            // Check equality and inequality.
+            Object obj = new uintmax_t(8);
+            Assert.IsTrue((new uintmax_t(8)).Equals(obj));
+            Assert.IsTrue(!(new uintmax_t(8)).Equals(new int()));
+            Assert.IsTrue((new uintmax_t(8)).Equals(new uintmax_t(8)));
+            Assert.IsTrue(!(new uintmax_t(8)).Equals(new uintmax_t(9)));
+            Assert.IsTrue((new uintmax_t(8)) == (new uintmax_t(8)));
+            Assert.IsTrue((new uintmax_t(8)) != (new uintmax_t(9)));
+        }
+
+        [TestMethod]
+        public void intmax_t_test()
+        {
+            intmax_t v;
+
+            byte zero = 0;
+
+            // Check implicit and explict conversions to intmax_t.
+            v = (byte)zero;
+            v = (sbyte)zero;
+            v = (ushort)zero;
+            v = (short)zero;
+            v = (uint)zero;
+            v = (int)zero;
+            v = (intmax_t)(ulong)zero;
+            v = (long)zero;
+
+            // Check implicit and explict conversions from mpfr_sign_t.
+            byte b = (byte)v;
+            sbyte sb = (sbyte)v;
+            ushort us = (ushort)v;
+            short s = (short)v;
+            uint ui = (uint)v;
+            int i = (int)v;
+            ulong ul = (ulong)v;
+            long l = v;
+
+            // Check conversions to intmax_t.
+            Assert.IsTrue((intmax_t)byte.MaxValue == (long)byte.MaxValue);
+            Assert.IsTrue((intmax_t)sbyte.MinValue == (long)sbyte.MinValue);
+            Assert.IsTrue((intmax_t)sbyte.MaxValue == (long)sbyte.MaxValue);
+            Assert.IsTrue((intmax_t)ushort.MaxValue == (long)ushort.MaxValue);
+            Assert.IsTrue((intmax_t)short.MinValue == (long)short.MinValue);
+            Assert.IsTrue((intmax_t)short.MaxValue == (long)short.MaxValue);
+            Assert.IsTrue((intmax_t)uint.MaxValue == (long)uint.MaxValue);
+            Assert.IsTrue((intmax_t)int.MinValue == (long)int.MinValue);
+            Assert.IsTrue((intmax_t)int.MaxValue == (long)int.MaxValue);
+            Assert.IsTrue((intmax_t)ulong.MaxValue == -1L);
+            Assert.IsTrue((intmax_t)long.MinValue == (long)long.MinValue);
+            Assert.IsTrue((intmax_t)long.MaxValue == (long)long.MaxValue);
+
+            // Check conversions from intmax_t.
+            Assert.IsTrue(Test(() => b = (byte)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => sb = (sbyte)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => s = (short)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => i = (int)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => i = (int)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue((ulong)(new intmax_t(long.MaxValue)) == (ulong)long.MaxValue);
+            Assert.IsTrue((new intmax_t(long.MinValue)) == long.MinValue);
+            Assert.IsTrue((new intmax_t(long.MaxValue)) == long.MaxValue);
+
+            // Check equality and inequality.
+            Object obj = new intmax_t(8);
+            Assert.IsTrue((new intmax_t(8)).Equals(obj));
+            Assert.IsTrue(!(new intmax_t(8)).Equals(new byte()));
+            Assert.IsTrue((new intmax_t(8)).Equals(new intmax_t(8)));
+            Assert.IsTrue(!(new intmax_t(8)).Equals(new intmax_t(9)));
+            Assert.IsTrue((new intmax_t(8)) == (new intmax_t(8)));
+            Assert.IsTrue((new intmax_t(8)) != (new intmax_t(9)));
+        }
+
+        [TestMethod]
         public void mpfr_exp_t_test()
         {
             mpfr_exp_t v;
@@ -190,7 +313,7 @@ namespace UnitTests
         [TestCategory("mpfr_t")]
         public void mpfr_t_test()
         {
-            // Set default precision to 84 bits.
+            // Set default precision to 32 bits.
             mpfr_lib.mpfr_set_default_prec(32U);
 
             // Create new multiple-precision floating-point numbers.
@@ -288,6 +411,16 @@ namespace UnitTests
             va_args = new va_list(args);
             va_args.RetrieveArgumentValues();
             Assert.IsTrue(((ptr<size_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
+
+            args = new object[] { new ptr<uintmax_t>(UInt64.MaxValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<uintmax_t>)args[0]).Value == UInt64.MaxValue);
+
+            args = new object[] { new ptr<intmax_t>(Int64.MinValue) };
+            va_args = new va_list(args);
+            va_args.RetrieveArgumentValues();
+            Assert.IsTrue(((ptr<intmax_t>)args[0]).Value == Int64.MinValue);
 
             args = new object[] { new ptr<mp_exp_t>(Int32.MinValue) };
             va_args = new va_list(args);
@@ -2166,21 +2299,6 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void mpfr_fits_intmax_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpfr_t op = new mpfr_t();
-            mpfr_lib.mpfr_init2(op, 64U);
-            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
-
-            // Assert that op fits in intmax_t.
-            Assert.IsTrue(mpfr_lib.mpfr_fits_intmax_p(op, mpfr_rnd_t.MPFR_RNDN) != 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpfr_clear(op);
-        }
-
-        [TestMethod]
         public void mpfr_fits_sint_p()
         {
             // Create, initialize, and set the value of op 4294967295.
@@ -2205,6 +2323,21 @@ namespace UnitTests
 
             // Assert that op does not fit in long.
             Assert.IsTrue(mpfr_lib.mpfr_fits_slong_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_intmax_p()
+        {
+            // Create, initialize, and set the value of op Int64.MaxValue.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_uj(op, Int64.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op fits in intmax_t.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_intmax_p(op, mpfr_rnd_t.MPFR_RNDN) != 0);
 
             // Release unmanaged memory allocated for op.
             mpfr_lib.mpfr_clear(op);
@@ -2241,21 +2374,6 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void mpfr_fits_uintmax_p()
-        {
-            // Create, initialize, and set the value of op 4294967295.
-            mpfr_t op = new mpfr_t();
-            mpfr_lib.mpfr_init2(op, 64U);
-            Assert.IsTrue(mpfr_lib.mpfr_set_ui(op, uint.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
-
-            // Assert that op fits in intmax_t.
-            Assert.IsTrue(mpfr_lib.mpfr_fits_uintmax_p(op, mpfr_rnd_t.MPFR_RNDN) != 0);
-
-            // Release unmanaged memory allocated for op.
-            mpfr_lib.mpfr_clear(op);
-        }
-
-        [TestMethod]
         public void mpfr_fits_ulong_p()
         {
             // Create, initialize, and set the value of op 4294967295.
@@ -2265,6 +2383,21 @@ namespace UnitTests
 
             // Assert that op does not fit in int.
             Assert.IsTrue(mpfr_lib.mpfr_fits_sint_p(op, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_fits_uintmax_p()
+        {
+            // Create, initialize, and set the value of op UInt64.MaxValue.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_uj(op, UInt64.MaxValue, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op fits in uintmax_t.
+            Assert.IsTrue(mpfr_lib.mpfr_fits_uintmax_p(op, mpfr_rnd_t.MPFR_RNDN) != 0);
 
             // Release unmanaged memory allocated for op.
             mpfr_lib.mpfr_clear(op);
@@ -2796,6 +2929,21 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void mpfr_get_sj()
+        {
+            // Create, initialize, and set a new floating-point number to -123.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, -123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_sj(op, mpfr_rnd_t.MPFR_RNDN) == -123);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
         public void mpfr_get_str()
         {
             // Create, initialize, and set a new floating-point number to -8.0
@@ -2843,6 +2991,21 @@ namespace UnitTests
 
             // Assert that the value of op is -123.0.
             Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) == 123);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(op);
+        }
+
+        [TestMethod]
+        public void mpfr_get_uj()
+        {
+            // Create, initialize, and set a new floating-point number to 123.0
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 123.0, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of op is -123.0.
+            Assert.IsTrue(mpfr_lib.mpfr_get_uj(op, mpfr_rnd_t.MPFR_RNDN) == 123);
 
             // Release unmanaged memory allocated for x.
             mpfr_lib.mpfr_clear(op);
@@ -3176,6 +3339,33 @@ namespace UnitTests
 
             // Release unmanaged memory allocated for x.
             mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
+        public void mpfr_inp_str()
+        {
+            // Create and initialize op.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+
+            // Write op to a temporary file.
+            string pathname = System.IO.Path.GetTempFileName();
+            System.IO.File.WriteAllText(pathname, "123456");
+
+            // Read op from the temporary file, and assert that the number of bytes read is 6.
+            ptr<FILE> stream = new ptr<FILE>();
+            _wfopen_s(out stream.Value.Value, pathname, "r");
+            Assert.IsTrue(mpfr_lib.mpfr_inp_str(op, stream, 10, mpfr_rnd_t.MPFR_RNDN) == 6);
+            fclose(stream.Value.Value);
+
+            // Assert that op is 123456.
+            Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) == 123456U);
+
+            // Delete temporary file.
+            System.IO.File.Delete(pathname);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
         }
 
         [TestMethod]
@@ -3963,6 +4153,44 @@ namespace UnitTests
             mpfr_lib.mpfr_clear(op);
         }
 
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern Int32 _wfopen_s(out IntPtr pFile, String filename, String mode);
+
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+        public static extern Int32 fclose(IntPtr stream);
+
+        [TestMethod]
+        public void mpfr_out_str()
+        {
+            // Create, initialize, and set the value of op to 123456.
+            mpfr_t op = new mpfr_t();
+            mpfr_lib.mpfr_init2(op, 64U);
+            mpfr_lib.mpfr_set_ui(op, 123456U, mpfr_rnd_t.MPFR_RNDN);
+
+            // Get a temporary file.
+            string pathname = System.IO.Path.GetTempFileName();
+
+            // Open temporary file for writing.
+            ptr<FILE> stream = new ptr<FILE>();
+            _wfopen_s(out stream.Value.Value, pathname, "w");
+
+            // Write op to temporary file, and assert that the number of bytes written is 24.
+            Assert.IsTrue(mpfr_lib.mpfr_out_str(stream, 10, 0, op, mpfr_rnd_t.MPFR_RNDN) == 24);
+
+            // Close temporary file.
+            fclose(stream.Value.Value);
+
+            // Assert that the content of the temporary file is "123456".
+            string result = System.IO.File.ReadAllText(pathname);
+            Assert.IsTrue(result == "1.23456000000000000000e5");
+
+            // Delete temporary file.
+            System.IO.File.Delete(pathname);
+
+            // Release unmanaged memory allocated for op.
+            mpfr_lib.mpfr_clear(op);
+        }
+
         [TestMethod]
         public void mpfr_overflow_p()
         {
@@ -4734,6 +4962,21 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void mpfr_set_sj()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+            Assert.IsTrue(mpfr_lib.mpfr_set_sj(rop, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 10.
+            Assert.IsTrue(mpfr_lib.mpfr_get_sj(rop, mpfr_rnd_t.MPFR_RNDN) == 10);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
         public void mpfr_set_si_2exp()
         {
             // Create, initialize, and set a new floating-point number rop to 10.
@@ -4745,6 +4988,23 @@ namespace UnitTests
 
             // Assert that op is 320.
             Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 320);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_set_sj_2exp()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10 * 2^5.
+            Assert.IsTrue(mpfr_lib.mpfr_set_sj_2exp(rop, 10, 5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 320.
+            Assert.IsTrue(mpfr_lib.mpfr_get_sj(rop, mpfr_rnd_t.MPFR_RNDN) == 320);
 
             // Release unmanaged memory allocated for rop.
             mpfr_lib.mpfr_clear(rop);
@@ -4785,6 +5045,23 @@ namespace UnitTests
         }
 
         [TestMethod]
+        public void mpfr_set_uj()
+        {
+            // Create and initialize a new floating-point number.
+            mpfr_t x = new mpfr_t();
+            mpfr_lib.mpfr_init2(x, 128U);
+
+            // Set x to 100.
+            Assert.IsTrue(mpfr_lib.mpfr_set_uj(x, 100U, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that the value of x is 100.
+            Assert.IsTrue(mpfr_lib.mpfr_get_d(x, mpfr_rnd_t.MPFR_RNDN) == 100.0);
+
+            // Release unmanaged memory allocated for x.
+            mpfr_lib.mpfr_clear(x);
+        }
+
+        [TestMethod]
         public void mpfr_set_ui_2exp()
         {
             // Create, initialize, and set a new floating-point number rop to 10.
@@ -4796,6 +5073,23 @@ namespace UnitTests
 
             // Assert that op is 320.
             Assert.IsTrue(mpfr_lib.mpfr_get_si(rop, mpfr_rnd_t.MPFR_RNDN) == 320);
+
+            // Release unmanaged memory allocated for rop.
+            mpfr_lib.mpfr_clear(rop);
+        }
+
+        [TestMethod]
+        public void mpfr_set_uj_2exp()
+        {
+            // Create, initialize, and set a new floating-point number rop to 10.
+            mpfr_t rop = new mpfr_t();
+            mpfr_lib.mpfr_init2(rop, 64U);
+
+            // Set rop = 10 * 2^5.
+            Assert.IsTrue(mpfr_lib.mpfr_set_uj_2exp(rop, 10U, 5, mpfr_rnd_t.MPFR_RNDN) == 0);
+
+            // Assert that op is 320.
+            Assert.IsTrue(mpfr_lib.mpfr_get_uj(rop, mpfr_rnd_t.MPFR_RNDN) == 320);
 
             // Release unmanaged memory allocated for rop.
             mpfr_lib.mpfr_clear(rop);

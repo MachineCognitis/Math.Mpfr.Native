@@ -185,6 +185,16 @@ namespace Math.Mpfr.Native
                         };
                         break;
 
+                    case "intmax_t":
+                        args_size += 8;
+                        va_args[j].write = (i) => Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)(intmax_t)args[i]);
+                        break;
+
+                    case "uintmax_t":
+                        args_size += 8;
+                        va_args[j].write = (i) => Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)(uintmax_t)args[i]);
+                        break;
+
                     case "String":
                         args_size += IntPtr.Size;
                         data_size += ((string)args[j]).Length + 1;
@@ -594,6 +604,44 @@ namespace Math.Mpfr.Native
                                 data.Value.Value = (UInt32)Marshal.ReadInt32(data_ptr);
                             else
                                 data.Value.Value = (UInt64)Marshal.ReadInt64(data_ptr);
+                        };
+                        readables.Push(j);
+                        break;
+
+                    case "ptr<uintmax_t>":
+                        args_size += IntPtr.Size;
+                        data_size += 8;
+                        va_args[j].write = (i) =>
+                        {
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
+                            uintmax_t data = ((ptr<uintmax_t>)args[i]).Value;
+                            Marshal.WriteInt64(data_ptr, 0, (long)data.Value);
+                        };
+                        va_args[j].read = (i) =>
+                        {
+                            ptr<uintmax_t> data = (ptr<uintmax_t>)args[i];
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            data.Value.Value = (ulong)Marshal.ReadInt64(data_ptr);
+                        };
+                        readables.Push(j);
+                        break;
+
+                    case "ptr<intmax_t>":
+                        args_size += IntPtr.Size;
+                        data_size += 8;
+                        va_args[j].write = (i) =>
+                        {
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            Marshal.WriteIntPtr(arguments, va_args[i].arg_offset, data_ptr);
+                            intmax_t data = ((ptr<intmax_t>)args[i]).Value;
+                            Marshal.WriteInt64(data_ptr, 0, data.Value);
+                        };
+                        va_args[j].read = (i) =>
+                        {
+                            ptr<intmax_t> data = (ptr<intmax_t>)args[i];
+                            IntPtr data_ptr = (IntPtr)(arguments.ToInt64() + args_size + va_args[i].data_offset);
+                            data.Value.Value = Marshal.ReadInt64(data_ptr);
                         };
                         readables.Push(j);
                         break;
