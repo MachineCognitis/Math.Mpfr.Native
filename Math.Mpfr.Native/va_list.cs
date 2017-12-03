@@ -8,6 +8,9 @@ using Math.Gmp.Native;
 namespace Math.Mpfr.Native
 {
 
+    /// <summary>
+    /// Represent a variable argument list.
+    /// </summary>
     public class va_list
     {
 
@@ -79,41 +82,49 @@ namespace Math.Mpfr.Native
                     case "mp_bitcnt_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_bitcnt_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mpfr_prec_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_prec_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mp_size_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_size_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mp_exp_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_exp_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mpfr_exp_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_exp_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mpfr_sign_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_sign_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mpfr_rnd_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_rnd_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "mpfr_kind_t":
                         args_size += 4;
                         va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mpfr_kind_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                         break;
 
                     case "Int64":
@@ -164,8 +175,10 @@ namespace Math.Mpfr.Native
                         {
                             if (IntPtr.Size == 4)
                                 Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(mp_limb_t)args[i]);
+                                //Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                             else
                                 Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)(mp_limb_t)args[i]);
+                                //Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)args[i]);
                         };
                         break;
 
@@ -180,19 +193,23 @@ namespace Math.Mpfr.Native
                         {
                             if (IntPtr.Size == 4)
                                 Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)(size_t)args[i]);
+                                //Marshal.WriteInt32(arguments, va_args[i].arg_offset, (Int32)args[i]);
                             else
                                 Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)(size_t)args[i]);
+                                //Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)args[i]);
                         };
                         break;
 
                     case "intmax_t":
                         args_size += 8;
                         va_args[j].write = (i) => Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)(intmax_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)args[i]);
                         break;
 
                     case "uintmax_t":
                         args_size += 8;
                         va_args[j].write = (i) => Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)(uintmax_t)args[i]);
+                        //va_args[j].write = (i) => Marshal.WriteInt64(arguments, va_args[i].arg_offset, (Int64)args[i]);
                         break;
 
                     case "String":
@@ -678,6 +695,10 @@ namespace Math.Mpfr.Native
 
         }
 
+        /// <summary>
+        /// Return the pointer to the list of arguments in unmanaged memory.
+        /// </summary>
+        /// <returns></returns>
         public IntPtr ToIntPtr()
         {
             return arguments;

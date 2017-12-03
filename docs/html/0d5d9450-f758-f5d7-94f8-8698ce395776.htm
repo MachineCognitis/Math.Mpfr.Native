@@ -41,7 +41,7 @@
             rounding for <span class="parameter">rnd1</span>. 
             </p><p>
             Note: if one wants to also determine the correct <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> when rounding <span class="parameter">b</span> to precision <span class="parameter">prec</span>
-            with rounding mode <span class="parameter">rnd</span>, a useful trick is the following:
+            with rounding mode rnd, a useful trick is the following:
             </p><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EABHBA_tab1" class="codeSnippetContainerTabSingle">C#</div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EABHBA_copyCode" href="#" class="copyCodeSnippet" onclick="javascript:CopyToClipboard('ID0EABHBA');return false;" title="Copy">Copy</a></div></div><div id="ID0EABHBA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">if</span> (mpfr_can_round(b, err, MPFR_RNDN, MPFR_RNDZ, prec + (rnd == mpfr_rnd_t.MPFR_RNDN)))
  ...</pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EABHBA");</script><p>
             Indeed, if rnd is <a href="3a4a909f-0c87-700e-42d0-7159d6a6bf37.htm">MPFR_RNDN</a>, this will check if one can round to prec + 1 bits with a directed rounding:

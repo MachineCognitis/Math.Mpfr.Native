@@ -5,13 +5,9 @@ namespace Math.Mpfr.Native
 {
 
     /// <summary>
-    /// Represents ...
+    /// Represents the maximum width unsigned integer type.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// Counts of bits of a multi-precision number are represented in the C type <see cref="uintmax_t"/>.
-    /// Currently this is always an unsigned long, but on some systems it will be an unsigned long long in the future.
-    /// </para>
     /// <para>
     /// In .NET, this is an unsigned 64-bit integer.
     /// </para>
@@ -20,6 +16,9 @@ namespace Math.Mpfr.Native
     public struct uintmax_t
     {
 
+        /// <summary>
+        /// The value of the <see cref="uintmax_t"/>.
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         public ulong Value;
 
@@ -112,8 +111,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="uintmax_t"/> value.</returns>
         public static explicit operator uintmax_t(long value)
         {
-            //if (value < 0) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the uintmax_t data type.", value));
-            return new uintmax_t(unchecked((ulong)value));
+            if (value < 0) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the uintmax_t data type.", value));
+            return new uintmax_t((ulong)value);
         }
 
         /// <summary>
@@ -199,8 +198,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="Int64"/> value.</returns>
         public static explicit operator long(uintmax_t value)
         {
-            //if (value._value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int32 data type.", value));
-            return unchecked((long)value.Value);
+            if (value.Value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int32 data type.", value));
+            return (long)value.Value;
         }
 
         /// <summary>

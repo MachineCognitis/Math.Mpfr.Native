@@ -20,6 +20,9 @@ namespace Math.Mpfr.Native
     public struct mpfr_exp_t
     {
 
+        /// <summary>
+        /// The <see cref="mpfr_exp_t"/> value.
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         public int Value;
 
@@ -122,7 +125,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="Byte"/> value.</returns>
         public static explicit operator byte(mpfr_exp_t value)
         {
-            if (value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
+            if (value.Value < 0 || value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
             return (byte)value.Value;
         }
 
@@ -144,7 +147,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt16"/> value.</returns>
         public static explicit operator ushort(mpfr_exp_t value)
         {
-            if (value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
+            if (value.Value < 0 || value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
             return (ushort)value.Value;
         }
 

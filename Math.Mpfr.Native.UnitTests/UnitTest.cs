@@ -38,6 +38,7 @@ namespace UnitTests
         [TestMethod]
         public void mpfr_prec_t_test()
         {
+            // uint
             mpfr_prec_t v;
 
             byte zero = 0;
@@ -63,20 +64,29 @@ namespace UnitTests
             ulong ul = v;
             long l = v;
 
-            // Check OverflowException cases.
+            // Check OverflowException conversions to mpfr_prec_t.
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(byte)byte.MaxValue) == byte.MaxValue.ToString());
             Assert.IsTrue(Test(() => v = (mpfr_prec_t)(sbyte)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(sbyte)sbyte.MaxValue) == sbyte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(ushort)ushort.MaxValue) == ushort.MaxValue.ToString());
             Assert.IsTrue(Test(() => v = (mpfr_prec_t)(short)minusOne) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => v = (mpfr_prec_t)(int)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(short)short.MaxValue) == short.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(uint)uint.MaxValue) == uint.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(int)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(int)int.MaxValue) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(ulong)ulong.MaxValue) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => v = (mpfr_prec_t)(long)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_prec_t)(long)long.MaxValue) == typeof(OverflowException).Name);
 
-            Assert.IsTrue(Test(() => v = (mpfr_prec_t)ulong.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mpfr_prec_t)long.MaxValue) == typeof(OverflowException).Name);
-
+            // Check OverflowException conversions from mpfr_prec_t.
             Assert.IsTrue(Test(() => b = (byte)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => us = (ushort)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
-            //Assert.IsTrue(Test(() => i = (int)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new mpfr_prec_t(uint.MaxValue))) == uint.MaxValue.ToString());
+            Assert.IsTrue(Test(() => i = (int)(new mpfr_prec_t(uint.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ul = (ulong)(new mpfr_prec_t(uint.MaxValue))) == uint.MaxValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new mpfr_prec_t(uint.MaxValue))) == uint.MaxValue.ToString());
 
             // Check equality and inequality.
             Object obj = new mpfr_prec_t(8);
@@ -91,6 +101,7 @@ namespace UnitTests
         [TestMethod]
         public void mpfr_sign_t_test()
         {
+            // int
             mpfr_sign_t v;
 
             byte zero = 0;
@@ -115,17 +126,37 @@ namespace UnitTests
             ulong ul = (ulong)v;
             long l = v;
 
-            // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (mpfr_sign_t)uint.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mpfr_sign_t)long.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mpfr_sign_t)ulong.MaxValue) == typeof(OverflowException).Name);
+            // Check OverflowException conversions to mpfr_sign_t.
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(byte)byte.MaxValue) == byte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(sbyte)sbyte.MinValue) == sbyte.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(sbyte)sbyte.MaxValue) == sbyte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(ushort)ushort.MaxValue) == ushort.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(short)short.MinValue) == short.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(short)short.MaxValue) == short.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(uint)uint.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(int)int.MinValue) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(int)int.MaxValue) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(ulong)ulong.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(long)long.MinValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_sign_t)(long)long.MaxValue) == typeof(OverflowException).Name);
 
+            // Check OverflowException conversions from mpfr_sign_t.
+            Assert.IsTrue(Test(() => b = (byte)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => b = (byte)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => us = (ushort)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new mpfr_sign_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new mpfr_sign_t(int.MaxValue))) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => i = (int)(new mpfr_sign_t(int.MinValue))) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => i = (int)(new mpfr_sign_t(int.MaxValue))) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => ul = (ulong)(new mpfr_sign_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ul = (ulong)(new mpfr_sign_t(int.MaxValue))) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new mpfr_sign_t(int.MinValue))) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new mpfr_sign_t(int.MaxValue))) == int.MaxValue.ToString());
 
             // Check equality and inequality.
             Object obj = new mpfr_sign_t(8);
@@ -140,6 +171,7 @@ namespace UnitTests
         [TestMethod]
         public void uintmax_t_test()
         {
+            // ulong
             uintmax_t v;
 
             byte zero = 0;
@@ -165,25 +197,29 @@ namespace UnitTests
             ulong ul = v;
             long l = (long)v;
 
-            // Check conversions to uintmax_t.
-            Assert.IsTrue((uintmax_t)byte.MaxValue == (ulong)byte.MaxValue);
+            // Check OverflowException conversions to uintmax_t.
+            Assert.IsTrue(Test(() => v = (uintmax_t)(byte)byte.MaxValue) == byte.MaxValue.ToString());
             Assert.IsTrue(Test(() => v = (uintmax_t)(sbyte)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue((uintmax_t)ushort.MaxValue == (ulong)ushort.MaxValue);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(sbyte)sbyte.MaxValue) == sbyte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (uintmax_t)(ushort)ushort.MaxValue) == ushort.MaxValue.ToString());
             Assert.IsTrue(Test(() => v = (uintmax_t)(short)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue((uintmax_t)uint.MaxValue == (ulong)uint.MaxValue);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(short)short.MaxValue) == short.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (uintmax_t)(uint)uint.MaxValue) == uint.MaxValue.ToString());
             Assert.IsTrue(Test(() => v = (uintmax_t)(int)minusOne) == typeof(OverflowException).Name);
-            Assert.IsTrue((uintmax_t)ulong.MaxValue == (ulong)ulong.MaxValue);
-            Assert.IsTrue(((uintmax_t)(long)minusOne) == ulong.MaxValue);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(int)int.MaxValue) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (uintmax_t)(ulong)ulong.MaxValue) == ulong.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (uintmax_t)(long)minusOne) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (uintmax_t)(long)long.MaxValue) == long.MaxValue.ToString());
 
-            // Check conversions from uintmax_t.
+            // Check OverflowException conversions from uintmax_t.
             Assert.IsTrue(Test(() => b = (byte)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => us = (ushort)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => ui = (uint)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => i = (int)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue(((ulong)(new uintmax_t(ulong.MaxValue))) == ulong.MaxValue);
-            Assert.IsTrue(((long)(new uintmax_t(ulong.MaxValue))) == -1L);
+            Assert.IsTrue(Test(() => ul = (ulong)(new uintmax_t(ulong.MaxValue))) == ulong.MaxValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new uintmax_t(ulong.MaxValue))) == typeof(OverflowException).Name);
 
             // Check equality and inequality.
             Object obj = new uintmax_t(8);
@@ -198,6 +234,7 @@ namespace UnitTests
         [TestMethod]
         public void intmax_t_test()
         {
+            // long
             intmax_t v;
 
             byte zero = 0;
@@ -212,7 +249,7 @@ namespace UnitTests
             v = (intmax_t)(ulong)zero;
             v = (long)zero;
 
-            // Check implicit and explict conversions from mpfr_sign_t.
+            // Check implicit and explict conversions from intmax_t.
             byte b = (byte)v;
             sbyte sb = (sbyte)v;
             ushort us = (ushort)v;
@@ -222,33 +259,37 @@ namespace UnitTests
             ulong ul = (ulong)v;
             long l = v;
 
-            // Check conversions to intmax_t.
-            Assert.IsTrue((intmax_t)byte.MaxValue == (long)byte.MaxValue);
-            Assert.IsTrue((intmax_t)sbyte.MinValue == (long)sbyte.MinValue);
-            Assert.IsTrue((intmax_t)sbyte.MaxValue == (long)sbyte.MaxValue);
-            Assert.IsTrue((intmax_t)ushort.MaxValue == (long)ushort.MaxValue);
-            Assert.IsTrue((intmax_t)short.MinValue == (long)short.MinValue);
-            Assert.IsTrue((intmax_t)short.MaxValue == (long)short.MaxValue);
-            Assert.IsTrue((intmax_t)uint.MaxValue == (long)uint.MaxValue);
-            Assert.IsTrue((intmax_t)int.MinValue == (long)int.MinValue);
-            Assert.IsTrue((intmax_t)int.MaxValue == (long)int.MaxValue);
-            Assert.IsTrue((intmax_t)ulong.MaxValue == -1L);
-            Assert.IsTrue((intmax_t)long.MinValue == (long)long.MinValue);
-            Assert.IsTrue((intmax_t)long.MaxValue == (long)long.MaxValue);
+            // Check OverflowException conversions to intmax_t.
+            Assert.IsTrue(Test(() => v = (intmax_t)(byte)byte.MaxValue) == byte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(sbyte)sbyte.MinValue) == sbyte.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(sbyte)sbyte.MaxValue) == sbyte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(ushort)ushort.MaxValue) == ushort.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(short)short.MinValue) == short.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(short)short.MaxValue) == short.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(uint)uint.MaxValue) == uint.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(int)int.MinValue) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(int)int.MaxValue) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(ulong)ulong.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (intmax_t)(long)long.MinValue) == long.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (intmax_t)(long)long.MaxValue) == long.MaxValue.ToString());
 
-            // Check conversions from intmax_t.
+            // Check OverflowException conversions from intmax_t.
+            Assert.IsTrue(Test(() => b = (byte)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => b = (byte)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => us = (ushort)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => ui = (uint)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => i = (int)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => i = (int)(new intmax_t(long.MaxValue))) == typeof(OverflowException).Name);
-            Assert.IsTrue((ulong)(new intmax_t(long.MaxValue)) == (ulong)long.MaxValue);
-            Assert.IsTrue((new intmax_t(long.MinValue)) == long.MinValue);
-            Assert.IsTrue((new intmax_t(long.MaxValue)) == long.MaxValue);
+            Assert.IsTrue(Test(() => ul = (ulong)(new intmax_t(long.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ul = (ulong)(new intmax_t(long.MaxValue))) == long.MaxValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new intmax_t(long.MinValue))) == long.MinValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new intmax_t(long.MaxValue))) == long.MaxValue.ToString());
 
             // Check equality and inequality.
             Object obj = new intmax_t(8);
@@ -263,6 +304,7 @@ namespace UnitTests
         [TestMethod]
         public void mpfr_exp_t_test()
         {
+            // int
             mpfr_exp_t v;
 
             byte zero = 0;
@@ -287,17 +329,37 @@ namespace UnitTests
             ulong ul = (ulong)v;
             long l = v;
 
-            // Check OverflowException cases.
-            Assert.IsTrue(Test(() => v = (mpfr_exp_t)uint.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mpfr_exp_t)long.MaxValue) == typeof(OverflowException).Name);
-            Assert.IsTrue(Test(() => v = (mpfr_exp_t)ulong.MaxValue) == typeof(OverflowException).Name);
+            // Check OverflowException conversions to mpfr_exp_t.
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(byte)byte.MaxValue) == byte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(sbyte)sbyte.MinValue) == sbyte.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(sbyte)sbyte.MaxValue) == sbyte.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(ushort)ushort.MaxValue) == ushort.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(short)short.MinValue) == short.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(short)short.MaxValue) == short.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(uint)uint.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(int)int.MinValue) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(int)int.MaxValue) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(ulong)ulong.MaxValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(long)long.MinValue) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => v = (mpfr_exp_t)(long)long.MaxValue) == typeof(OverflowException).Name);
 
+            // Check OverflowException conversions from mpfr_exp_t.
+            Assert.IsTrue(Test(() => b = (byte)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => b = (byte)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => sb = (sbyte)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => us = (ushort)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => us = (ushort)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
             Assert.IsTrue(Test(() => s = (short)(new mpfr_exp_t(int.MaxValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ui = (uint)(new mpfr_exp_t(int.MaxValue))) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => i = (int)(new mpfr_exp_t(int.MinValue))) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => i = (int)(new mpfr_exp_t(int.MaxValue))) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => ul = (ulong)(new mpfr_exp_t(int.MinValue))) == typeof(OverflowException).Name);
+            Assert.IsTrue(Test(() => ul = (ulong)(new mpfr_exp_t(int.MaxValue))) == int.MaxValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new mpfr_exp_t(int.MinValue))) == int.MinValue.ToString());
+            Assert.IsTrue(Test(() => l = (long)(new mpfr_exp_t(int.MaxValue))) == int.MaxValue.ToString());
 
             // Check equality and inequality.
             Object obj = new mpfr_exp_t(8);

@@ -5,13 +5,9 @@ namespace Math.Mpfr.Native
 {
 
     /// <summary>
-    /// Represents the ...
+    /// Represents the maximum width integer type.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// The floating point functions accept and return exponents in the C type <see cref="intmax_t"/>.
-    /// Currently this is usually a long, but on some systems it’s an int for efficiency.
-    /// </para>
     /// <para>
     /// In .Net, this is a 64-bit integer. 
     /// </para>
@@ -19,6 +15,9 @@ namespace Math.Mpfr.Native
     public struct intmax_t
     {
 
+        /// <summary>
+        /// The value of the <see cref="intmax_t"/>.
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         public long Value;
 
@@ -98,8 +97,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="intmax_t"/> value.</returns>
         public static explicit operator intmax_t(ulong value)
         {
-            //if (value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the intmax_t data type.", value));
-            return new intmax_t(unchecked((long)value));
+            if (value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the intmax_t data type.", value));
+            return new intmax_t((long)value);
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="Byte"/> value.</returns>
         public static explicit operator byte(intmax_t value)
         {
-            if (value.Value < byte.MinValue || value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
+            if (value.Value < 0 || value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
             return (byte)value.Value;
         }
 
@@ -141,7 +140,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt16"/> value.</returns>
         public static explicit operator ushort(intmax_t value)
         {
-            if (value.Value < ushort.MinValue || value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
+            if (value.Value < 0 || value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
             return (ushort)value.Value;
         }
 
@@ -163,7 +162,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt32"/> value.</returns>
         public static explicit operator uint(intmax_t value)
         {
-            if (value.Value < uint.MinValue || value.Value > uint.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt32 data type.", value));
+            if (value.Value < 0 || value.Value > uint.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt32 data type.", value));
             return (uint)value.Value;
         }
 
@@ -185,8 +184,8 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt64"/> value.</returns>
         public static explicit operator ulong(intmax_t value)
         {
-            //if (value.Value < 0) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt64 data type.", value));
-            return unchecked((ulong)value.Value);
+            if (value.Value < 0) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt64 data type.", value));
+            return (ulong)value.Value;
         }
 
         /// <summary>

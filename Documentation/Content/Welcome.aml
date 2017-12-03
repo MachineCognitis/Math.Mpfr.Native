@@ -11,12 +11,43 @@
           <linkUri>https://mpfrlib.org/</linkUri>
           <linkTarget>_self</linkTarget>
         </externalLink>
-        (version 6.1.2). It automatically loads at runtime the 32-bit or 64-bit GNU MPFR library that matches the current CPU
+        (version 3.1.6).
+        It automatically loads at runtime the 32-bit or 64-bit GNU MPFR library that matches the current CPU
         architecture, thus allowing building Visual Studio Projects for Any CPU, x86, or x64.
-        It is based on the GNU MPFR "fat" build which automatically detects the current CPU type, and selects any available
-        assembly language code optimization for that CPU, thus providing best performance.
+        MPFR depends on the
+        <externalLink>
+          <linkText>GNU MP Library</linkText>
+          <linkUri>https://gmplib.org/</linkUri>
+          <linkTarget>_self</linkTarget>
+        </externalLink>.
+        The MPFR Native Interface library loads the required GNU MP library through the
+        <externalLink>
+          <linkText>Math.Gmp.Native.NET</linkText>
+          <linkUri>https://www.nuget.org/packages/Math.Gmp.Native.NET/</linkUri>
+          <linkTarget>_self</linkTarget>
+        </externalLink>.
+        NuGet package.
+        As a result, all of the Math.GMP.Native library functionality and help are available when loading the
+        Math.Mpfr.Native library.
+        The Math.Gmp.Native.NET NuGet package is based on the GNU MP "fat" build which automatically detects
+        the current CPU type, and selects any available assembly language code optimization for that CPU,
+        thus providing best performance.
       </para>
- 		</introduction>
+      <para>
+        The source code of the library is available in the GitHub project
+        <externalLink>
+          <linkText>Math.Mpfr.Native</linkText>
+          <linkUri>https://github.com/MachineCognitis/Math.Mpfr.Native</linkUri>
+          <linkTarget>_self</linkTarget>
+        </externalLink>.
+        To use the library in your projects, install the NuGet package
+        <externalLink>
+          <linkText>Math.Mpfr.Native.NET</linkText>
+          <linkUri>https://www.nuget.org/packages/Math.Mpfr.Native.NET/</linkUri>
+          <linkTarget>_self</linkTarget>
+        </externalLink>.
+      </para>
+    </introduction>
 
     <section>
       <title>Overview</title>
@@ -32,7 +63,7 @@
           Instructions for building the GNU MPFR Library on Windows are given below.
         </para>
         <para>
-          For convenience, this help file has been created from the GNU MPFR manual version 6.1.2. It shows with examples
+          For convenience, this help file has been created from the GNU MPFR manual version 3.1.6. It shows with examples
           how each GNU MPFR function is called in .NET. For an introduction to GNU MPFR, refer to the
           <externalLink>
             <linkText>GNU MPFR Manual</linkText>
@@ -1548,39 +1579,39 @@
           </tableHeader>
           <row>
             <entry><para>short</para></entry>
-            <entry><para>Int16</para></entry>
+            <entry><para>Int16 / short (C#) / Short (VB.NET)</para></entry>
           </row>
           <row>
             <entry><para>int</para></entry>
-            <entry><para>Int32</para></entry>
+            <entry><para>Int32 / int (C#) / Integer (VB.NET)</para></entry>
           </row>
           <row>
             <entry><para>long</para></entry>
-            <entry><para>Int32</para></entry>
+            <entry><para>Int32 / int (C#) / Integer (VB.NET)</para></entry>
           </row>
           <row>
             <entry><para>long long</para></entry>
-            <entry><para>Int64</para></entry>
+            <entry><para>Int64 / long (C#) / Long (VB.NET)</para></entry>
           </row>
           <row>
-            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mp_bitcnt_t</codeEntityReference></para></entry>
-            <entry><para>UInt32</para></entry>
+            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mpfr_exp_t</codeEntityReference></para></entry>
+            <entry><para>Int32 / int (C#) / Integer (VB.NET)</para></entry>
           </row>
           <row>
-            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mp_exp_t</codeEntityReference></para></entry>
-            <entry><para>Int32</para></entry>
+            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mpfr_prec_t</codeEntityReference></para></entry>
+            <entry><para>UInt32 / uint (C#) / UInteger (VB.NET)</para></entry>
           </row>
           <row>
-            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mp_size_t</codeEntityReference></para></entry>
-            <entry><para>Int32</para></entry>
+            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mpfr_sign_t</codeEntityReference></para></entry>
+            <entry><para>Int32 / int (C#) / Integer (VB.NET)</para></entry>
           </row>
           <row>
-            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.mp_limb_t</codeEntityReference></para></entry>
-            <entry><para>UInt32 (on 32-bit CPU) / UInt64 (on 64-bit CPU)</para></entry>
+            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.intmax_t</codeEntityReference></para></entry>
+            <entry><para>Int64 / long (C#) / Long (VB.NET)</para></entry>
           </row>
           <row>
-            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.size_t</codeEntityReference></para></entry>
-            <entry><para>UInt32 (on 32-bit CPU) / UInt64 (on 64-bit CPU)</para></entry>
+            <entry><para><codeEntityReference autoUpgrade="true">T:Math.Mpfr.Native.uintmax_t</codeEntityReference></para></entry>
+            <entry><para>UInt64 / ulong (C#) / ULong (VB.NET)</para></entry>
           </row>
         </table>
       </content>

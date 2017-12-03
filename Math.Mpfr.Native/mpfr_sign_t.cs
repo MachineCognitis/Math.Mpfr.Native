@@ -6,13 +6,9 @@ namespace Math.Mpfr.Native
 {
 
     /// <summary>
-    /// Represents the exponent of a floating-point number.
+    /// Represents the sign of a floating-point number.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// The floating point functions accept and return exponents in the C type <see cref="mpfr_sign_t"/>.
-    /// Currently this is usually a long, but on some systems it’s an int for efficiency.
-    /// </para>
     /// <para>
     /// In .Net, this is a 32-bit integer. 
     /// </para>
@@ -20,6 +16,9 @@ namespace Math.Mpfr.Native
     public struct mpfr_sign_t
     {
 
+        /// <summary>
+        /// The value of the <see cref="mpfr_sign_t"/>
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         public int Value;
 
@@ -111,7 +110,7 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="mpfr_sign_t"/> value.</returns>
         public static explicit operator mpfr_sign_t(long value)
         {
-            if (value < uint.MinValue || value > uint.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the mpfr_sign_t data type.", value));
+            if (value < int.MinValue || value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the mpfr_sign_t data type.", value));
             return new mpfr_sign_t((int)value);
         }
 
@@ -122,7 +121,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="Byte"/> value.</returns>
         public static explicit operator byte(mpfr_sign_t value)
         {
-            if (value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
+            if (value.Value < 0 || value.Value > byte.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Byte data type.", value));
             return (byte)value.Value;
         }
 
@@ -144,7 +143,7 @@ namespace Math.Mpfr.Native
         /// <returns>A <see cref="UInt16"/> value.</returns>
         public static explicit operator ushort(mpfr_sign_t value)
         {
-            if (value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
+            if (value.Value < 0 || value.Value > ushort.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the UInt16 data type.", value));
             return (ushort)value.Value;
         }
 

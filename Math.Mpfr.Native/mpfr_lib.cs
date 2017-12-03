@@ -151,7 +151,7 @@ namespace Math.Mpfr.Native
         /// <para>
         /// The base may vary from 2 to 62. 
         /// Print <paramref name="n"/> significant digits exactly, or if <paramref name="n"/> is 0,
-        /// enough digits so that <paramref name="op"/> can be read back exactly (see <see cref="mpfr_get_str"/>). 
+        /// enough digits so that <paramref name="op"/> can be read back exactly (see <see cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>). 
         /// </para>
         /// <para>
         /// In addition to the significant digits, a decimal point (defined by the current locale) at the right of
@@ -186,7 +186,7 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// This function reads a word (defined as a sequence of characters between whitespace) and parses it using <see cref="mpfr_set_str"/>.
-        /// See the documentation of <see cref="mpfr_strtofr"/> for a detailed description of the valid string formats. 
+        /// See the documentation of <see cref="O:Math.Mpfr.Native.mpfr_strtofr"/> for a detailed description of the valid string formats. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_lib.mpfr_out_str"/>
@@ -243,9 +243,9 @@ namespace Math.Mpfr.Native
         /// <code language="VB.NET">
         /// </code> 
         /// </example>
-        public static intmax_t mpfr_get_sj(mpfr_t rop, mpfr_rnd_t rnd)
+        public static intmax_t mpfr_get_sj(mpfr_t op, mpfr_rnd_t rnd)
         {
-            return SafeNativeMethods.__gmpfr_mpfr_get_sj(rop.ToIntPtr(),(int)rnd);
+            return SafeNativeMethods.__gmpfr_mpfr_get_sj(op.ToIntPtr(),(int)rnd);
         }
 
         /// <summary>
@@ -286,9 +286,9 @@ namespace Math.Mpfr.Native
         /// <code language="VB.NET">
         /// </code> 
         /// </example>
-        public static uintmax_t mpfr_get_uj(mpfr_t rop, mpfr_rnd_t rnd)
+        public static uintmax_t mpfr_get_uj(mpfr_t op, mpfr_rnd_t rnd)
         {
-            return SafeNativeMethods.__gmpfr_mpfr_get_uj(rop.ToIntPtr(), (int)rnd);
+            return SafeNativeMethods.__gmpfr_mpfr_get_uj(op.ToIntPtr(), (int)rnd);
         }
 
         /// <summary>
@@ -1989,7 +1989,7 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// See <see cref="mpfr_init2"/> for more details.
-        /// The list of floating-pointer numbers ends when it encounters a null pointer (whose type must also be <see cref="mpfr_ptr"/>).
+        /// The list of floating-pointer numbers ends when it encounters a null pointer (whose type must also be <see cref="mpfr_t"/>).
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_lib.mpfr_init2(mpfr_t, mpfr_prec_t)"/>
@@ -2030,7 +2030,7 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// See <see cref="mpfr_init"/> for more details.
-        /// The list of floating-point numbers ends when it encounters a null pointer (whose type must also be <see cref="mpfr_ptr"/>). 
+        /// The list of floating-point numbers ends when it encounters a null pointer (whose type must also be <see cref="mpfr_t"/>). 
         /// </para>
         /// <para>
         /// Warning!
@@ -2076,7 +2076,7 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// See <see cref="mpfr_clear"/> for more details.
-        /// The list of floating-point numbers ends when it encounters a null pointer (whose type must also be <see cref="mpfr_ptr"/>). 
+        /// The list of floating-point numbers ends when it encounters a null pointer (whose type must also be <see cref="mpfr_t"/>). 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_lib.mpfr_init2(mpfr_t, mpfr_prec_t)"/>
@@ -2108,7 +2108,7 @@ namespace Math.Mpfr.Native
         /// <param name="x">The operand floating-point number.</param>
         /// <param name="prec">The precision in bits.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns></returns>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="x"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
         /// If <paramref name="prec"/> is greater or equal to the precision of <paramref name="x"/>, then new space is allocated for the
@@ -2177,7 +2177,7 @@ namespace Math.Mpfr.Native
         /// </para>
         /// <para>
         /// Note: if one wants to also determine the correct <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> when rounding <paramref name="b"/> to precision <paramref name="prec"/>
-        /// with rounding mode <paramref name="rnd"/>, a useful trick is the following:
+        /// with rounding mode rnd, a useful trick is the following:
         /// </para>
         /// <code language="C#">
         /// if (mpfr_can_round(b, err, MPFR_RNDN, MPFR_RNDZ, prec + (rnd == mpfr_rnd_t.MPFR_RNDN)))
@@ -2274,7 +2274,7 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <param name="x">The operand floating-point number.</param>
         /// <param name="e">The exponent value.</param>
-        /// <returns></returns>
+        /// <returns>Return 0 (even if <paramref name="x"/> is not a non-zero ordinary number); otherwise, return a non-zero value.</returns>
         /// <remarks>
         /// <para>
         /// Set the exponent of <paramref name="x"/> if <paramref name="e"/> is in the current exponent range, and return 0
@@ -2326,7 +2326,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Reset the precision of <paramref name="x"/> to be exactly <paramref name="pre"/>c bits, and set its value to NaN.
+        /// Reset the precision of <paramref name="x"/> to be exactly <paramref name="prec"/> bits, and set its value to NaN.
         /// </summary>
         /// <param name="x">The floating-point number.</param>
         /// <param name="prec">The precision of the significand in bits.</param>
@@ -2337,7 +2337,7 @@ namespace Math.Mpfr.Native
         /// but more efficient as no allocation is done in case the current allocated space for the significand of
         /// <paramref name="x"/> is enough.
         /// The precision <paramref name="prec"/> can be any integer between <see cref="MPFR_PREC_MIN"/> and <see cref="MPFR_PREC_MAX"/>.
-        /// In case you want to keep the previous value stored in <paramref name="x"/>, use <see cref="mpfr_prec_raw"/> instead. 
+        /// In case you want to keep the previous value stored in <paramref name="x"/>, use <see cref="mpfr_prec_round"/> instead. 
         /// </para>
         /// <para>
         /// Warning!
@@ -3149,17 +3149,17 @@ namespace Math.Mpfr.Native
         /// <returns>Retturn 0 if the entire string up to the final null character is a valid number in base <paramref name="base"/>; otherwise it is -1.</returns>
         /// <remarks>
         /// <para>
-        /// See the documentation of <see cref="mpfr_strtofr"/> for a detailed description of the valid string formats.
-        /// Contrary to <see cref="mpfr_strtofr"/>,<see cref="mpfr_set_str"/> requires the whole string to represent a valid floating-point number. 
+        /// See the documentation of <see cref="O:Math.Mpfr.Native.mpfr_strtofr"/> for a detailed description of the valid string formats.
+        /// Contrary to <see cref="O:Math.Mpfr.Native.mpfr_strtofr"/>,<see cref="mpfr_set_str"/> requires the whole string to represent a valid floating-point number. 
         /// </para>
         /// <para>
         /// The meaning of the return value differs from other MPFR functions:
         /// it is 0 if the entire string up to the final null character is a valid number in base <paramref name="base"/>; otherwise it is -1,
         /// and <paramref name="rop"/> may have changed (users interested in the 
-        /// <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> should use <see cref="mpfr_strtofr"/> instead). 
+        /// <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> should use <see cref="O:Math.Mpfr.Native.mpfr_strtofr"/> instead). 
         /// </para>
         /// <para>
-        /// Note: it is preferable to use <see cref="mpfr_strtofr"/> if one wants to distinguish between an infinite <paramref name="rop"/> value
+        /// Note: it is preferable to use <see cref="O:Math.Mpfr.Native.mpfr_strtofr"/> if one wants to distinguish between an infinite <paramref name="rop"/> value
         /// coming from an infinite <paramref name="s"/> or from an overflow. 
         /// </para>
         /// </remarks>
@@ -3203,7 +3203,7 @@ namespace Math.Mpfr.Native
         /// <param name="s">String containing a floating-point number.</param>
         /// <param name="base">The base.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="x"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
         /// See <see cref="mpfr_set_str"/>.
@@ -3434,11 +3434,11 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Put the scaled significand of <paramref name="op"/> (regarded as an integer, with the precision of <paramref name="op"/>) into <paramref name="rop"/>, and return the exponent <paramref name="exp"/> (which may be outside the current exponent range) such that <paramref name="op"/> = <paramref name="rop"/> * 2^<paramref name="exp"/>.
+        /// Put the scaled significand of <paramref name="op"/> (regarded as an integer, with the precision of <paramref name="op"/>) into <paramref name="rop"/>, and return the exponent exp (which may be outside the current exponent range) such that <paramref name="op"/> = <paramref name="rop"/> * 2^exp.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
-        /// <returns>Return the exponent <paramref name="exp"/> (which may be outside the current exponent range) such that <paramref name="op"/> = <paramref name="rop"/> * 2^<paramref name="exp"/>.</returns>
+        /// <returns>Return the exponent exp (which may be outside the current exponent range) such that <paramref name="op"/> = <paramref name="rop"/> * 2^exp.</returns>
         /// <remarks>
         /// <para>
         /// If <paramref name="op"/> is zero, the minimal exponent emin is returned.
@@ -3638,7 +3638,7 @@ namespace Math.Mpfr.Native
         /// <param name="y">The returned significand.</param>
         /// <param name="x">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="y"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
         /// If <paramref name="x"/> is zero, then <paramref name="y"/> is set to a zero of the same sign and <paramref name="exp"/> is set to 0.
@@ -3679,7 +3679,7 @@ namespace Math.Mpfr.Native
         /// <param name="y">The returned significand.</param>
         /// <param name="x">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="y"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
         /// If <paramref name="x"/> is zero, then <paramref name="y"/> is set to a zero of the same sign and <paramref name="exp"/> is set to 0.
@@ -3809,7 +3809,7 @@ namespace Math.Mpfr.Native
         /// <param name="n">The number of digits in the result string.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <returns>Return the converted string of digits.</returns>
         /// <remarks>
         /// <para>
         /// The base may vary from 2 to 62; otherwise the function does nothing and immediately returns a null pointer.
@@ -3886,7 +3886,7 @@ namespace Math.Mpfr.Native
         /// <param name="n">The number of digits in the result string.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <returns>Return the converted string of digits.</returns>
         /// <remarks>
         /// <para>
         /// The base may vary from 2 to 62; otherwise the function does nothing and immediately returns a null pointer.
@@ -3995,7 +3995,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Free a string allocated by <see cref="mpfr_get_str"/> using the unallocation function (see <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Memory-Handling">GNU MPFR - Memory Handling</a>).
+        /// Free a string allocated by <see cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/> using the unallocation function (see <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Memory-Handling">GNU MPFR - Memory Handling</a>).
         /// </summary>
         /// <param name="str">Pointer to string.</param>
         /// <remarks>
@@ -4149,7 +4149,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Equivalent to <see cref="mpfr_nexttoward"/> where <paramref name="y"/> is plus infinity. 
+        /// Equivalent to <see cref="mpfr_nexttoward"/> where y is plus infinity. 
         /// </summary>
         /// <param name="x">The operand floating-point number.</param>
         /// <seealso cref="mpfr_lib.mpfr_nexttoward"/>
@@ -4168,7 +4168,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Equivalent to <see cref="mpfr_nexttoward"/> where <paramref name="y"/> is minus infinity. 
+        /// Equivalent to <see cref="mpfr_nexttoward"/> where y is minus infinity. 
         /// </summary>
         /// <param name="x">The operand floating-point number.</param>
         /// <seealso cref="mpfr_lib.mpfr_nexttoward"/>
@@ -8299,6 +8299,7 @@ namespace Math.Mpfr.Native
         /// <param name="q">Low significant bits of quotient.</param>
         /// <param name="x">The first operand floating-point number.</param>
         /// <param name="y">The second operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
         /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> corresponding to <paramref name="r"/>. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
@@ -9142,7 +9143,7 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <param name="op1">The first operand floating-point number.</param>
         /// <param name="op2">The second operand floating-point number.</param>
-        /// <returns></returns>
+        /// <returns>Return zero whenever <paramref name="op1"/> and/or <paramref name="op2"/> is NaN.</returns>
         /// <remarks>
         /// <para>
         /// Return zero whenever <paramref name="op1"/> and/or <paramref name="op2"/> is NaN. 
@@ -10275,6 +10276,7 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
+        /// <param name="k">The degree of the root.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
@@ -10787,6 +10789,7 @@ namespace Math.Mpfr.Native
         /// Set <paramref name="rop"/> to the value of the first kind Bessel function of order <paramref name="n"/> on <paramref name="op"/> rounded in the direction <paramref name="rnd"/>.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
+        /// <param name="n">Order of the Bessel function.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
@@ -10933,6 +10936,7 @@ namespace Math.Mpfr.Native
         /// Set <paramref name="rop"/> to the value of the first kind Bessel function of order <paramref name="n"/> on <paramref name="op"/> rounded in the direction <paramref name="rnd"/>.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
+        /// <param name="n">Order of the Bessel function.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
@@ -12470,10 +12474,10 @@ namespace Math.Mpfr.Native
             public static extern ulong /*size_t*/ __gmpfr_inp_str_x64(IntPtr /*mpfr_ptr*/ rop, IntPtr /*FILE **/ stream, int @base, int /*mpfr_rnd_t*/ rnd);
 
             [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
-            public static extern long /*intmax_t*/ __gmpfr_mpfr_get_sj(IntPtr /*mpfr_t*/ rop, int /*mpfr_rnd_t*/ rnd);
+            public static extern long /*intmax_t*/ __gmpfr_mpfr_get_sj(IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
             [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
-            public static extern ulong /*uintmax_t*/ __gmpfr_mpfr_get_uj(IntPtr /*mpfr_t*/ rop, int /*mpfr_rnd_t*/ rnd);
+            public static extern ulong /*uintmax_t*/ __gmpfr_mpfr_get_uj(IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
             [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int __gmpfr_set_sj(IntPtr /*mpfr_t*/ rop, long /*intmax_t*/ op, int /*mpfr_rnd_t*/ rnd);

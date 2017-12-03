@@ -7,9 +7,48 @@ using Math.Gmp.Native;
 namespace Math.Mpfr.Native
 {
 
+    /// <summary>
+    /// Represents a multiple precision floating-point number.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A floating-point number, or float for short, is an arbitrary precision significand (also called mantissa)
+    /// with a limited precision exponent.
+    /// The C data type for such objects is <see cref="mpfr_t"/> (internally defined as a one-element array of a
+    /// structure, and <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/4609ac5e-5cf9-cd20-2fa9-8040101c165c.htm">mp_ptr</a>
+    /// is the C data type representing a pointer to this structure).
+    /// A floating-point number can have three special values: Not-a-Number (NaN) or plus or minus Infinity.
+    /// NaN represents an uninitialized object, the result of an invalid operation (like 0 divided by 0), or
+    /// a value that cannot be determined (like +Infinity minus +Infinity).
+    /// Moreover, like in the IEEE 754 standard, zero is signed, i.e., there are both +0 and -0; the behavior
+    /// is the same as in the IEEE 754 standard and it is generalized to the other functions supported by MPFR.
+    /// Unless documented otherwise, the sign bit of a NaN is unspecified. 
+    /// </para>
+    /// <para>
+    /// The precision is the number of bits used to represent the significand of a floating-point number;
+    /// the corresponding C data type is <see cref="mpfr_prec_t"/>.
+    /// The precision can be any integer between <see cref="mpfr_lib.MPFR_PREC_MIN"/> and <see cref="mpfr_lib.MPFR_PREC_MAX"/>.
+    /// In the current implementation, <see cref="mpfr_lib.MPFR_PREC_MIN"/> is equal to 2. 
+    /// </para>
+    /// <para>
+    /// Warning! MPFR needs to increase the precision internally, in order to provide accurate results
+    /// (and in particular, correct rounding).
+    /// Do not attempt to set the precision to any value near <see cref="mpfr_lib.MPFR_PREC_MAX"/>, otherwise MPFR will
+    /// abort due to an assertion failure.
+    /// Moreover, you may reach some memory limit on your platform, in which case the program may abort, crash or have
+    /// undefined behavior (depending on your C implementation).
+    /// </para>
+    /// <para>
+    /// The rounding mode specifies the way to round the result of a floating-point operation, in case the exact result
+    /// can not be represented exactly in the destination significand; the corresponding C data type is <see cref="mpfr_rnd_t"/>. 
+    /// </para>
+    /// </remarks>
     public class mpfr_t : mp_base
     {
 
+        /// <summary>
+        /// The <see cref="mpfr_t"/> value.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool _initialized = false;
 
@@ -37,7 +76,7 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <remarks>
         /// <para>
-        ///  In any calculation the aim is to produce <see cref="_mp_prec"/> limbs of result (the most significant being non-zero). 
+        /// In any calculation the aim is to produce <see cref="_mpfr_prec"/> limbs of result (the most significant being non-zero). 
         /// </para>
         /// </remarks>
         public mpfr_prec_t _mpfr_prec
@@ -48,6 +87,12 @@ namespace Math.Mpfr.Native
             }
         }
 
+        /// <summary>
+        /// Gets the sign of the floating-point number.
+        /// </summary>
+        /// <seealso cref="mpfr_lib.mpfr_signbit"/>
+        /// <seealso cref="mpfr_lib.mpfr_setsign"/>
+        /// <seealso cref="mpfr_lib.mpfr_copysign"/>
         public mpfr_sign_t _mpfr_sign
         {
             get
@@ -57,18 +102,13 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// The exponent, in limbs, determining the location of the implied radix point.
+        /// The _mpfr_exp field stores the exponent.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// Zero means the radix point is just above the most significant limb.
-        /// Positive values mean a radix point offset towards the lower limbs and hence a value &#8805; 1, as for example in the diagram above.
-        /// Negative exponents mean a radix point further above the highest limb. 
-        /// </para>
-        /// <para>
-        /// Naturally the exponent can be any value, it doesn’t have to fall within the limbs as the diagram shows,
-        /// it can be a long way above or a long way below.
-        /// Limbs other than those included in the {<see cref="mp_base._mp_d"/>, <see cref="_mp_size"/>} data are treated as zero.
+        /// An exponent of 0 means a radix point just above the most significant limb.
+        /// Non-zero values n are a multiplier 2^n relative to that point.
+        /// A NaN, an infinity and a zero are indicated by special values of the exponent field. 
         /// </para>
         /// </remarks>
         public mpfr_exp_t _mpfr_exp
@@ -79,6 +119,19 @@ namespace Math.Mpfr.Native
             }
         }
 
+        /// <summary>
+        /// The <see cref="_mp_d_intptr"/> field is a pointer to the limbs, least significant limbs stored first. 
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The number of limbs in use is controlled by <see cref="_mpfr_prec"/>, namely
+        /// ceil(<see cref="_mpfr_prec"/> / <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/f88c76a8-118a-5cbd-0df1-e30adcacb8ae.htm">mp_bits_per_limb</a>).
+        /// Non-singular (i.e., different from NaN, Infinity or zero) values always have the most
+        /// significant bit of the most significant limb set to 1.
+        /// When the precision does not correspond to a whole number of limbs, the excess bits at
+        /// the low end of the data are zeros.
+        /// </para>
+        /// </remarks>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IntPtr _mp_d_intptr
         {
@@ -93,15 +146,8 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// The number of limbs currently in use, or the negative of that when representing a negative value.
+        /// The number of limbs currently in use.
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Zero is represented by <see cref="_mp_size"/> and <see cref="_mp_exp"/> both set to zero,
-        /// and in that case the <see cref="mp_base._mp_d"/> data is unused.
-        /// (In the future <see cref="_mp_exp"/> might be undefined when representing zero.) 
-        /// </para>
-        /// </remarks>
         public override mp_size_t _mp_size
         {
             get

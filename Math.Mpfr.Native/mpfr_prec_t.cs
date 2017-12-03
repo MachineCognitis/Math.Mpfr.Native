@@ -5,9 +5,15 @@ using System.Runtime.InteropServices;
 namespace Math.Mpfr.Native
 {
 
+    /// <summary>
+    /// Represents precision in number of bits.
+    /// </summary>
     public struct mpfr_prec_t
     {
 
+        /// <summary>
+        /// The <see cref="mpfr_prec_t"/> value.
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         public uint Value;
 
@@ -79,8 +85,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="mpfr_prec_t"/> value.</returns>
         public static explicit operator mpfr_prec_t(int value)
         {
-            //if (value < 0) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the mpfr_prec_t data type.", value));
-            return new mpfr_prec_t(unchecked((uint)value));
+            if (value < 0) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the mpfr_prec_t data type.", value));
+            return new mpfr_prec_t((uint)value);
         }
 
         /// <summary>
@@ -166,8 +172,8 @@ namespace Math.Mpfr.Native
         /// <returns>An <see cref="Int32"/> value.</returns>
         public static explicit operator int(mpfr_prec_t value)
         {
-            //if (value._value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int32 data type.", value));
-            return unchecked((int)value.Value);
+            if (value.Value > int.MaxValue) throw new System.OverflowException(String.Format(System.Globalization.CultureInfo.InvariantCulture, "'{0}' is out of range of the Int32 data type.", value));
+            return (int)value.Value;
         }
 
         /// <summary>
