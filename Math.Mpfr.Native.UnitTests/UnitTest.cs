@@ -393,107 +393,107 @@ namespace UnitTests
             mpfr_lib.mpfr_clears(x, y, z, result, null);
         }
 
-        [TestMethod]
-        public void va_list()
-        {
-            object[] args;
-            va_list va_args;
+        //[TestMethod]
+        //public void va_list()
+        //{
+        //    object[] args;
+        //    va_list va_args;
 
-            args = new object[] { new ptr<Char>('A') };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Char>)args[0]).Value == 'A');
+        //    args = new object[] { new ptr<Char>('A') };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Char>)args[0]).Value == 'A');
 
-            args = new object[] { new ptr<Byte>(Byte.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Byte>)args[0]).Value == Byte.MinValue);
+        //    args = new object[] { new ptr<Byte>(Byte.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Byte>)args[0]).Value == Byte.MinValue);
 
-            args = new object[] { new ptr<SByte>(SByte.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<SByte>)args[0]).Value == SByte.MaxValue);
+        //    args = new object[] { new ptr<SByte>(SByte.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<SByte>)args[0]).Value == SByte.MaxValue);
 
-            args = new object[] { new ptr<Int16>(Int16.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Int16>)args[0]).Value == Int16.MinValue);
+        //    args = new object[] { new ptr<Int16>(Int16.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Int16>)args[0]).Value == Int16.MinValue);
 
-            args = new object[] { new ptr<UInt16>(UInt16.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<UInt16>)args[0]).Value == UInt16.MaxValue);
+        //    args = new object[] { new ptr<UInt16>(UInt16.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<UInt16>)args[0]).Value == UInt16.MaxValue);
 
-            args = new object[] { new ptr<Int32>(Int32.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Int32>)args[0]).Value == Int32.MinValue);
+        //    args = new object[] { new ptr<Int32>(Int32.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Int32>)args[0]).Value == Int32.MinValue);
 
-            args = new object[] { new ptr<UInt32>(UInt32.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<UInt32>)args[0]).Value == UInt32.MaxValue);
+        //    args = new object[] { new ptr<UInt32>(UInt32.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<UInt32>)args[0]).Value == UInt32.MaxValue);
 
-            args = new object[] { new ptr<Int64>(Int64.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Int64>)args[0]).Value == Int64.MinValue);
+        //    args = new object[] { new ptr<Int64>(Int64.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Int64>)args[0]).Value == Int64.MinValue);
 
-            args = new object[] { new ptr<UInt64>(UInt64.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<UInt64>)args[0]).Value == UInt64.MaxValue);
+        //    args = new object[] { new ptr<UInt64>(UInt64.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<UInt64>)args[0]).Value == UInt64.MaxValue);
 
-            args = new object[] { new ptr<mp_bitcnt_t>(UInt32.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<mp_bitcnt_t>)args[0]).Value == UInt32.MaxValue);
+        //    args = new object[] { new ptr<mp_bitcnt_t>(UInt32.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<mp_bitcnt_t>)args[0]).Value == UInt32.MaxValue);
 
-            args = new object[] { new ptr<mp_size_t>(Int32.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<mp_size_t>)args[0]).Value == Int32.MinValue);
+        //    args = new object[] { new ptr<mp_size_t>(Int32.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<mp_size_t>)args[0]).Value == Int32.MinValue);
 
-            args = new object[] { new ptr<Single>(Single.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Single>)args[0]).Value == Single.MinValue);
+        //    args = new object[] { new ptr<Single>(Single.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Single>)args[0]).Value == Single.MinValue);
 
-            args = new object[] { new ptr<Double>(Double.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<Double>)args[0]).Value == Double.MaxValue);
+        //    args = new object[] { new ptr<Double>(Double.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<Double>)args[0]).Value == Double.MaxValue);
 
-            args = new object[] { new ptr<mp_limb_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<mp_limb_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
+        //    args = new object[] { new ptr<mp_limb_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<mp_limb_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
 
-            args = new object[] { new ptr<size_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<size_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
+        //    args = new object[] { new ptr<size_t>(IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<size_t>)args[0]).Value == (IntPtr.Size == 4 ? UInt32.MaxValue : UInt64.MaxValue));
 
-            args = new object[] { new ptr<uintmax_t>(UInt64.MaxValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<uintmax_t>)args[0]).Value == UInt64.MaxValue);
+        //    args = new object[] { new ptr<uintmax_t>(UInt64.MaxValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<uintmax_t>)args[0]).Value == UInt64.MaxValue);
 
-            args = new object[] { new ptr<intmax_t>(Int64.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<intmax_t>)args[0]).Value == Int64.MinValue);
+        //    args = new object[] { new ptr<intmax_t>(Int64.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<intmax_t>)args[0]).Value == Int64.MinValue);
 
-            args = new object[] { new ptr<mp_exp_t>(Int32.MinValue) };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((ptr<mp_exp_t>)args[0]).Value == Int32.MinValue);
+        //    args = new object[] { new ptr<mp_exp_t>(Int32.MinValue) };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((ptr<mp_exp_t>)args[0]).Value == Int32.MinValue);
 
-            args = new object[] { new StringBuilder("ABCDEFGHIJ") };
-            va_args = new va_list(args);
-            va_args.RetrieveArgumentValues();
-            Assert.IsTrue(((StringBuilder)args[0]).ToString() == "ABCDEFGHIJ");
-        }
+        //    args = new object[] { new StringBuilder("ABCDEFGHIJ") };
+        //    va_args = new va_list(args);
+        //    va_args.RetrieveArgumentValues();
+        //    Assert.IsTrue(((StringBuilder)args[0]).ToString() == "ABCDEFGHIJ");
+        //}
 
         #endregion
 

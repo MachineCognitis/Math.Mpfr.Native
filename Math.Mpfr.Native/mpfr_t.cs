@@ -14,7 +14,7 @@ namespace Math.Mpfr.Native
     /// <para>
     /// A floating-point number, or float for short, is an arbitrary precision significand (also called mantissa)
     /// with a limited precision exponent.
-    /// The C data type for such objects is <see cref="mpfr_t"/> (internally defined as a one-element array of a
+    /// The C data type for such objects is <see cref="mpfr_t">mpfr_t</see> (internally defined as a one-element array of a
     /// structure, and <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/4609ac5e-5cf9-cd20-2fa9-8040101c165c.htm">mp_ptr</a>
     /// is the C data type representing a pointer to this structure).
     /// A floating-point number can have three special values: Not-a-Number (NaN) or plus or minus Infinity.
@@ -26,28 +26,28 @@ namespace Math.Mpfr.Native
     /// </para>
     /// <para>
     /// The precision is the number of bits used to represent the significand of a floating-point number;
-    /// the corresponding C data type is <see cref="mpfr_prec_t"/>.
-    /// The precision can be any integer between <see cref="mpfr_lib.MPFR_PREC_MIN"/> and <see cref="mpfr_lib.MPFR_PREC_MAX"/>.
-    /// In the current implementation, <see cref="mpfr_lib.MPFR_PREC_MIN"/> is equal to 2. 
+    /// the corresponding C data type is <see cref="mpfr_prec_t">mpfr_prec_t</see>.
+    /// The precision can be any integer between <see cref="mpfr_lib.MPFR_PREC_MIN">mpfr_lib.MPFR_PREC_MIN</see> and <see cref="mpfr_lib.MPFR_PREC_MAX">mpfr_lib.MPFR_PREC_MAX</see>.
+    /// In the current implementation, <see cref="mpfr_lib.MPFR_PREC_MIN">mpfr_lib.MPFR_PREC_MIN</see> is equal to 2. 
     /// </para>
     /// <para>
     /// Warning! MPFR needs to increase the precision internally, in order to provide accurate results
     /// (and in particular, correct rounding).
-    /// Do not attempt to set the precision to any value near <see cref="mpfr_lib.MPFR_PREC_MAX"/>, otherwise MPFR will
+    /// Do not attempt to set the precision to any value near <see cref="mpfr_lib.MPFR_PREC_MAX">mpfr_lib.MPFR_PREC_MAX</see>, otherwise MPFR will
     /// abort due to an assertion failure.
     /// Moreover, you may reach some memory limit on your platform, in which case the program may abort, crash or have
     /// undefined behavior (depending on your C implementation).
     /// </para>
     /// <para>
     /// The rounding mode specifies the way to round the result of a floating-point operation, in case the exact result
-    /// can not be represented exactly in the destination significand; the corresponding C data type is <see cref="mpfr_rnd_t"/>. 
+    /// can not be represented exactly in the destination significand; the corresponding C data type is <see cref="mpfr_rnd_t">mpfr_rnd_t</see>. 
     /// </para>
     /// </remarks>
     public class mpfr_t : mp_base
     {
 
         /// <summary>
-        /// The <see cref="mpfr_t"/> value.
+        /// The <see cref="mpfr_t">mpfr_t</see> value.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool _initialized = false;
@@ -76,7 +76,7 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <remarks>
         /// <para>
-        /// In any calculation the aim is to produce <see cref="_mpfr_prec"/> limbs of result (the most significant being non-zero). 
+        /// In any calculation the aim is to produce <see cref="_mpfr_prec">_mpfr_prec</see> limbs of result (the most significant being non-zero). 
         /// </para>
         /// </remarks>
         public mpfr_prec_t _mpfr_prec
@@ -90,9 +90,9 @@ namespace Math.Mpfr.Native
         /// <summary>
         /// Gets the sign of the floating-point number.
         /// </summary>
-        /// <seealso cref="mpfr_lib.mpfr_signbit"/>
-        /// <seealso cref="mpfr_lib.mpfr_setsign"/>
-        /// <seealso cref="mpfr_lib.mpfr_copysign"/>
+        /// <seealso cref="mpfr_lib.mpfr_signbit">mpfr_signbit</seealso>
+        /// <seealso cref="mpfr_lib.mpfr_setsign">mpfr_setsign</seealso>
+        /// <seealso cref="mpfr_lib.mpfr_copysign">mpfr_copysign</seealso>
         public mpfr_sign_t _mpfr_sign
         {
             get
@@ -120,12 +120,12 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// The <see cref="_mp_d_intptr"/> field is a pointer to the limbs, least significant limbs stored first. 
+        /// The <see cref="_mp_d_intptr">_mp_d_intptr</see> field is a pointer to the limbs, least significant limbs stored first. 
         /// </summary>
         /// <remarks>
         /// <para>
-        /// The number of limbs in use is controlled by <see cref="_mpfr_prec"/>, namely
-        /// ceil(<see cref="_mpfr_prec"/> / <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/f88c76a8-118a-5cbd-0df1-e30adcacb8ae.htm">mp_bits_per_limb</a>).
+        /// The number of limbs in use is controlled by <see cref="_mpfr_prec">_mpfr_prec</see>, namely
+        /// ceil(<see cref="_mpfr_prec">_mpfr_prec</see> / <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/f88c76a8-118a-5cbd-0df1-e30adcacb8ae.htm">mp_bits_per_limb</a>).
         /// Non-singular (i.e., different from NaN, Infinity or zero) values always have the most
         /// significant bit of the most significant limb set to 1.
         /// When the precision does not correspond to a whole number of limbs, the excess bits at
@@ -166,10 +166,10 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Converts a <see cref="string"/> value to an <see cref="mpfr_t"/> value.
+        /// Converts a <see cref="string">string</see> value to an <see cref="mpfr_t">mpfr_t</see> value.
         /// </summary>
-        /// <param name="value">A <see cref="string"/> value.</param>
-        /// <returns>An <see cref="mpfr_t"/> value.</returns>
+        /// <param name="value">A <see cref="string">string</see> value.</param>
+        /// <returns>An <see cref="mpfr_t">mpfr_t</see> value.</returns>
         /// <remarks>
         /// <para>
         /// Base is assumed to be 10 unless the first character of the string is <c>B</c>

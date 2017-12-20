@@ -33,10 +33,12 @@
             </div> (Overrides <a href="http://msdn2.microsoft.com/en-us/library/7bxwbwt2" target="_blank">Object<span id="LSTE40CF191_5"></span><script type="text/javascript">AddLanguageSpecificTextSet("LSTE40CF191_5?cs=.|vb=.|cpp=::|nu=.|fs=.");</script>ToString<span id="LSTE40CF191_6"></span><script type="text/javascript">AddLanguageSpecificTextSet("LSTE40CF191_6?cs=()|vb=|cpp=()|nu=()|fs=()");</script></a>.)</td></tr></table><a href="#PageHeader">Top</a></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID6RB')" onkeypress="SectionExpandCollapse_CheckKey('ID6RB', event)" tabindex="0"><img id="ID6RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Operators</span></div><div id="ID6RBSection" class="collapsibleSection"><table class="members" id="operatorList"><tr><th class="iconColumn">
 								 
 							</th><th>Name</th><th>Description</th></tr><tr data="public;static;declared;notNetfw;"><td><img src="../icons/puboperator.gif" alt="Public operator" title="Public operator" /><img src="../icons/static.gif" alt="Static member" title="Static member" /></td><td><a href="8de398a4-77e1-678d-6e24-6b6513c3476b.htm"><span id="LSTE40CF191_7"></span><script type="text/javascript">AddLanguageSpecificTextSet("LSTE40CF191_7?cs=Implicit|vb=Widening|cpp=Implicit|nu=Implicit|fs=Implicit");</script>(String to mpfr_t)</a></td><td><div class="summary">
-            Converts a <a href="http://msdn2.microsoft.com/en-us/library/s1wwdcbf" target="_blank">String</a> value to an <span class="selflink">mpfr_t</span> value.
+            Converts a <a href="http://msdn2.microsoft.com/en-us/library/s1wwdcbf" target="_blank">string</a> value to an <span class="selflink">mpfr_t</span> value.
             </div></td></tr></table><a href="#PageHeader">Top</a></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID7RB')" onkeypress="SectionExpandCollapse_CheckKey('ID7RB', event)" tabindex="0"><img id="ID7RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Fields</span></div><div id="ID7RBSection" class="collapsibleSection"><table class="members" id="fieldList"><tr><th class="iconColumn">
 								 
-							</th><th>Name</th><th>Description</th></tr><tr data="public;inherited;notNetfw;"><td><img src="../icons/pubfield.gif" alt="Public field" title="Public field" /></td><td><a href="8d76a7b0-6917-c5d0-3b4a-de767fd3ddd4.htm">Pointer</a></td><td> (Inherited from <a href="8f3c572b-8133-bccc-b838-9d22e3467898.htm">mp_base</a>.)</td></tr></table><a href="#PageHeader">Top</a></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID8RB')" onkeypress="SectionExpandCollapse_CheckKey('ID8RB', event)" tabindex="0"><img id="ID8RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Remarks</span></div><div id="ID8RBSection" class="collapsibleSection"><p>
+							</th><th>Name</th><th>Description</th></tr><tr data="public;inherited;notNetfw;"><td><img src="../icons/pubfield.gif" alt="Public field" title="Public field" /></td><td><a href="8d76a7b0-6917-c5d0-3b4a-de767fd3ddd4.htm">Pointer</a></td><td><div class="summary">
+            Pointer to limbs in unmanaged memory.
+            </div> (Inherited from <a href="8f3c572b-8133-bccc-b838-9d22e3467898.htm">mp_base</a>.)</td></tr></table><a href="#PageHeader">Top</a></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID8RB')" onkeypress="SectionExpandCollapse_CheckKey('ID8RB', event)" tabindex="0"><img id="ID8RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Remarks</span></div><div id="ID8RBSection" class="collapsibleSection"><p>
             A floating-point number, or float for short, is an arbitrary precision significand (also called mantissa)
             with a limited precision exponent.
             The C data type for such objects is <span class="selflink">mpfr_t</span> (internally defined as a one-element array of a
@@ -51,12 +53,12 @@
             </p><p>
             The precision is the number of bits used to represent the significand of a floating-point number;
             the corresponding C data type is <a href="17fd6845-f3b5-5c4a-18fd-4d45a9abf415.htm">mpfr_prec_t</a>.
-            The precision can be any integer between <a href="171bee53-85ad-d75d-4ac8-7d5cccd390da.htm">MPFR_PREC_MIN</a> and <a href="49652a3e-439a-531b-a50d-b66875f99733.htm">MPFR_PREC_MAX</a>.
-            In the current implementation, <a href="171bee53-85ad-d75d-4ac8-7d5cccd390da.htm">MPFR_PREC_MIN</a> is equal to 2. 
+            The precision can be any integer between <a href="171bee53-85ad-d75d-4ac8-7d5cccd390da.htm">mpfr_lib.MPFR_PREC_MIN</a> and <a href="49652a3e-439a-531b-a50d-b66875f99733.htm">mpfr_lib.MPFR_PREC_MAX</a>.
+            In the current implementation, <a href="171bee53-85ad-d75d-4ac8-7d5cccd390da.htm">mpfr_lib.MPFR_PREC_MIN</a> is equal to 2. 
             </p><p>
             Warning! MPFR needs to increase the precision internally, in order to provide accurate results
             (and in particular, correct rounding).
-            Do not attempt to set the precision to any value near <a href="49652a3e-439a-531b-a50d-b66875f99733.htm">MPFR_PREC_MAX</a>, otherwise MPFR will
+            Do not attempt to set the precision to any value near <a href="49652a3e-439a-531b-a50d-b66875f99733.htm">mpfr_lib.MPFR_PREC_MAX</a>, otherwise MPFR will
             abort due to an assertion failure.
             Moreover, you may reach some memory limit on your platform, in which case the program may abort, crash or have
             undefined behavior (depending on your C implementation).

@@ -14,7 +14,7 @@
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <FrameworkVersion>.NET Framework 2.0</FrameworkVersion>
+    <FrameworkVersion>.NET Framework 4.0</FrameworkVersion>
     <OutputPath>..\docs\</OutputPath>
     <HtmlHelpName>Mpfr.Native</HtmlHelpName>
     <Language>en-US</Language>
@@ -33,8 +33,8 @@
     </TransformComponentArguments>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\Math.Mpfr.Native\Math.Mpfr.Native.csproj" />
-      <DocumentationSource sourceFile="..\packages\Math.Gmp.Native.NET.1.6.5\lib\net20\Math.Gmp.Native.dll" />
-      <DocumentationSource sourceFile="..\packages\Math.Gmp.Native.NET.1.6.5\lib\net20\Math.Gmp.Native.xml" />
+      <DocumentationSource sourceFile="..\Math.Mpfr.Native\bin\Release\Math.Gmp.Native.dll" />
+      <DocumentationSource sourceFile="..\Math.Mpfr.Native\bin\Release\Math.Gmp.Native.xml" />
     </DocumentationSources>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
@@ -46,6 +46,7 @@
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" />
       <NamespaceSummaryItem name="Math.Mpfr.Native" isDocumented="True">The Math.Mpfr.Native namespace contains types defined to expose all of the GNU MPFR functionality to .NET.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="Math.Gmp.Native" isDocumented="True">The Math.Gmp.Native namespace contains types defined to expose all of the GNU GMP functionality to .NET.</NamespaceSummaryItem>
     </NamespaceSummaries>
     <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>

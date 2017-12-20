@@ -41,7 +41,7 @@ namespace Math.Mpfr.Native
         MPFR_RNDF = 5,
 
         /// <summary>
-        /// Round to nearest, with ties away from zero (<see cref="mpfr_lib.mpfr_round"/>).
+        /// Round to nearest, with ties away from zero (<see cref="mpfr_lib.mpfr_round">mpfr_lib.mpfr_round</see>).
         /// </summary>
         MPFR_RNDNA = -1
     }

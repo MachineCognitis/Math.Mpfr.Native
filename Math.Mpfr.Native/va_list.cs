@@ -35,7 +35,7 @@ namespace Math.Mpfr.Native
         /// <summary>
         /// Creates a variable list of arguments in unmanaged memory.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">The list of arguments.</param>
         public va_list(params object[] args)
         {
             va_args = new va_arg[args[args.Length - 1] == null ? args.Length - 1 : args.Length];
@@ -698,7 +698,7 @@ namespace Math.Mpfr.Native
         /// <summary>
         /// Return the pointer to the list of arguments in unmanaged memory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The pointer to the list of arguments in unmanaged memory.</returns>
         public IntPtr ToIntPtr()
         {
             return arguments;
