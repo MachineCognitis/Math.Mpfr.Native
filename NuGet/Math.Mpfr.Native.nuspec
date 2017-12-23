@@ -25,8 +25,8 @@ Supported Platform: .NET Framework 4.0+</description>
         <reference file="Math.Mpfr.Native.dll" />
       </references>
       <dependencies>
-        <dependency id="Math.Gmp.Native.NET" version="2.0.0-pre14" />
-        <!--<dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.1" />-->
+        <dependency id="Math.Gmp.Native.NET" version="2.0.0" />
+        <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.1" />
       </dependencies>
     </metadata>
     <files>
