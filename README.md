@@ -1,7 +1,7 @@
 
 # Welcome to the MPFR Native Interface for .NET Library
 The MPFR Native Interface for .NET Library exposes to .NET (through P-Invoke and .NET types) all of
-the functionality of the [GNU MPFR](https://mpfrlib.org/) Library (version 3.1.6).
+the functionality of the [GNU MPFR](http://www.mpfr.org/) Library (version 3.1.6).
 It automatically loads at runtime the 32-bit or 64-bit GNU MPFR library that matches the current CPU
 architecture, thus allowing building Visual Studio Projects for AnyCPU, x86, or x64.
 It is based on the GNU MP "fat" build which automatically detects the current CPU type, and selects
