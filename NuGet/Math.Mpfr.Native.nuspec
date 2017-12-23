@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Math.Mpfr.Native.NET</id>
-        <version>1.0.0=pre01</version>
+        <version>1.0.0</version>
         <title>MPFR Native Interface for .NET</title>
         <authors>Robert Baron (Machine Cognitis)</authors>
         <owners>Robert Baron (Machine Cognitis)</owners>
@@ -25,7 +25,8 @@ Supported Platform: .NET Framework 4.0+</description>
         <reference file="Math.Mpfr.Native.dll" />
       </references>
       <dependencies>
-        <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.1" />
+        <dependency id="Math.Gmp.Native.NET" version="2.0.0-pre14" />
+        <!--<dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.1" />-->
       </dependencies>
     </metadata>
     <files>

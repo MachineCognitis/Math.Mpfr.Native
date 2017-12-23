@@ -1827,8 +1827,8 @@
   <HelpKINode Title="reallocate method" Url="html/067f64f9-7014-8c6a-3c02-153c1460a1dd.htm" />
   <HelpKINode Title="reallocate_function delegate" Url="html/aa9d21b4-a929-d550-5a65-f9cbcfa7f638.htm" />
   <HelpKINode Title="RetrieveArgumentValues method">
-    <HelpKINode Title="va_list.RetrieveArgumentValues Method " Url="html/4933b34c-6ca2-3188-ce88-46a31f67837f.htm" />
     <HelpKINode Title="va_list.RetrieveArgumentValues Method " Url="html/ddbcfc40-f5e5-a37b-6a8c-76e08932025a.htm" />
+    <HelpKINode Title="va_list.RetrieveArgumentValues Method " Url="html/4933b34c-6ca2-3188-ce88-46a31f67837f.htm" />
   </HelpKINode>
   <HelpKINode Title="SByte to intmax_t conversion" Url="html/8a52da08-6eb0-3b6a-6846-5438315d0ace.htm" />
   <HelpKINode Title="SByte to mpfr_exp_t conversion" Url="html/7d0ebae7-f0f3-4f3e-0677-d4c02177eee3.htm" />
@@ -1876,8 +1876,8 @@
     <HelpKINode Title="mpq_t.ToIntPtr Method " Url="html/ce76ca4d-3aab-d682-1f85-aa95ce7d43a9.htm" />
     <HelpKINode Title="mpz_t.ToIntPtr Method " Url="html/018d9747-3053-df6d-2bb3-5273ad735860.htm" />
     <HelpKINode Title="mp_ptr.ToIntPtr Method " Url="html/659f2b6c-790b-e9b9-cc61-e8fc8a4bd2c0.htm" />
-    <HelpKINode Title="va_list.ToIntPtr Method " Url="html/13e99044-0242-c6b6-6a32-e9abb01ceaaa.htm" />
     <HelpKINode Title="va_list.ToIntPtr Method " Url="html/ca1e880d-9f46-3083-81c2-de6d5a0d9ce5.htm" />
+    <HelpKINode Title="va_list.ToIntPtr Method " Url="html/13e99044-0242-c6b6-6a32-e9abb01ceaaa.htm" />
     <HelpKINode Title="void_ptr.ToIntPtr Method " Url="html/3e1375c2-3f44-721d-6ef3-32e49a3d7d3b.htm" />
   </HelpKINode>
   <HelpKINode Title="ToString method">
@@ -1969,10 +1969,10 @@
     <HelpKINode Title="va_list Class" Url="html/434d2691-37f0-18ed-1a50-d1a758f082f4.htm" />
     <HelpKINode Title="about va_list class" Url="html/4f2255b8-b87a-7b1b-286a-abb7293059d7.htm" />
     <HelpKINode Title="about va_list class" Url="html/434d2691-37f0-18ed-1a50-d1a758f082f4.htm" />
-    <HelpKINode Title="constructor" Url="html/e483f3ae-5222-9bbe-a08e-2556c3f3c162.htm" />
     <HelpKINode Title="constructor" Url="html/ae56ba7a-658c-10a7-c441-f44b82161113.htm" />
-    <HelpKINode Title="methods" Url="html/0af0c5f7-045d-d0b0-fe24-f20f44b030dc.htm" />
+    <HelpKINode Title="constructor" Url="html/e483f3ae-5222-9bbe-a08e-2556c3f3c162.htm" />
     <HelpKINode Title="methods" Url="html/6d5ffeb3-2444-f42f-cb95-883a23b88e90.htm" />
+    <HelpKINode Title="methods" Url="html/0af0c5f7-045d-d0b0-fe24-f20f44b030dc.htm" />
   </HelpKINode>
   <HelpKINode Title="va_list.RetrieveArgumentValues method">
     <HelpKINode Title="va_list.RetrieveArgumentValues Method " Url="html/4933b34c-6ca2-3188-ce88-46a31f67837f.htm" />
