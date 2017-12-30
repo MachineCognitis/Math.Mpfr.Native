@@ -260,9 +260,9 @@
               Build <externalLink><linkText>GNU MPFR</linkText><linkUri>https://mpfrlib.org/</linkUri><linkTarget>_self</linkTarget></externalLink>.
             </para>
             <para>
-              Unzip <externalLink><linkText>mpfr-6.1.2.tar.bz2</linkText><linkUri>https://github.com/MachineCognitis/Math.Mpfr.Native/blob/master/Math.Mpfr.Native/Dependencies/</linkUri><linkTarget>_self</linkTarget></externalLink>
+              Unzip <externalLink><linkText>mpfr-3.1.6.tar.bz2</linkText><linkUri>https://github.com/MachineCognitis/Math.Mpfr.Native/blob/master/Math.Mpfr.Native/Dependencies/</linkUri><linkTarget>_self</linkTarget></externalLink>
               in folder <localUri>C:\Temp</localUri>.
-              This puts GNU MPFR in subfolder <localUri>mpfr-6.1.2</localUri>.
+              This puts GNU MPFR in subfolder <localUri>mpfr-3.1.6</localUri>.
             </para>
             <para>
               In each one of the command windows openend with the commands <command>MSYS2 MinGW 32-bit</command>
@@ -271,7 +271,7 @@
             <list class="nobullet">
                <listItem>
                  <para>
-                   <userInput>cd /c/Temp/mpfr-6.1.2</userInput><markup><br/></markup>
+                   <userInput>cd /c/Temp/mpfr-3.1.6</userInput><markup><br/></markup>
                    <userInput>./configure CC="gcc -static-libgcc" --with-gmp=/c/Temp/x86</userInput> or <userInput>x64 --enable-static --prefix=/c/Temp/x86</userInput> or <userInput>x64</userInput><markup><br/></markup>
                    <userInput>make</userInput><markup><br/></markup>
                 </para>

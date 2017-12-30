@@ -2,16 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Math.Mpfr.Native.NET</id>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <title>MPFR Native Interface for .NET</title>
         <authors>Robert Baron (Machine Cognitis)</authors>
         <owners>Robert Baron (Machine Cognitis)</owners>
         <licenseUrl>https://github.com/MachineCognitis/Math.Mpfr.Native/blob/master/LICENSE.md</licenseUrl>
         <projectUrl>https://github.com/MachineCognitis/Math.Mpfr.Native/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>The MPFR Native Interface for .NET Library exposes to .NET (through P-Invoke and .NET types) all of the functionality of the GNU MPFR Library (version 6.1.2). It automatically loads at runtime the 32-bit or 64-bit GNU MPFR library that matches the current CPU architecture, thus allowing building Visual Studio Projects for AnyCPU, x86, or x64. It is based on the GNU MPFR "fat" build which automatically detects the current CPU type, and selects any available assembly language code optimization for that CPU, thus providing optimal performance.
+        <description>
+          The MPFR Native Interface for .NET Library exposes to .NET (through P-Invoke and .NET types) all of the functionality of the GNU MPFR Library (version 6.1.2). It automatically loads at runtime the 32-bit or 64-bit GNU MPFR library that matches the current CPU architecture, thus allowing building Visual Studio Projects for AnyCPU, x86, or x64. It is based on the GNU MPFR "fat" build which automatically detects the current CPU type, and selects any available assembly language code optimization for that CPU, thus providing optimal performance.
 
-Documentation with sample usage is given at the Project URL. GNU MPFR is at https://mpfrlib.org/.
+Because GNU MPFR depends on GNU MP (https://gmplib.org/), this package depends on the Math.Gmp.Native.NET package which exposes all of the GNU MP library (v6.1.2).
+
+Documentation with sample usage is given at the Project URL. GNU MPFR is at http://www.mpfr.org/.
 
 Supported Platform: .NET Framework 4.0+</description>
         <summary>MPFR Native Interface for .NET</summary>
