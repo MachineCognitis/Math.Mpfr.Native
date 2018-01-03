@@ -38,9 +38,9 @@ Supported Platform: .NET Framework 4.0+</description>
         <file src="..\Math.Mpfr.Native\bin\Release\Math.Mpfr.Native.xml" target="lib\net20\Math.Mpfr.Native.xml" />
         <file src="..\Math.Mpfr.Native\bin\Release\x86\MPFR_COPYING" target="output\x86\MPFR_COPYING" />
         <file src="..\Math.Mpfr.Native\bin\Release\x86\MPFR_README" target="output\x86\MPFR_README" />
-        <file src="..\Math.Mpfr.Native\bin\Release\x86\libmpfr-4.dll" target="output\x86\libmpfr-4.dll" />
+        <file src="..\Math.Mpfr.Native\bin\Release\x86\libmpfr-6.dll" target="output\x86\libmpfr-4.dll" />
         <file src="..\Math.Mpfr.Native\bin\Release\x64\MPFR_COPYING" target="output\x64\MPFR_COPYING" />
         <file src="..\Math.Mpfr.Native\bin\Release\x64\MPFR_README" target="output\x64\MPFR_README" />
-        <file src="..\Math.Mpfr.Native\bin\Release\x64\libmpfr-4.dll" target="output\x64\libmpfr-4.dll" />
+        <file src="..\Math.Mpfr.Native\bin\Release\x64\libmpfr-6.dll" target="output\x64\libmpfr-4.dll" />
     </files>
 </package>
