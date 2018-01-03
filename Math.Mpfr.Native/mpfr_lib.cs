@@ -86,6 +86,7 @@ namespace Math.Mpfr.Native
     /// <item><description><see cref="mpfr_get_ui">mpfr_get_ui</see> - Convert <i>op</i> to an unsigned long after rounding it with respect to <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_get_uj">mpfr_get_uj</see> - Convert <i>op</i> to an <see cref="uintmax_t">uintmax_t</see> after rounding it with respect to <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_get_z">mpfr_get_z</see> - Convert <i>op</i> to a <see cref="mpz_t">mpz_t</see>, after rounding it with respect to <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_get_q">mpfr_get_q</see> - Convert <i>op</i> to a <see cref="mpq_t"/>.</description></item>
     /// <item><description><see cref="mpfr_get_z_2exp">mpfr_get_z_2exp</see> - Put the scaled significand of <i>op</i>  into <i>rop</i>, and return the exponent exp  such that <i>op</i> = <i>rop</i> * 2^exp.</description></item>
     /// </list>
     /// <para><a name="Basic_Arithmetic_Functions"/><h3>Basic Arithmetic Functions:</h3></para>
@@ -98,6 +99,7 @@ namespace Math.Mpfr.Native
     /// <item><description><see cref="mpfr_add_ui">mpfr_add_ui</see> - Set <i>rop</i> to <i>op1</i> + <i>op2</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_add_z">mpfr_add_z</see> - Set <i>rop</i> to <i>op1</i> + <i>op2</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_cbrt">mpfr_cbrt</see> - Set <i>rop</i> to the cubic root of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_rootn_ui">mpfr_rootn_ui</see> - Set <i>rop</i> to the <i>k</i>th root of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_d_div">mpfr_d_div</see> - Set <i>rop</i> to <i>op1</i> / <i>op2</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_d_sub">mpfr_d_sub</see> - Set <i>rop</i> to <i>op1</i> - <i>op2</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_dim">mpfr_dim</see> - Set <i>rop</i> to the positive difference of <i>op1</i> and <i>op2</i>, i.e., <i>op1</i> - <i>op2</i> rounded in the direction <i>rnd</i> if <i>op1</i> &gt; <i>op2</i>, +0 if <i>op1</i> &#8804; <i>op2</i>, and NaN if <i>op1</i> or <i>op2</i> is NaN.</description></item>
@@ -196,12 +198,19 @@ namespace Math.Mpfr.Native
     /// <item><description><see cref="mpfr_exp">mpfr_exp</see> - Set <i>rop</i> to the exponential of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_exp10">mpfr_exp10</see> - Set <i>rop</i> to 10^<i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_exp2">mpfr_exp2</see> - Set <i>rop</i> to 2^<i>op</i> rounded in the direction <i>rnd</i>.</description></item>
-    /// <item><description><see cref="mpfr_expm1">mpfr_expm1</see> - Set <i>rop</i> to the exponential of <i>op</i> followed by a subtraction by one, rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_expm1">mpfr_expm1</see> - Set <i>rop</i> to the e^<i>op</i> - 1, rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_fac_ui">mpfr_fac_ui</see> - Set <i>rop</i> to the factorial of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
-    /// <item><description><see cref="mpfr_fma">mpfr_fma</see> - Set <i>rop</i> to  + <i>op3</i> rounded in the direction <i>rnd</i>.</description></item>
-    /// <item><description><see cref="mpfr_fms">mpfr_fms</see> - Set <i>rop</i> to  - <i>op3</i> rounded in the direction <i>rnd</i>.</description></item>
-    /// <item><description><see cref="mpfr_free_cache">mpfr_free_cache</see> - Free various caches used by MPFR internally, in particular the caches used by the functions computing constants .</description></item>
+    /// <item><description><see cref="mpfr_fma">mpfr_fma</see> - Set <i>rop</i> to (<i>op1</i> × <i>op2</i>) + <i>op3</i> rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_fms">mpfr_fms</see> - Set <i>rop</i> to (<i>op1</i> × <i>op2</i>) - <i>op3</i> rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_fmma">mpfr_fmma</see> - Set <i>rop</i> to (<i>op1</i> × <i>op2</i>) + (<i>op3</i> × <i>op4</i>) rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_fmms">mpfr_fmms</see> - Set <i>rop</i> to (<i>op1</i> × <i>op2</i>) - (<i>op3</i> × <i>op4</i>) rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_free_cache">mpfr_free_cache</see> - Free all caches and pools used by MPFR internally.</description></item>
+    /// <item><description><see cref="mpfr_free_cache2">mpfr_free_cache2</see> - Free various caches and pools used by MPFR internally, as specified by <i>way</i>, which is a set of flags.</description></item>
+    /// <item><description><see cref="mpfr_free_pool">mpfr_free_pool</see> - Free the pools used by MPFR internally.</description></item>
+    /// <item><description><see cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</see> - This function should be called before calling <see cref="gmp_lib.mp_set_memory_functions"/>.</description></item>
     /// <item><description><see cref="mpfr_gamma">mpfr_gamma</see> - Set <i>rop</i> to the value of the Gamma function on <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_gamma_inc">mpfr_gamma_inc</see> - Set <i>rop</i> to the value of the Incomplete Gamma function on <i>op</i> and <i>op2</i> rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_beta">mpfr_beta</see> - Set <i>rop</i> to the value of the Beta function at arguments <i>op1</i> and <i>op2</i>, rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_hypot">mpfr_hypot</see> - Set <i>rop</i> to the Euclidean norm of <i>x</i> and <i>y</i>, i.e., the square root of the sum of the squares of <i>x</i> and <i>y</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_j0">mpfr_j0</see> - Set <i>rop</i> to the value of the first kind Bessel function of order 0 on <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_j1">mpfr_j1</see> - Set <i>rop</i> to the value of the first kind Bessel function of order 1 on <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
@@ -210,6 +219,7 @@ namespace Math.Mpfr.Native
     /// <item><description><see cref="mpfr_li2">mpfr_li2</see> - Set <i>rop</i> to real part of the dilogarithm of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_lngamma">mpfr_lngamma</see> - Set <i>rop</i> to the value of the logarithm of the Gamma function on <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_log">mpfr_log</see> - Set <i>rop</i> to the natural logarithm of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_log_ui">mpfr_log_ui</see> - Set <i>rop</i> to the natural logarithm of <i>op</i> rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_log10">mpfr_log10</see> - Set <i>rop</i> to log10 rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_log1p">mpfr_log1p</see> - Set <i>rop</i> to the logarithm of one plus <i>op</i>, rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_log2">mpfr_log2</see> - Set <i>rop</i> to log2 rounded in the direction <i>rnd</i>.</description></item>
@@ -231,6 +241,8 @@ namespace Math.Mpfr.Native
     /// <list type="bullet">
     /// <item><description><see cref="mpfr_inp_str">mpfr_inp_str</see> - Input a string in base <i>base</i> from stream <i>stream</i>, rounded in the direction <i>rnd</i>, and put the read float in <i>rop</i>.</description></item>
     /// <item><description><see cref="mpfr_out_str">mpfr_out_str</see> - Output <i>op</i> on stream <i>stream</i>, as a string of digits in base <i>base</i>, rounded in the direction <i>rnd</i>.</description></item>
+    /// <item><description><see cref="mpfr_fpif_import">mpfr_fpif_import</see> - Import the number <i>op</i> from the stream <i>stream</i> in a floating-point interchange format (see <see cref="mpfr_fpif_export"/>).</description></item>
+    /// <item><description><see cref="mpfr_fpif_export">mpfr_fpif_export</see> - Export the number <i>op</i> to the stream <i>stream</i> in a floating-point interchange format.</description></item>
     /// </list>
     /// <para><a name="Formatted_Output_Functions"/><h3>Formatted Output Functions:</h3></para>
     /// <list type="bullet">
@@ -247,9 +259,10 @@ namespace Math.Mpfr.Native
     /// </list>
     /// <para><a name="Integer_and_Remainder_Related_Functions"/><h3>Integer and Remainder Related Functions:</h3></para>
     /// <list type="bullet">
-    /// <item><description><see cref="mpfr_ceil">mpfr_ceil</see> - Set <i>rop</i> to <i>op</i> rounded to the next higher or equal representable integer.</description></item>
-    /// <item><description><see cref="mpfr_floor">mpfr_floor</see> - Set <i>rop</i> to <i>op</i> rounded to the next lower or equal representable integer.</description></item>
+    /// <item><description><see cref="mpfr_ceil">mpfr_ceil</see> - Set <i>rop</i> to <i>op</i> rounded to the next higher or equal representable integer (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDU"/>).</description></item>
+    /// <item><description><see cref="mpfr_floor">mpfr_floor</see> - Set <i>rop</i> to <i>op</i> rounded to the next lower or equal representable integer (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDD"/>).</description></item>
     /// <item><description><see cref="mpfr_fmod">mpfr_fmod</see> - Set <i>r</i> to the value of <i>x</i> - n * <i>y</i>, rounded according to the direction <i>rnd</i>, where n is the integer quotient of <i>x</i> divided by <i>y</i>, rounded toward zero.</description></item>
+    /// <item><description><see cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmodquo</see> - Set <i>r</i> to the value of <i>x</i> - n * <i>y</i>, rounded according to the direction <i>rnd</i>, where n is the integer quotient of <i>x</i> divided by <i>y</i>, rounded toward zero.</description></item>
     /// <item><description><see cref="mpfr_frac">mpfr_frac</see> - Set <i>rop</i> to the fractional part of <i>op</i>, having the same sign as <i>op</i>, rounded in the direction <i>rnd</i>.</description></item>
     /// <item><description><see cref="mpfr_integer_p">mpfr_integer_p</see> - Return non-zero iff <i>op</i> is an integer.</description></item>
     /// <item><description><see cref="mpfr_modf">mpfr_modf</see> - Set simultaneously <i>iop</i> to the integral part of <i>op</i> and <i>fop</i> to the fractional part of <i>op</i>, rounded in the direction <i>rnd</i> with the corresponding precision of <i>iop</i> and <i>fop</i>.</description></item>
@@ -259,9 +272,11 @@ namespace Math.Mpfr.Native
     /// <item><description><see cref="mpfr_rint_ceil">mpfr_rint_ceil</see> - Set <i>rop</i> to <i>op</i> rounded to the next higher or equal integer.</description></item>
     /// <item><description><see cref="mpfr_rint_floor">mpfr_rint_floor</see> - Set <i>rop</i> to <i>op</i> rounded to the next lower or equal integer.</description></item>
     /// <item><description><see cref="mpfr_rint_round">mpfr_rint_round</see> - Set <i>rop</i> to <i>op</i> rounded to the nearest integer, rounding halfway cases away from zero.</description></item>
+    /// <item><description><see cref="mpfr_rint_roundeven">mpfr_rint_roundeven</see> - Set <i>rop</i> to <i>op</i> rounded to the nearest integer, rounding halfway cases to the nearest even integer.</description></item>
     /// <item><description><see cref="mpfr_rint_trunc">mpfr_rint_trunc</see> - Set <i>rop</i> to <i>op</i> rounded to the next integer toward zero.</description></item>
-    /// <item><description><see cref="mpfr_round">mpfr_round</see> - Set <i>rop</i> to <i>op</i> rounded to the nearest representable integer, rounding halfway cases away from zero .</description></item>
-    /// <item><description><see cref="mpfr_trunc">mpfr_trunc</see> - Set <i>rop</i> to <i>op</i> rounded to the next representable integer toward zero.</description></item>
+    /// <item><description><see cref="mpfr_round">mpfr_round</see> - Set <i>rop</i> to <i>op</i> rounded to the nearest representable integer, rounding halfway cases away from zero.</description></item>
+    /// <item><description><see cref="mpfr_roundeven">mpfr_roundeven</see> - Set <i>rop</i> to <i>op</i> rounded to the nearest representable integer, rounding halfway cases with the even-rounding rule zero (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDZ"/>).</description></item>
+    /// <item><description><see cref="mpfr_trunc">mpfr_trunc</see> - Set <i>rop</i> to <i>op</i> rounded to the next representable integer toward zero (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDZ"/>).</description></item>
     /// </list>
     /// <para><a name="Rounding_Related_Functions"/><h3>Rounding Related Functions:</h3></para>
     /// <list type="bullet">
@@ -276,12 +291,16 @@ namespace Math.Mpfr.Native
     /// <list type="bullet">
     /// <item><description><see cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</see> - Return a non-zero value if MPFR was compiled with decimal float support, return zero otherwise.</description></item>
     /// <item><description><see cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</see> - Return a non-zero value if MPFR was compiled with GMP internals, return zero otherwise.</description></item>
+    /// <item><description><see cref="mpfr_buildopt_sharedcache_p ">mpfr_buildopt_sharedcache_p </see> - Return a non-zero value if MPFR was compiled so that all threads share the same cache for one MPFR constant, return zero otherwise.</description></item>
     /// <item><description><see cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</see> - Return a non-zero value if MPFR was compiled as thread safe using compiler-level Thread Local Storage, return zero otherwise.</description></item>
+    /// <item><description><see cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</see> - Return a non-zero value if MPFR was compiled with ‘__float128’ support, return zero otherwise.</description></item>
     /// <item><description><see cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</see> - Return a string saying which thresholds file has been used at compile time.</description></item>
     /// <item><description><see cref="mpfr_copysign">mpfr_copysign</see> - Set the value of <i>rop</i> from <i>op1</i>, rounded toward the given direction <i>rnd</i>, then set its sign bit to that of <i>op2</i> .</description></item>
     /// <item><description><see cref="mpfr_get_patches">mpfr_get_patches</see> - Return a null-terminated string containing the ids of the patches applied to the MPFR library , separated by spaces.</description></item>
     /// <item><description><see cref="mpfr_get_version">mpfr_get_version</see> - Return the MPFR version, as a null-terminated string.</description></item>
-    /// <item><description><see cref="mpfr_grandom">mpfr_grandom</see> - Generate two random floats according to a standard normal gaussian distribution.</description></item>
+    /// <item><description><see cref="mpfr_nrandom">mpfr_nrandom</see> - Generate one random float according to a standard normal gaussian distribution (with mean zero and variance one).</description></item>
+    /// <item><description><see cref="mpfr_grandom">mpfr_grandom</see> - Generate two random floats according to a standard normal gaussian distribution (with mean zero and variance one).</description></item>
+    /// <item><description><see cref="mpfr_erandom">mpfr_erandom</see> - Generate one random float according to an exponential distribution, with mean one.</description></item>
     /// <item><description><see cref="mpfr_max">mpfr_max</see> - Set <i>rop</i> to the maximum of <i>op1</i> and <i>op2</i>.</description></item>
     /// <item><description><see cref="mpfr_min">mpfr_min</see> - Set <i>rop</i> to the minimum of <i>op1</i> and <i>op2</i>.</description></item>
     /// <item><description><see cref="mpfr_nextabove">mpfr_nextabove</see> - Equivalent to <see cref="mpfr_nexttoward">mpfr_nexttoward</see> where y is plus infinity.</description></item>
@@ -304,13 +323,13 @@ namespace Math.Mpfr.Native
     /// <para><a name="Exception_Related_Functions"/><h3>Exception Related Functions:</h3></para>
     /// <list type="bullet">
     /// <item><description><see cref="mpfr_check_range">mpfr_check_range</see> - Check that <i>x</i> is within the current range of acceptable values.</description></item>
-    /// <item><description><see cref="mpfr_clear_divby0">mpfr_clear_divby0</see> - Clear the divide-by-zero flag.</description></item>
-    /// <item><description><see cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</see> - Clear the erange flag.</description></item>
-    /// <item><description><see cref="mpfr_clear_flags">mpfr_clear_flags</see> - Clear all global flags .</description></item>
-    /// <item><description><see cref="mpfr_clear_inexflag">mpfr_clear_inexflag</see> - Clear the inexact flag.</description></item>
-    /// <item><description><see cref="mpfr_clear_nanflag">mpfr_clear_nanflag</see> - Clear the invalid flag.</description></item>
-    /// <item><description><see cref="mpfr_clear_overflow">mpfr_clear_overflow</see> - Clear the overflow flag.</description></item>
-    /// <item><description><see cref="mpfr_clear_underflow">mpfr_clear_underflow</see> - Clear the underflow flag.</description></item>
+    /// <item><description><see cref="mpfr_clear_divby0">mpfr_clear_divby0</see> - Clear (lower) the divide-by-zero flag.</description></item>
+    /// <item><description><see cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</see> - Clear (lower) the erange flag.</description></item>
+    /// <item><description><see cref="mpfr_clear_flags">mpfr_clear_flags</see> - Clear (lower) all global flags .</description></item>
+    /// <item><description><see cref="mpfr_clear_inexflag">mpfr_clear_inexflag</see> - Clear (lower) the inexact flag.</description></item>
+    /// <item><description><see cref="mpfr_clear_nanflag">mpfr_clear_nanflag</see> - Clear (lower) the invalid flag.</description></item>
+    /// <item><description><see cref="mpfr_clear_overflow">mpfr_clear_overflow</see> - Clear (lower) the overflow flag.</description></item>
+    /// <item><description><see cref="mpfr_clear_underflow">mpfr_clear_underflow</see> - Clear (lower) the underflow flag.</description></item>
     /// <item><description><see cref="mpfr_divby0_p">mpfr_divby0_p</see> - Return the divide-by-zero flag, which is non-zero iff the flag is set.</description></item>
     /// <item><description><see cref="mpfr_erangeflag_p">mpfr_erangeflag_p</see> - Return the erange flag, which is non-zero iff the flag is set.</description></item>
     /// <item><description><see cref="mpfr_get_emax">mpfr_get_emax</see> - Return the  largest exponent allowed for a floating-point variable.</description></item>
@@ -323,16 +342,21 @@ namespace Math.Mpfr.Native
     /// <item><description><see cref="mpfr_inexflag_p">mpfr_inexflag_p</see> - Return the inexact flag, which is non-zero iff the flag is set.</description></item>
     /// <item><description><see cref="mpfr_nanflag_p">mpfr_nanflag_p</see> - Return the invalid flag, which is non-zero iff the flag is set.</description></item>
     /// <item><description><see cref="mpfr_overflow_p">mpfr_overflow_p</see> - Return the overflow flag, which is non-zero iff the flag is set.</description></item>
-    /// <item><description><see cref="mpfr_set_divby0">mpfr_set_divby0</see> - Set the divide-by-zero flag.</description></item>
+    /// <item><description><see cref="mpfr_set_divby0">mpfr_set_divby0</see> - Set (raise) the divide-by-zero flag.</description></item>
     /// <item><description><see cref="mpfr_set_emax">mpfr_set_emax</see> - Set the largest exponent allowed for a floating-point variable.</description></item>
     /// <item><description><see cref="mpfr_set_emin">mpfr_set_emin</see> - Set the smallest exponent allowed for a floating-point variable.</description></item>
-    /// <item><description><see cref="mpfr_set_erangeflag">mpfr_set_erangeflag</see> - Set the erange flag.</description></item>
-    /// <item><description><see cref="mpfr_set_inexflag">mpfr_set_inexflag</see> - Set the inexact flag.</description></item>
-    /// <item><description><see cref="mpfr_set_nanflag">mpfr_set_nanflag</see> - Set the invalid flag.</description></item>
-    /// <item><description><see cref="mpfr_set_overflow">mpfr_set_overflow</see> - Set the overflow flag.</description></item>
-    /// <item><description><see cref="mpfr_set_underflow">mpfr_set_underflow</see> - Set the underflow flag.</description></item>
+    /// <item><description><see cref="mpfr_set_erangeflag">mpfr_set_erangeflag</see> - Set (raise) the erange flag.</description></item>
+    /// <item><description><see cref="mpfr_set_inexflag">mpfr_set_inexflag</see> - Set (raise) the inexact flag.</description></item>
+    /// <item><description><see cref="mpfr_set_nanflag">mpfr_set_nanflag</see> - Set (raise) the invalid flag.</description></item>
+    /// <item><description><see cref="mpfr_set_overflow">mpfr_set_overflow</see> - Set (raise) the overflow flag.</description></item>
+    /// <item><description><see cref="mpfr_set_underflow">mpfr_set_underflow</see> - Set (raise) the underflow flag.</description></item>
     /// <item><description><see cref="mpfr_subnormalize">mpfr_subnormalize</see> - This function rounds <i>x</i> emulating subnormal number arithmetic.</description></item>
     /// <item><description><see cref="mpfr_underflow_p">mpfr_underflow_p</see> - Return the underflow flag, which is non-zero iff the flag is set.</description></item>
+    /// <item><description><see cref="mpfr_flags_clear">mpfr_flags_clear</see> - Clear (lower) the group of flags specified by <i>mask</i>.</description></item>
+    /// <item><description><see cref="mpfr_flags_set">mpfr_flags_set</see> - Set (raise) the group of flags specified by <i>mask</i>.</description></item>
+    /// <item><description><see cref="mpfr_flags_test">mpfr_flags_test</see> - Return the flags specified by <i>mask</i>.</description></item>
+    /// <item><description><see cref="mpfr_flags_save">mpfr_flags_save</see> - Return all the flags.</description></item>
+    /// <item><description><see cref="mpfr_flags_restore">mpfr_flags_restore</see> = Restore the flags specified by <i>mask</i> to their state represented in <i>flags</i>.</description></item>
     /// </list>
     /// <para><a name="Compatibility_With_MPF"/><h3>Compatibility With MPF:</h3></para>
     /// <list type="bullet">
@@ -372,7 +396,7 @@ namespace Math.Mpfr.Native
             // Add MPFR library directory to DLL search paths.
             SafeNativeMethods.SetDllDirectory(libpath);
             // Load MPFR library and create safe handle to it.
-            IntPtr handle = SafeNativeMethods.LoadLibrary(@"libmpfr-4.dll");
+            IntPtr handle = SafeNativeMethods.LoadLibrary(@"libmpfr-6.dll");
             // Retrieve and cache MPFR dynamic memory allocation functions.
             return handle;
         }
@@ -382,12 +406,12 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <remarks>
         /// <para>
-        /// In the current implementation, <see cref="MPFR_PREC_MIN">MPFR_PREC_MIN</see> is 2.
+        /// In the current implementation, <see cref="MPFR_PREC_MIN">MPFR_PREC_MIN</see> is 1.
         /// </para>
         /// </remarks>
         /// <seealso cref="MPFR_PREC_MAX">MPFR_PREC_MAX</seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html">GNU MPFR</a></seealso>
-        public static readonly mpfr_prec_t MPFR_PREC_MIN = 2;
+        public static readonly mpfr_prec_t MPFR_PREC_MIN = 1;
 
         /// <summary>
         /// The maximum number of bits that can be used to represent the significand of a floating-point number.
@@ -425,7 +449,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="MPFR_VERSION_NUM">MPFR_VERSION_NUM</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
-        public static readonly int MPFR_VERSION_MAJOR = 3;
+        public static readonly int MPFR_VERSION_MAJOR = 4;
 
         /// <summary>
         /// <see cref="MPFR_VERSION_MINOR">MPFR_VERSION_MINOR</see> is the minor MPFR version.
@@ -438,7 +462,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="MPFR_VERSION_NUM">MPFR_VERSION_NUM</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
-        public static readonly int MPFR_VERSION_MINOR = 1;
+        public static readonly int MPFR_VERSION_MINOR = 0;
 
         /// <summary>
         /// <see cref="MPFR_VERSION_PATCHLEVEL">MPFR_VERSION_PATCHLEVEL</see> is the patch level of MPFR version.
@@ -451,7 +475,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="MPFR_VERSION_NUM">MPFR_VERSION_NUM</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
-        public static readonly int MPFR_VERSION_PATCHLEVEL = 6;
+        public static readonly int MPFR_VERSION_PATCHLEVEL = 0;
 
         /// <summary>
         /// <see cref="MPFR_VERSION_STRING">MPFR_VERSION_STRING</see> is the version (with an optional suffix, used in development and pre-release versions) as a string constant.
@@ -464,7 +488,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="MPFR_VERSION_NUM">MPFR_VERSION_NUM</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
-        public static readonly string MPFR_VERSION_STRING = "3.1.6";
+        public static readonly string MPFR_VERSION_STRING = "4.0.0";
 
         /// <summary>
         /// Create an integer in the same format as used by <see cref="MPFR_VERSION">MPFR_VERSION</see> from the given <paramref name="major"/>, <paramref name="minor"/> and <paramref name="patchlevel"/>. 
@@ -508,6 +532,8 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_inp_str">mpfr_inp_str</seealso>
+        /// <seealso cref="mpfr_fpif_export">mpfr_fpif_export</seealso>
+        /// <seealso cref="mpfr_fpif_import">mpfr_fpif_import</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Input_and_Output_Functions">Input and Output Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Input-and-Output-Functions">GNU MPFR - Input and Output Functions</a></seealso>
         /// <example>
@@ -593,6 +619,8 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_out_str">mpfr_out_str</seealso>
+        /// <seealso cref="mpfr_fpif_export">mpfr_fpif_export</seealso>
+        /// <seealso cref="mpfr_fpif_import">mpfr_fpif_import</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Input_and_Output_Functions">Input and Output Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Input-and-Output-Functions">GNU MPFR - Input and Output Functions</a></seealso>
         /// <example>
@@ -654,6 +682,197 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Export the number <paramref name="op"/> to the stream <paramref name="stream"/> in a floating-point interchange format. 
+        /// </summary>
+        /// <param name="stream">The export stream.</param>
+        /// <param name="op">The floating-point number.</param>
+        /// <returns>Return 0 iff the export was successful.</returns>
+        /// <remarks>
+        /// <para>
+        /// In particular one can export on a 32-bit computer and import on a 64-bit computer, or export on a little-endian
+        /// computer and import on a big-endian computer. The precision of <paramref name="op"/> and the sign bit of a NaN
+        /// are stored too. 
+        /// </para>
+        /// <para>
+        /// Note: this function is experimental and its interface might change in future versions.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_out_str">mpfr_out_str</seealso>
+        /// <seealso cref="mpfr_inp_str">mpfr_inp_str</seealso>
+        /// <seealso cref="mpfr_fpif_import">mpfr_fpif_import</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Input_and_Output_Functions">Input and Output Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Input-and-Output-Functions">GNU MPFR - Input and Output Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set the value of op to 123456.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// mpfr_lib.mpfr_set_ui(op, 123456U, mpfr_rnd_t.MPFR_RNDN);
+        /// 
+        /// // Get a temporary file.
+        /// string pathname = System.IO.Path.GetTempFileName();
+        /// 
+        /// // Open temporary file for writing.
+        /// ptr&lt;FILE&gt; stream = new ptr&lt;FILE&gt;();
+        /// _wfopen_s(out stream.Value.Value, pathname, "w");
+        /// 
+        /// // Export op to temporary file.
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_export(stream, op) == 0);
+        /// fclose(stream.Value.Value);
+        /// 
+        /// // Read op from the temporary file.
+        /// mpfr_lib.mpfr_set_ui(op, 0, mpfr_rnd_t.MPFR_RNDN);
+        /// stream = new ptr&lt;FILE&gt;();
+        /// _wfopen_s(out stream.Value.Value, pathname, "r");
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_import(op, stream) == 0);
+        /// fclose(stream.Value.Value);
+        /// 
+        /// // Assert that op is 123456.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) == 123456U);
+        /// 
+        /// // Delete temporary file.
+        /// System.IO.File.Delete(pathname);
+        /// 
+        /// // Release unmanaged memory allocated for op.
+        /// mpfr_lib.mpfr_clear(op);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set the value of op to 123456.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// mpfr_lib.mpfr_set_ui(op, 123456U, mpfr_rnd_t.MPFR_RNDN)
+        /// 
+        /// ' Get a temporary file.
+        /// Dim pathname As String = System.IO.Path.GetTempFileName() 
+        /// 
+        /// ' Open temporary file for writing.
+        /// Dim stream As ptr(Of FILE) =  New ptr(Of FILE)()
+        ///  _wfopen_s(stream.Value.Value, pathname,"w")
+        /// 
+        /// ' Export op to temporary file.
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_export(stream, op) = 0)
+        /// fclose(stream.Value.Value)
+        /// 
+        /// ' Read op from the temporary file.
+        /// mpfr_lib.mpfr_set_ui(op, 0, mpfr_rnd_t.MPFR_RNDN)
+        /// stream = New ptr(Of FILE)()
+        /// _wfopen_s(stream.Value.Value, pathname,"r")
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_import(op, stream) = 0)
+        /// fclose(stream.Value.Value)
+        /// 
+        /// ' Assert that op is 123456.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) = 123456U)
+        /// 
+        /// ' Delete temporary file.
+        /// System.IO.File.Delete(pathname)
+        /// 
+        /// ' Release unmanaged memory allocated for op.
+        /// mpfr_lib.mpfr_clear(op)
+        /// </code> 
+        /// </example>
+        public static int mpfr_fpif_export(ptr<FILE> stream, mpfr_t op)
+        {
+            return SafeNativeMethods.__gmpfr_fpif_export(stream.Value.Value, op.ToIntPtr());
+        }
+
+        /// <summary>
+        /// Import the number <paramref name="op"/> from the stream <paramref name="stream"/> in a floating-point interchange format (see <see cref="mpfr_fpif_export"/>). 
+        /// </summary>
+        /// <param name="op">The imported floating-point number.</param>
+        /// <param name="stream">The input stream.</param>
+        /// <returns>Return 0 iff the import was successful.</returns>
+        /// <remarks>
+        /// <para>
+        /// Note that the precision of <paramref name="op"/> is set to the one read from the stream, and the sign bit
+        /// is always retrieved (even for NaN).
+        /// If the stored precision is zero or greater than <see cref="mpfr_lib.MPFR_PREC_MAX"/>, the function fails
+        /// (it returns non-zero) and <paramref name="op"/> is unchanged.
+        /// If the function fails for another reason, <paramref name="op"/> is set to NaN and it is unspecified
+        /// whether the precision of <paramref name="op"/> has changed to the one read from the file. 
+        /// </para>
+        /// <para>
+        /// Note: this function is experimental and its interface might change in future versions.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_out_str">mpfr_out_str</seealso>
+        /// <seealso cref="mpfr_inp_str">mpfr_inp_str</seealso>
+        /// <seealso cref="mpfr_fpif_export">mpfr_fpif_export</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Input_and_Output_Functions">Input and Output Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Input-and-Output-Functions">GNU MPFR - Input and Output Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set the value of op to 123456.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// mpfr_lib.mpfr_set_ui(op, 123456U, mpfr_rnd_t.MPFR_RNDN);
+        /// 
+        /// // Get a temporary file.
+        /// string pathname = System.IO.Path.GetTempFileName();
+        /// 
+        /// // Open temporary file for writing.
+        /// ptr&lt;FILE&gt; stream = new ptr&lt;FILE&gt;();
+        /// _wfopen_s(out stream.Value.Value, pathname, "w");
+        /// 
+        /// // Export op to temporary file.
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_export(stream, op) == 0);
+        /// fclose(stream.Value.Value);
+        /// 
+        /// // Read op from the temporary file.
+        /// mpfr_lib.mpfr_set_ui(op, 0, mpfr_rnd_t.MPFR_RNDN);
+        /// stream = new ptr&lt;FILE&gt;();
+        /// _wfopen_s(out stream.Value.Value, pathname, "r");
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_import(op, stream) == 0);
+        /// fclose(stream.Value.Value);
+        /// 
+        /// // Assert that op is 123456.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) == 123456U);
+        /// 
+        /// // Delete temporary file.
+        /// System.IO.File.Delete(pathname);
+        /// 
+        /// // Release unmanaged memory allocated for op.
+        /// mpfr_lib.mpfr_clear(op);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set the value of op to 123456.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// mpfr_lib.mpfr_set_ui(op, 123456U, mpfr_rnd_t.MPFR_RNDN)
+        /// 
+        /// ' Get a temporary file.
+        /// Dim pathname As String = System.IO.Path.GetTempFileName() 
+        /// 
+        /// ' Open temporary file for writing.
+        /// Dim stream As ptr(Of FILE) =  New ptr(Of FILE)()
+        ///  _wfopen_s(stream.Value.Value, pathname,"w")
+        /// 
+        /// ' Export op to temporary file.
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_export(stream, op) = 0)
+        /// fclose(stream.Value.Value)
+        /// 
+        /// ' Read op from the temporary file.
+        /// mpfr_lib.mpfr_set_ui(op, 0, mpfr_rnd_t.MPFR_RNDN)
+        /// stream = New ptr(Of FILE)()
+        /// _wfopen_s(stream.Value.Value, pathname,"r")
+        /// Assert.IsTrue(mpfr_lib.mpfr_fpif_import(op, stream) = 0)
+        /// fclose(stream.Value.Value)
+        /// 
+        /// ' Assert that op is 123456.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_ui(op, mpfr_rnd_t.MPFR_RNDN) = 123456U)
+        /// 
+        /// ' Delete temporary file.
+        /// System.IO.File.Delete(pathname)
+        /// 
+        /// ' Release unmanaged memory allocated for op.
+        /// mpfr_lib.mpfr_clear(op)
+        /// </code> 
+        /// </example>
+        public static int mpfr_fpif_import(mpfr_t op, ptr<FILE> stream)
+        {
+            return SafeNativeMethods.__gmpfr_fpif_import(op.ToIntPtr(), stream.Value.Value);
+        }
+
+        /// <summary>
         /// Convert <paramref name="op"/> to an <see cref="intmax_t">intmax_t</see> after rounding it with respect to <paramref name="rnd"/>.
         /// </summary>
         /// <param name="op">The operand floating-point number.</param>
@@ -665,7 +884,9 @@ namespace Math.Mpfr.Native
         /// If <paramref name="op"/> is too big for the return type, the function returns the maximum
         /// or the minimum of the corresponding C type, depending on the direction of the overflow;
         /// the erange flag is set too.
-        /// See also <see cref="mpfr_fits_intmax_p">mpfr_fits_intmax_p</see>.
+        /// When there is no such range error, if the return value differs from <paramref name="op"/>,
+        /// i.e., if <paramref name="op"/> is not an integer, the inexact flag is set.
+        /// See also mpfr_fits_slong_p, mpfr_fits_ulong_p, mpfr_fits_intmax_p and mpfr_fits_uintmax_p.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -677,6 +898,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -729,7 +951,9 @@ namespace Math.Mpfr.Native
         /// If <paramref name="op"/> is too big for the return type, the function returns the maximum
         /// or the minimum of the corresponding C type, depending on the direction of the overflow;
         /// the erange flag is set too.
-        /// See also <see cref="mpfr_fits_uintmax_p">mpfr_fits_uintmax_p</see>.
+        /// When there is no such range error, if the return value differs from <paramref name="op"/>,
+        /// i.e., if <paramref name="op"/> is not an integer, the inexact flag is set.
+        /// See also mpfr_fits_slong_p, mpfr_fits_ulong_p, mpfr_fits_intmax_p and mpfr_fits_uintmax_p.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -741,6 +965,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -1102,9 +1327,11 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</seealso>
+        /// <seealso cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</seealso>
         /// <seealso cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</seealso>
         /// <seealso cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</seealso>
         /// <seealso cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</seealso>
+        /// <seealso cref="mpfr_buildopt_sharedcache_p ">mpfr_buildopt_sharedcache_p </seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -1134,9 +1361,11 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_patches">mpfr_get_patches</seealso>
+        /// <seealso cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</seealso>
         /// <seealso cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</seealso>
         /// <seealso cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</seealso>
         /// <seealso cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</seealso>
+        /// <seealso cref="mpfr_buildopt_sharedcache_p ">mpfr_buildopt_sharedcache_p </seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -1155,6 +1384,39 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Return a non-zero value if MPFR was compiled with ‘__float128’ support, return zero otherwise.
+        /// </summary>
+        /// <returns>Return a non-zero value if MPFR was compiled with ‘__float128’ support, return zero otherwise.</returns>
+        /// <remarks>
+        /// <para>
+        /// Return a non-zero value if MPFR was compiled with ‘__float128’ support (that is, MPFR was built with the
+        /// ‘--enable-float128’ configure option), return zero otherwise.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_get_patches">mpfr_get_patches</seealso>
+        /// <seealso cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</seealso>
+        /// <seealso cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</seealso>
+        /// <seealso cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</seealso>
+        /// <seealso cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</seealso>
+        /// <seealso cref="mpfr_buildopt_sharedcache_p ">mpfr_buildopt_sharedcache_p </seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Assert that ‘__float128’ support is not available.
+        /// Assert.IsTrue(mpfr_lib.mpfr_buildopt_float128_p() == 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Assert that ‘__float128’ support is not available.
+        /// Assert.IsTrue(mpfr_lib.mpfr_buildopt_float128_p() = 0)
+        /// </code> 
+        /// </example>
+        public static int mpfr_buildopt_float128_p(/*void*/)
+        {
+            return SafeNativeMethods.mpfr_buildopt_float128_p();
+        }
+
+        /// <summary>
         /// Return a non-zero value if MPFR was compiled with decimal float support, return zero otherwise. 
         /// </summary>
         /// <returns>Return a non-zero value if MPFR was compiled with decimal float support, return zero otherwise.</returns>
@@ -1166,8 +1428,10 @@ namespace Math.Mpfr.Native
         /// </remarks>
         /// <seealso cref="mpfr_get_patches">mpfr_get_patches</seealso>
         /// <seealso cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</seealso>
+        /// <seealso cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</seealso>
         /// <seealso cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</seealso>
         /// <seealso cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</seealso>
+        /// <seealso cref="mpfr_buildopt_sharedcache_p ">mpfr_buildopt_sharedcache_p </seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -1197,8 +1461,10 @@ namespace Math.Mpfr.Native
         /// </remarks>
         /// <seealso cref="mpfr_get_patches">mpfr_get_patches</seealso>
         /// <seealso cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</seealso>
+        /// <seealso cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</seealso>
         /// <seealso cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</seealso>
         /// <seealso cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</seealso>
+        /// <seealso cref="mpfr_buildopt_sharedcache_p ">mpfr_buildopt_sharedcache_p </seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -1217,6 +1483,41 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Return a non-zero value if MPFR was compiled so that all threads share the same cache for one MPFR constant, return zero otherwise. 
+        /// </summary>
+        /// <returns>Return a non-zero value if MPFR was compiled so that all threads share the same cache for one MPFR constant, return zero otherwise.</returns>
+        /// <remarks>
+        /// <para>
+        /// Return a non-zero value if MPFR was compiled so that all threads share the same cache for one MPFR constant,
+        /// like <see cref="mpfr_const_pi"/> or <see cref="mpfr_const_log2"/> (that is, MPFR was built with the
+        /// ‘--enable-shared-cache’ configure option), return zero otherwise.
+        /// If the return value is non-zero, MPFR applications may need to be compiled with the ‘-pthread’ option.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_get_patches">mpfr_get_patches</seealso>
+        /// <seealso cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</seealso>
+        /// <seealso cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</seealso>
+        /// <seealso cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</seealso>
+        /// <seealso cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</seealso>
+        /// <seealso cref="mpfr_buildopt_tune_case">mpfr_buildopt_tune_case</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Assert that --enable-shared-cache compile option was used.
+        /// Assert.IsTrue(mpfr_lib.mpfr_buildopt_sharedcache_p() == 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Assert that --enable-shared-cache compile option was used.
+        /// Assert.IsTrue(mpfr_lib.mpfr_buildopt_sharedcache_p() = 0)
+        /// </code> 
+        /// </example>
+        public static int mpfr_buildopt_sharedcache_p(/*void*/)
+        {
+            return SafeNativeMethods.mpfr_buildopt_sharedcache_p();
+        }
+
+        /// <summary>
         /// Return a string saying which thresholds file has been used at compile time.
         /// </summary>
         /// <returns>Return a string saying which thresholds file has been used at compile time.</returns>
@@ -1227,6 +1528,7 @@ namespace Math.Mpfr.Native
         /// </remarks>
         /// <seealso cref="mpfr_get_patches">mpfr_get_patches</seealso>
         /// <seealso cref="mpfr_buildopt_tls_p">mpfr_buildopt_tls_p</seealso>
+        /// <seealso cref="mpfr_buildopt_float128_p">mpfr_buildopt_float128_p</seealso>
         /// <seealso cref="mpfr_buildopt_decimal_p">mpfr_buildopt_decimal_p</seealso>
         /// <seealso cref="mpfr_buildopt_gmpinternals_p">mpfr_buildopt_gmpinternals_p</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
@@ -1292,12 +1594,23 @@ namespace Math.Mpfr.Native
         /// Set the smallest exponent allowed for a floating-point variable.
         /// </summary>
         /// <param name="exp">The exponent.</param>
-        /// <returns>Return a non-zero value when <paramref name="exp"/> is not in the range accepted by the implementation (in that case the smallest exponent is not changed), and zero otherwise.</returns>
+        /// <returns>Return a nonzero value when <paramref name="exp"/> is not in the range accepted by the implementation (in that case the smallest exponent is not changed), and zero otherwise.</returns>
         /// <remarks>
         /// <para>
-        /// If the user changes the exponent range, it is her/his responsibility to check that all current floating-point variables 
-        /// are in the new allowed range (for example using <see cref="mpfr_check_range">mpfr_check_range</see>), otherwise the subsequent behavior will
-        /// be undefined, in the sense of the ISO C standard. 
+        /// For the subsequent operations, it is the user’s responsibility to check that any floating-point value used as an input is in the
+        /// new exponent range (for example using <see cref="mpfr_check_range"/>).
+        /// If a floating-point value outside the new exponent range is used as an input, the default behavior is undefined, in the sense of
+        /// the ISO C standard; the behavior may also be explicitly documented, such as for <see cref="mpfr_check_range"/>.
+        /// </para>
+        /// <para>
+        /// Note: Caches may still have values outside the current exponent range.
+        /// This is not an issue as the user cannot use these caches directly via the API (MPFR extends the exponent range internally
+        /// when need be).
+        /// </para>
+        /// <para>
+        /// If emin &gt; emax and a floating-point value needs to be produced as output, the behavior is undefined
+        /// (<see cref="mpfr_set_emin"/> and <see cref="mpfr_set_emax"/> do not check this condition as it might occur between
+        /// successive calls to these two functions).
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_emin">mpfr_get_emin</seealso>
@@ -1656,8 +1969,13 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear all global flags (underflow, overflow, divide-by-zero, invalid, inexact, erange). 
+        /// Clear (lower) all global flags (underflow, overflow, divide-by-zero, invalid, inexact, erange). 
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Note: a group of flags can be cleared by using <see cref="mpfr_flags_clear"/>.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
         /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
@@ -1706,7 +2024,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear the underflow flag. 
+        /// Clear (lower) the underflow flag. 
         /// </summary>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
         /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
@@ -1746,7 +2064,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear the overflow flag. 
+        /// Clear (lower) the overflow flag. 
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
@@ -1786,7 +2104,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear the divide-by-zero flag. 
+        /// Clear (lower) the divide-by-zero flag. 
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -1826,7 +2144,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear the invalid flag. 
+        /// Clear (lower) the invalid flag. 
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -1866,7 +2184,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear the inexact flag. 
+        /// Clear (lower) the inexact flag. 
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -1906,7 +2224,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Clear the erange flag. 
+        /// Clear (lower) the erange flag. 
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -1946,7 +2264,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set the underflow flag.
+        /// Set (raised) the underflow flag.
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -1986,7 +2304,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set the overflow flag.
+        /// Set (raised) the overflow flag.
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -2026,7 +2344,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set the divide-by-zero flag.
+        /// Set (raised) the divide-by-zero flag.
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -2066,7 +2384,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set the invalid flag.
+        /// Set (raised) the invalid flag.
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -2106,7 +2424,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set the inexact flag.
+        /// Set (raised) the inexact flag.
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -2146,7 +2464,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set the erange flag.
+        /// Set (raised) the erange flag.
         /// </summary>
         /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
         /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
@@ -2429,6 +2747,293 @@ namespace Math.Mpfr.Native
         public static int mpfr_erangeflag_p(/*void*/)
         {
             return SafeNativeMethods.mpfr_erangeflag_p();
+        }
+
+        /// <summary>
+        /// Clear (lower) the group of flags specified by <paramref name="mask"/>.
+        /// </summary>
+        /// <param name="mask">The bit flags mask.</param>
+        /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
+        /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
+        /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
+        /// <seealso cref="mpfr_clear_nanflag">mpfr_clear_nanflag</seealso>
+        /// <seealso cref="mpfr_clear_inexflag">mpfr_clear_inexflag</seealso>
+        /// <seealso cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</seealso>
+        /// <seealso cref="mpfr_set_underflow">mpfr_set_underflow</seealso>
+        /// <seealso cref="mpfr_set_overflow">mpfr_set_overflow</seealso>
+        /// <seealso cref="mpfr_set_divby0">mpfr_set_divby0</seealso>
+        /// <seealso cref="mpfr_set_nanflag">mpfr_set_nanflag</seealso>
+        /// <seealso cref="mpfr_set_inexflag">mpfr_set_inexflag</seealso>
+        /// <seealso cref="mpfr_set_erangeflag">mpfr_set_erangeflag</seealso>
+        /// <seealso cref="mpfr_clear_flags">mpfr_clear_flags</seealso>
+        /// <seealso cref="mpfr_underflow_p">mpfr_underflow_p</seealso>
+        /// <seealso cref="mpfr_overflow_p">mpfr_overflow_p</seealso>
+        /// <seealso cref="mpfr_divby0_p">mpfr_divby0_p</seealso>
+        /// <seealso cref="mpfr_nanflag_p">mpfr_nanflag_p</seealso>
+        /// <seealso cref="mpfr_inexflag_p">mpfr_inexflag_p</seealso>
+        /// <seealso cref="mpfr_erangeflag_p">mpfr_erangeflag_p</seealso>
+        /// <seealso cref="mpfr_flags_set">mpfr_flags_set</seealso>
+        /// <seealso cref="mpfr_flags_test">mpfr_flags_test</seealso>
+        /// <seealso cref="mpfr_flags_save">mpfr_flags_save</seealso>
+        /// <seealso cref="mpfr_flags_restore">mpfr_flags_restore</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Exception_Related_Functions">Exception Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Exception-Related-Functions">GNU MPFR - Exception Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Clear erange and inexact flags, and assert that they are clear.
+        /// mpfr_lib.mpfr_flags_clear(mpfr_flags_t.MPFR_FLAGS_ERANGE | mpfr_flags_t.MPFR_FLAGS_INEXACT);
+        /// Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() == 0);
+        /// Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() == 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Clear erange and inexact flags, and assert that they are clear.
+        /// mpfr_lib.mpfr_flags_clear(mpfr_flags_t.MPFR_FLAGS_ERANGE Or mpfr_flags_t.MPFR_FLAGS_INEXACT)
+        /// Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() = 0)
+        /// Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() = 0)
+        /// </code> 
+        /// </example>
+        public static void mpfr_flags_clear(mpfr_flags_t mask)
+        {
+            SafeNativeMethods.mpfr_flags_clear((uint)mask);
+        }
+
+        /// <summary>
+        /// Set (raise) the group of flags specified by <paramref name="mask"/>.
+        /// </summary>
+        /// <param name="mask">The bit flags mask.</param>
+        /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
+        /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
+        /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
+        /// <seealso cref="mpfr_clear_nanflag">mpfr_clear_nanflag</seealso>
+        /// <seealso cref="mpfr_clear_inexflag">mpfr_clear_inexflag</seealso>
+        /// <seealso cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</seealso>
+        /// <seealso cref="mpfr_set_underflow">mpfr_set_underflow</seealso>
+        /// <seealso cref="mpfr_set_overflow">mpfr_set_overflow</seealso>
+        /// <seealso cref="mpfr_set_divby0">mpfr_set_divby0</seealso>
+        /// <seealso cref="mpfr_set_nanflag">mpfr_set_nanflag</seealso>
+        /// <seealso cref="mpfr_set_inexflag">mpfr_set_inexflag</seealso>
+        /// <seealso cref="mpfr_set_erangeflag">mpfr_set_erangeflag</seealso>
+        /// <seealso cref="mpfr_clear_flags">mpfr_clear_flags</seealso>
+        /// <seealso cref="mpfr_underflow_p">mpfr_underflow_p</seealso>
+        /// <seealso cref="mpfr_overflow_p">mpfr_overflow_p</seealso>
+        /// <seealso cref="mpfr_divby0_p">mpfr_divby0_p</seealso>
+        /// <seealso cref="mpfr_nanflag_p">mpfr_nanflag_p</seealso>
+        /// <seealso cref="mpfr_inexflag_p">mpfr_inexflag_p</seealso>
+        /// <seealso cref="mpfr_erangeflag_p">mpfr_erangeflag_p</seealso>
+        /// <seealso cref="mpfr_flags_clear">mpfr_flags_clear</seealso>
+        /// <seealso cref="mpfr_flags_test">mpfr_flags_test</seealso>
+        /// <seealso cref="mpfr_flags_save">mpfr_flags_save</seealso>
+        /// <seealso cref="mpfr_flags_restore">mpfr_flags_restore</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Exception_Related_Functions">Exception Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Exception-Related-Functions">GNU MPFR - Exception Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Set erange and inexact flags, and assert that they are set.
+        /// mpfr_lib.mpfr_flags_set(mpfr_flags_t.MPFR_FLAGS_ERANGE | mpfr_flags_t.MPFR_FLAGS_INEXACT);
+        /// Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() != 0);
+        /// Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() != 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Set erange and inexact flags, and assert that they are set.
+        /// mpfr_lib.mpfr_flags_set(mpfr_flags_t.MPFR_FLAGS_ERANGE Or mpfr_flags_t.MPFR_FLAGS_INEXACT)
+        /// Assert.IsTrue(mpfr_lib.mpfr_erangeflag_p() &lt;&gt; 0)
+        /// Assert.IsTrue(mpfr_lib.mpfr_inexflag_p() &lt;&gt; 0)
+        /// </code> 
+        /// </example>
+        public static void mpfr_flags_set(mpfr_flags_t mask)
+        {
+            SafeNativeMethods.mpfr_flags_set((uint)mask);
+        }
+
+        /// <summary>
+        /// Return the flags specified by <paramref name="mask"/>.
+        /// </summary>
+        /// <param name="mask">The bit flags mask.</param>
+        /// <returns>Return the flags specified by <paramref name="mask"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// To test whether any flag from <paramref name="mask"/> is set, compare the return value to 0.
+        /// You can also test individual flags by AND’ing the result with the <see cref="mpfr_flags_t"/> values. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
+        /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
+        /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
+        /// <seealso cref="mpfr_clear_nanflag">mpfr_clear_nanflag</seealso>
+        /// <seealso cref="mpfr_clear_inexflag">mpfr_clear_inexflag</seealso>
+        /// <seealso cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</seealso>
+        /// <seealso cref="mpfr_set_underflow">mpfr_set_underflow</seealso>
+        /// <seealso cref="mpfr_set_overflow">mpfr_set_overflow</seealso>
+        /// <seealso cref="mpfr_set_divby0">mpfr_set_divby0</seealso>
+        /// <seealso cref="mpfr_set_nanflag">mpfr_set_nanflag</seealso>
+        /// <seealso cref="mpfr_set_inexflag">mpfr_set_inexflag</seealso>
+        /// <seealso cref="mpfr_set_erangeflag">mpfr_set_erangeflag</seealso>
+        /// <seealso cref="mpfr_clear_flags">mpfr_clear_flags</seealso>
+        /// <seealso cref="mpfr_underflow_p">mpfr_underflow_p</seealso>
+        /// <seealso cref="mpfr_overflow_p">mpfr_overflow_p</seealso>
+        /// <seealso cref="mpfr_divby0_p">mpfr_divby0_p</seealso>
+        /// <seealso cref="mpfr_nanflag_p">mpfr_nanflag_p</seealso>
+        /// <seealso cref="mpfr_inexflag_p">mpfr_inexflag_p</seealso>
+        /// <seealso cref="mpfr_erangeflag_p">mpfr_erangeflag_p</seealso>
+        /// <seealso cref="mpfr_flags_clear">mpfr_flags_clear</seealso>
+        /// <seealso cref="mpfr_flags_set">mpfr_flags_set</seealso>
+        /// <seealso cref="mpfr_flags_save">mpfr_flags_save</seealso>
+        /// <seealso cref="mpfr_flags_restore">mpfr_flags_restore</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Exception_Related_Functions">Exception Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Exception-Related-Functions">GNU MPFR - Exception Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Set erange and divby0 flags.
+        /// mpfr_lib.mpfr_flags_set(mpfr_flags_t.MPFR_FLAGS_ERANGE | mpfr_flags_t.MPFR_FLAGS_DIVBY0);
+        /// 
+        /// // Get the erange and inexact flags, and assert that their values.
+        /// mpfr_flags_t flags = mpfr_lib.mpfr_flags_test(mpfr_flags_t.MPFR_FLAGS_ERANGE | mpfr_flags_t.MPFR_FLAGS_INEXACT);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_ERANGE) != 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_INEXACT) == 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Set erange and divby0 flags.
+        /// mpfr_lib.mpfr_flags_set(mpfr_flags_t.MPFR_FLAGS_ERANGE Or mpfr_flags_t.MPFR_FLAGS_DIVBY0)
+        /// 
+        /// ' Get the erange and inexact flags, and assert that their values.
+        /// Dim flags As mpfr_flags_t = mpfr_lib.mpfr_flags_test(mpfr_flags_t.MPFR_FLAGS_ERANGE Or mpfr_flags_t.MPFR_FLAGS_INEXACT)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_ERANGE) &lt;&gt; 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_INEXACT) = 0)
+        /// </code> 
+        /// </example>
+        public static mpfr_flags_t mpfr_flags_test(mpfr_flags_t mask)
+        {
+            return (mpfr_flags_t)SafeNativeMethods.mpfr_flags_test((uint)mask);
+        }
+
+        /// <summary>
+        /// Return all the flags.
+        /// </summary>
+        /// <returns>Return all the flags.</returns>
+        /// <remarks>
+        /// <para>
+        /// It is equivalent to <see cref="mpfr_flags_test"/>(<see cref="mpfr_flags_t.MPFR_FLAGS_ALL"/>).
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
+        /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
+        /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
+        /// <seealso cref="mpfr_clear_nanflag">mpfr_clear_nanflag</seealso>
+        /// <seealso cref="mpfr_clear_inexflag">mpfr_clear_inexflag</seealso>
+        /// <seealso cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</seealso>
+        /// <seealso cref="mpfr_set_underflow">mpfr_set_underflow</seealso>
+        /// <seealso cref="mpfr_set_overflow">mpfr_set_overflow</seealso>
+        /// <seealso cref="mpfr_set_divby0">mpfr_set_divby0</seealso>
+        /// <seealso cref="mpfr_set_nanflag">mpfr_set_nanflag</seealso>
+        /// <seealso cref="mpfr_set_inexflag">mpfr_set_inexflag</seealso>
+        /// <seealso cref="mpfr_set_erangeflag">mpfr_set_erangeflag</seealso>
+        /// <seealso cref="mpfr_clear_flags">mpfr_clear_flags</seealso>
+        /// <seealso cref="mpfr_underflow_p">mpfr_underflow_p</seealso>
+        /// <seealso cref="mpfr_overflow_p">mpfr_overflow_p</seealso>
+        /// <seealso cref="mpfr_divby0_p">mpfr_divby0_p</seealso>
+        /// <seealso cref="mpfr_nanflag_p">mpfr_nanflag_p</seealso>
+        /// <seealso cref="mpfr_inexflag_p">mpfr_inexflag_p</seealso>
+        /// <seealso cref="mpfr_erangeflag_p">mpfr_erangeflag_p</seealso>
+        /// <seealso cref="mpfr_flags_clear">mpfr_flags_clear</seealso>
+        /// <seealso cref="mpfr_flags_set">mpfr_flags_set</seealso>
+        /// <seealso cref="mpfr_flags_test">mpfr_flags_test</seealso>
+        /// <seealso cref="mpfr_flags_restore">mpfr_flags_restore</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Exception_Related_Functions">Exception Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Exception-Related-Functions">GNU MPFR - Exception Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Set erange and divby0 flags.
+        /// mpfr_lib.mpfr_flags_set(mpfr_flags_t.MPFR_FLAGS_ERANGE | mpfr_flags_t.MPFR_FLAGS_DIVBY0);
+        /// 
+        /// // Get all flags, and assert their values.
+        /// mpfr_flags_t flags = mpfr_lib.mpfr_flags_save();
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_DIVBY0) != 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_ERANGE) != 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_INEXACT) == 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_NAN) == 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_OVERFLOW) == 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_UNDERFLOW) == 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Set erange and divby0 flags.
+        /// mpfr_lib.mpfr_flags_set(mpfr_flags_t.MPFR_FLAGS_ERANGE Or mpfr_flags_t.MPFR_FLAGS_DIVBY0)
+        /// 
+        /// ' Get all flags, and assert their values.
+        /// Dim flags As mpfr_flags_t = mpfr_lib.mpfr_flags_save()
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_DIVBY0) &lt;&gt; 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_ERANGE) &lt;&gt; 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_INEXACT) = 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_NAN) = 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_OVERFLOW) = 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_UNDERFLOW) = 0)
+        /// </code> 
+        /// </example>
+        public static mpfr_flags_t mpfr_flags_save(/*void*/)
+        {
+            return (mpfr_flags_t)SafeNativeMethods.mpfr_flags_save();
+        }
+
+        /// <summary>
+        /// Restore the flags specified by <paramref name="mask"/> to their state represented in <paramref name="flags"/>.
+        /// </summary>
+        /// <param name="flags">The bit flags.</param>
+        /// <param name="mask">The bit flags mask.</param>
+        /// <seealso cref="mpfr_clear_underflow">mpfr_clear_underflow</seealso>
+        /// <seealso cref="mpfr_clear_overflow">mpfr_clear_overflow</seealso>
+        /// <seealso cref="mpfr_clear_divby0">mpfr_clear_divby0</seealso>
+        /// <seealso cref="mpfr_clear_nanflag">mpfr_clear_nanflag</seealso>
+        /// <seealso cref="mpfr_clear_inexflag">mpfr_clear_inexflag</seealso>
+        /// <seealso cref="mpfr_clear_erangeflag">mpfr_clear_erangeflag</seealso>
+        /// <seealso cref="mpfr_set_underflow">mpfr_set_underflow</seealso>
+        /// <seealso cref="mpfr_set_overflow">mpfr_set_overflow</seealso>
+        /// <seealso cref="mpfr_set_divby0">mpfr_set_divby0</seealso>
+        /// <seealso cref="mpfr_set_nanflag">mpfr_set_nanflag</seealso>
+        /// <seealso cref="mpfr_set_inexflag">mpfr_set_inexflag</seealso>
+        /// <seealso cref="mpfr_set_erangeflag">mpfr_set_erangeflag</seealso>
+        /// <seealso cref="mpfr_clear_flags">mpfr_clear_flags</seealso>
+        /// <seealso cref="mpfr_underflow_p">mpfr_underflow_p</seealso>
+        /// <seealso cref="mpfr_overflow_p">mpfr_overflow_p</seealso>
+        /// <seealso cref="mpfr_divby0_p">mpfr_divby0_p</seealso>
+        /// <seealso cref="mpfr_nanflag_p">mpfr_nanflag_p</seealso>
+        /// <seealso cref="mpfr_inexflag_p">mpfr_inexflag_p</seealso>
+        /// <seealso cref="mpfr_erangeflag_p">mpfr_erangeflag_p</seealso>
+        /// <seealso cref="mpfr_flags_clear">mpfr_flags_clear</seealso>
+        /// <seealso cref="mpfr_flags_set">mpfr_flags_set</seealso>
+        /// <seealso cref="mpfr_flags_test">mpfr_flags_test</seealso>
+        /// <seealso cref="mpfr_flags_save">mpfr_flags_save</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Exception_Related_Functions">Exception Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Exception-Related-Functions">GNU MPFR - Exception Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Set erange and divby0 flags.
+        /// mpfr_lib.mpfr_flags_restore(mpfr_flags_t.MPFR_FLAGS_ERANGE | mpfr_flags_t.MPFR_FLAGS_DIVBY0, mpfr_flags_t.MPFR_FLAGS_ALL);
+        /// 
+        /// // Get all flags, and assert their values.
+        /// mpfr_flags_t flags = mpfr_lib.mpfr_flags_save();
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_DIVBY0) != 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_ERANGE) != 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_INEXACT) == 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_NAN) == 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_OVERFLOW) == 0);
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_UNDERFLOW) == 0);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Set erange and divby0 flags.
+        /// mpfr_lib.mpfr_flags_restore(mpfr_flags_t.MPFR_FLAGS_ERANGE Or mpfr_flags_t.MPFR_FLAGS_DIVBY0, mpfr_flags_t.MPFR_FLAGS_ALL)
+        /// 
+        /// ' Get all flags, and assert their values.
+        /// Dim flags As mpfr_flags_t = mpfr_lib.mpfr_flags_save()
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_DIVBY0) &lt;&gt; 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_ERANGE) &lt;&gt; 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_INEXACT) = 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_NAN) = 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_OVERFLOW) = 0)
+        /// Assert.IsTrue((flags &amp; mpfr_flags_t.MPFR_FLAGS_UNDERFLOW) = 0)
+        /// </code> 
+        /// </example>
+        public static void mpfr_flags_restore(mpfr_flags_t flags, mpfr_flags_t mask)
+        {
+             SafeNativeMethods.mpfr_flags_restore((uint)flags, (uint)mask);
         }
 
         /// <summary>
@@ -3382,26 +3987,46 @@ namespace Math.Mpfr.Native
         /// Assuming <paramref name="b"/> is an approximation of an unknown number x in the direction <paramref name="rnd1"/>
         /// with error at most two to the power E(<paramref name="b"/>) - <paramref name="err"/> where E(<paramref name="b"/>)
         /// is the exponent of <paramref name="b"/>, return a non-zero value if one is able to round correctly x to precision
-        /// <paramref name="prec"/> with the direction <paramref name="rnd2"/>, and 0 otherwise (including for NaN and Inf).
+        /// <paramref name="prec"/> with the direction <paramref name="rnd2"/> assuming an unbounded exponent range,
+        /// and 0 otherwise (including for NaN and Inf).
+        /// In other words, if the error on <paramref name="b"/> is bounded by two to the power k ulps, and <paramref name="b"/>
+        /// has precision <paramref name="prec"/>, you should give err = <paramref name="prec"/> − k. 
         /// This function <b>does not modify</b> its arguments. 
         /// </para>
         /// <para>
-        /// If <paramref name="rnd1"/> is <see cref="mpfr_rnd_t.MPFR_RNDN">mpfr_rnd_t.MPFR_RNDN</see>, then the sign of the error is unknown,
-        /// but its absolute value is the same, so that the possible range is twice as large as with a directed
-        /// rounding for <paramref name="rnd1"/>. 
+        /// If <paramref name="rnd1"/> is <see cref="mpfr_rnd_t.MPFR_RNDN">mpfr_rnd_t.MPFR_RNDN</see> or
+        /// <see cref="mpfr_rnd_t.MPFR_RNDF">mpfr_rnd_t.MPFR_RNDF</see>, then the the error is considered to be either positive
+        /// or negative, thus the possible range is twice as large as with a directed rounding for <paramref name="rnd1"/>
+        /// (with the same value of err). 
         /// </para>
         /// <para>
-        /// Note: if one wants to also determine the correct <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> when rounding <paramref name="b"/> to precision <paramref name="prec"/>
-        /// with rounding mode rnd, a useful trick is the following:
+        /// When <paramref name="rnd2"/> is <see cref="mpfr_rnd_t.MPFR_RNDF"/>, let rnd3 be the opposite direction
+        /// if <paramref name="rnd1"/> is a directed rounding, and <see cref="mpfr_rnd_t.MPFR_RNDN"/> if <paramref name="rnd1"/> is
+        /// <see cref="mpfr_rnd_t.MPFR_RNDN"/> or <see cref="mpfr_rnd_t.MPFR_RNDF"/>.
+        /// The returned value of <see cref="mpfr_can_round"/>(<paramref name="b"/>, err, <paramref name="rnd1"/>, <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <paramref name="prec"/>) 
+        /// is non-zero iff after the call <see cref="mpfr_set"/>(y, <paramref name="b"/>, rnd3) with y of
+        /// precision <paramref name="prec"/>, y is guaranteed to be a faithful rounding of x.
+        /// </para>
+        /// <para>
+        /// Note: The <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> cannot be determined
+        /// in general with this function. However, if it is known that the exact value is not exactly representable in precision
+        /// prec, then one can use the following trick to determine the (non-zero) ternary value in any rounding mode <paramref name="rnd2"/>
+        /// (note that <see cref="mpfr_rnd_t.MPFR_RNDZ"/> below can be replaced by any directed rounding mode):
         /// </para>
         /// <code language="C#">
-        /// if (mpfr_can_round(b, err, MPFR_RNDN, MPFR_RNDZ, prec + (rnd == mpfr_rnd_t.MPFR_RNDN)))
-        ///  ...
+        /// if (mpfr_can_round(b, err, MPFR_RNDN, MPFR_RNDZ, prec + (rnd2 == mpfr_rnd_t.MPFR_RNDN)))
+        /// {
+        ///      /* round the approximation ’b’ to the result ’r’ of ’prec’ bits with rounding mode ’rnd2’ and get the ternary value ’inex’ */
+        ///      inex = mpfr_set(r, b, rnd2);
+        /// }
         /// </code> 
         /// <para>
-        /// Indeed, if rnd is <see cref="mpfr_rnd_t.MPFR_RNDN">mpfr_rnd_t.MPFR_RNDN</see>, this will check if one can round to prec + 1 bits with a directed rounding:
+        /// Indeed, if <paramref name="rnd2"/> is <see cref="mpfr_rnd_t.MPFR_RNDN">mpfr_rnd_t.MPFR_RNDN</see>, this will check if one can round to prec + 1 bits with a directed rounding:
         /// if so, one can surely round to nearest to prec bits, and in addition one can determine the correct <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a>,
         /// which would not be the case when b is near from a value exactly representable on prec bits. 
+        /// </para>
+        /// <para>
+        /// A detailed example is available in the examples subdirectory, file can_round.c.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_set_default_rounding_mode">mpfr_set_default_rounding_mode</seealso>
@@ -3458,14 +4083,6 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <param name="x">The operand floating-point number.</param>
         /// <returns>Return the minimal number of bits required to store the significand of <paramref name="x"/>, and 0 for special values, including 0.</returns>
-        /// <remarks>
-        /// <para>
-        /// Warning: the returned value can be less than <see cref="MPFR_PREC_MIN">MPFR_PREC_MIN</see>.
-        /// </para>
-        /// <para>
-        /// The function name is subject to change. 
-        /// </para>
-        /// </remarks>
         /// <seealso cref="mpfr_set_default_rounding_mode">mpfr_set_default_rounding_mode</seealso>
         /// <seealso cref="mpfr_get_default_rounding_mode ">mpfr_get_default_rounding_mode </seealso>
         /// <seealso cref="mpfr_prec_round">mpfr_prec_round</seealso>
@@ -3565,9 +4182,8 @@ namespace Math.Mpfr.Native
         /// <returns>Return 0 (even if <paramref name="x"/> is not a non-zero ordinary number); otherwise, return a non-zero value.</returns>
         /// <remarks>
         /// <para>
-        /// Set the exponent of <paramref name="x"/> if <paramref name="e"/> is in the current exponent range, and return 0
-        /// (even if <paramref name="x"/> is not a non-zero ordinary number); otherwise, return a non-zero value.
-        /// The significand is assumed to be in [1/2,1). 
+        /// Set the exponent of <paramref name="x"/> to <paramref name="e"/> if x is a non-zero ordinary number and <paramref name="e"/>
+        /// is in the current exponent range, and return 0; otherwise, return a non-zero value (<paramref name="x"/> is not changed). 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_exp">mpfr_get_exp</seealso>
@@ -4534,6 +5150,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Conversion_Functions">Conversion Functions</a></seealso>
@@ -5104,6 +5721,11 @@ namespace Math.Mpfr.Native
         /// Just changes or adjusts the sign if <paramref name="rop"/> and <paramref name="op"/> are the same variable,
         /// otherwise a rounding might occur if the precision of <paramref name="rop"/> is less than that of <paramref name="op"/>. 
         /// </para>
+        /// <para>
+        /// The sign rule also applies to NaN in order to mimic the IEEE 754 negate and abs operations, i.e.,
+        /// for <see cref="mpfr_neg"/>, the sign is reversed, and for <see cref="mpfr_abs"/>, the sign is set
+        /// to positive. But contrary to IEEE 754, the NaN flag is set as usual.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -5112,6 +5734,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -5177,6 +5800,10 @@ namespace Math.Mpfr.Native
         /// <para>
         /// This function assigns new values to already initialized floats
         /// (see <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Initialization-Functions">GNU MPFR - Initialization Functions</a>).
+        /// </para>
+        /// <para>
+        /// For <see cref="mpfr_set"/>, the sign of a NaN is propagated in order to mimic the IEEE 754 copy operation.
+        /// But contrary to IEEE 754, the NaN flag is set as usual.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_set_ui">mpfr_set_ui</seealso>
@@ -5262,6 +5889,11 @@ namespace Math.Mpfr.Native
         /// Just changes or adjusts the sign if <paramref name="rop"/> and <paramref name="op"/> are the same variable,
         /// otherwise a rounding might occur if the precision of <paramref name="rop"/> is less than that of <paramref name="op"/>. 
         /// </para>
+        /// <para>
+        /// The sign rule also applies to NaN in order to mimic the IEEE 754 negate and abs operations, i.e.,
+        /// for <see cref="mpfr_neg"/>, the sign is reversed, and for <see cref="mpfr_abs"/>, the sign is set
+        /// to positive. But contrary to IEEE 754, the NaN flag is set as usual.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -5270,6 +5902,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -5518,6 +6151,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_d_2exp"/>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5594,6 +6228,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5653,6 +6288,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5714,6 +6350,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_get_d_2exp(ptr{int}, mpfr_t, mpfr_rnd_t)">mpfr_get_d_2exp(ptr{int}, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5780,6 +6417,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5846,6 +6484,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_frexp(ptr{mpfr_exp_t}, mpfr_t, mpfr_t, mpfr_rnd_t)">mpfr_frexp(ptr{mpfr_exp_t}, mpfr_t, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5928,6 +6567,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_frexp(ref mpfr_exp_t, mpfr_t, mpfr_t, mpfr_rnd_t)">mpfr_frexp(ref mpfr_exp_t, mpfr_t, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -5999,7 +6639,9 @@ namespace Math.Mpfr.Native
         /// If <paramref name="op"/> is too big for the return type, the function returns the maximum
         /// or the minimum of the corresponding C type, depending on the direction of the overflow;
         /// the erange flag is set too.
-        /// See also <see cref="mpfr_fits_slong_p">mpfr_fits_slong_p</see>, and <see cref="mpfr_fits_sint_p">mpfr_fits_sint_p</see>.
+        /// When there is no such range error, if the return value differs from <paramref name="op"/>,
+        /// i.e., if <paramref name="op"/> is not an integer, the inexact flag is set.
+        /// See also mpfr_fits_slong_p, mpfr_fits_ulong_p, mpfr_fits_intmax_p and mpfr_fits_uintmax_p.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -6011,6 +6653,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -6064,7 +6707,9 @@ namespace Math.Mpfr.Native
         /// If <paramref name="op"/> is too big for the return type, the function returns the maximum
         /// or the minimum of the corresponding C type, depending on the direction of the overflow;
         /// the erange flag is set too.
-        /// See also <see cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</see> or <see cref="mpfr_fits_uint_p">mpfr_fits_uint_p</see> .
+        /// When there is no such range error, if the return value differs from <paramref name="op"/>,
+        /// i.e., if <paramref name="op"/> is not an integer, the inexact flag is set.
+        /// See also mpfr_fits_slong_p, mpfr_fits_ulong_p, mpfr_fits_intmax_p and mpfr_fits_uintmax_p.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -6074,6 +6719,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -6128,7 +6774,13 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// The base may vary from 2 to 62; otherwise the function does nothing and immediately returns a null pointer.
-        /// If the input number is an ordinary number, the exponent is written through the pointer <paramref name="expptr"/>
+        /// </para>
+        /// <para>
+        /// If the input is NaN, then the returned string is ‘@NaN@’ and the NaN flag is set.
+        /// If the input is +Inf (resp. −Inf), then the returned string is ‘@Inf@’ (resp. ‘-@Inf@’).
+        /// </para>
+        /// <para>
+        /// If the input number is a finite number, the exponent is written through the pointer <paramref name="expptr"/>
         /// (for input 0, the current minimal exponent is written); the type <see cref="mpfr_exp_t">mpfr_exp_t</see> is large enough to hold the exponent in all cases.
         /// </para>
         /// <para>
@@ -6153,15 +6805,15 @@ namespace Math.Mpfr.Native
         /// To free the returned string, you must use <see cref="mpfr_free_str">mpfr_free_str</see>. 
         /// </para>
         /// <para>
-        /// If <paramref name="str"/> is not a null pointer, it should point to a block of storage large enough for the significand,
-        /// i.e., at least max(<paramref name="n"/> + 2, 7).
+        /// If <paramref name="str"/> is not a null pointer, it should point to a block of storage large enough for the significand.
+        /// A safe block size (sufficient for any value) is max(<paramref name="n"/> + 2, 7) if <paramref name="n"/> is not zero;
+        /// if <paramref name="n"/> is zero, replace it by m + 1, as discussed above. 
         /// The extra two bytes are for a possible minus sign, and for the terminating null character, and the value 7 accounts
         /// for -@Inf@ plus the terminating null character.
         /// The pointer to the string <paramref name="str"/> is returned (unless the base is invalid). 
         /// </para>
         /// <para>
-        /// Note: The NaN and inexact flags are currently not set when need be; this will be fixed in future versions.
-        /// Programmers should currently assume that whether the flags are set by this function is unspecified. 
+        /// Like in usual functions, the inexact flag is set iff the result is inexact.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -6174,6 +6826,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="mpfr_get_str(char_ptr, ptr{mpfr_exp_t}, int, size_t, mpfr_t, mpfr_rnd_t)">mpfr_get_str(char_ptr, ptr{mpfr_exp_t}, int, size_t, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -6234,7 +6887,13 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// The base may vary from 2 to 62; otherwise the function does nothing and immediately returns a null pointer.
-        /// If the input number is an ordinary number, the exponent is written through the pointer <paramref name="expptr"/>
+        /// </para>
+        /// <para>
+        /// If the input is NaN, then the returned string is ‘@NaN@’ and the NaN flag is set.
+        /// If the input is +Inf (resp. −Inf), then the returned string is ‘@Inf@’ (resp. ‘-@Inf@’).
+        /// </para>
+        /// <para>
+        /// If the input number is a finite number, the exponent is written through the pointer <paramref name="expptr"/>
         /// (for input 0, the current minimal exponent is written); the type <see cref="mpfr_exp_t">mpfr_exp_t</see> is large enough to hold the exponent in all cases.
         /// </para>
         /// <para>
@@ -6259,15 +6918,15 @@ namespace Math.Mpfr.Native
         /// To free the returned string, you must use <see cref="mpfr_free_str">mpfr_free_str</see>. 
         /// </para>
         /// <para>
-        /// If <paramref name="str"/> is not a null pointer, it should point to a block of storage large enough for the significand,
-        /// i.e., at least max(<paramref name="n"/> + 2, 7).
+        /// If <paramref name="str"/> is not a null pointer, it should point to a block of storage large enough for the significand.
+        /// A safe block size (sufficient for any value) is max(<paramref name="n"/> + 2, 7) if <paramref name="n"/> is not zero;
+        /// if <paramref name="n"/> is zero, replace it by m + 1, as discussed above. 
         /// The extra two bytes are for a possible minus sign, and for the terminating null character, and the value 7 accounts
         /// for -@Inf@ plus the terminating null character.
         /// The pointer to the string <paramref name="str"/> is returned (unless the base is invalid). 
         /// </para>
         /// <para>
-        /// Note: The NaN and inexact flags are currently not set when need be; this will be fixed in future versions.
-        /// Programmers should currently assume that whether the flags are set by this function is unspecified. 
+        /// Like in usual functions, the inexact flag is set iff the result is inexact.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -6280,6 +6939,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="mpfr_get_str(char_ptr, ref mpfr_exp_t, int, size_t, mpfr_t, mpfr_rnd_t)">mpfr_get_str(char_ptr, ref mpfr_exp_t, int, size_t, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -6330,7 +6990,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Convert <paramref name="op"/> to a <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/8beda7fb-bbc4-b56f-fd1f-1459377ecb3b.htm">mpz_t</a>, after rounding it with respect to <paramref name="rnd"/>.
+        /// Convert <paramref name="op"/> to a <see cref="mpz_t"/>, after rounding it with respect to <paramref name="rnd"/>.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
@@ -6339,6 +6999,9 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// If <paramref name="op"/> is NaN or an infinity, the erange flag is set, <paramref name="rop"/> is set to 0, and 0 is returned.
+        /// Otherwise the return value is zero when rop is equal to op (i.e., when <paramref name="op"/> is an integer), positive when it
+        /// is greater than <paramref name="op"/>, and negative when it is smaller than <paramref name="op"/>; moreover, if <paramref name="rop"/>
+        /// differs from <paramref name="op"/>, i.e., if <paramref name="op"/> is not an integer, the inexact flag is set.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
@@ -6350,6 +7013,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_d_2exp"/>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
@@ -6405,6 +7069,81 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Convert <paramref name="op"/> to a <see cref="mpq_t"/>. 
+        /// </summary>
+        /// <param name="rop">The result rational number.</param>
+        /// <param name="op">The operand floating-point number.</param>
+        /// <remarks>
+        /// <para>
+        /// If <paramref name="op"/> is NaN or an infinity, the erange flag is set, <paramref name="rop"/> is set to 0, and 0 is returned.
+        /// Otherwise the conversion is always exact.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_get_flt">mpfr_get_flt</seealso>
+        /// <seealso cref="mpfr_get_d">mpfr_get_d</seealso>
+        /// <seealso cref="mpfr_get_si">mpfr_get_si</seealso>
+        /// <seealso cref="mpfr_get_ui">mpfr_get_ui</seealso>
+        /// <seealso cref="mpfr_get_sj">mpfr_get_sj</seealso>
+        /// <seealso cref="mpfr_get_uj">mpfr_get_uj</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_d_2exp"/>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
+        /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
+        /// <seealso cref="mpfr_get_z">mpfr_get_q</seealso>
+        /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
+        /// <seealso cref="mpfr_free_str">mpfr_free_str</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Conversion_Functions">Conversion Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Conversion-Functions">GNU MPFR - Conversion Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op to 10.6.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.6, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new rational rop.
+        /// mpq_t rop = new mpq_t();
+        /// gmp_lib.mpq_init(rop);
+        /// 
+        /// // Set rop = op.
+        /// mpfr_lib.mpfr_get_q(rop, op);
+        /// 
+        /// // Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() == "5967269506265907/562949953421312");
+        /// 
+        /// // Release unmanaged memory allocated for rop and op.
+        /// gmp_lib.mpq_clear(rop);
+        /// mpfr_lib.mpfr_clear(op);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op to 10.6.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.6, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new rational rop.
+        /// Dim rop As mpq_t = New mpq_t()
+        /// gmp_lib.mpq_init(rop)
+        /// 
+        /// ' Set rop = op.
+        /// mpfr_lib.mpfr_get_q(rop, op)
+        /// 
+        /// ' Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() = "5967269506265907/562949953421312")
+        /// 
+        /// ' Release unmanaged memory allocated for rop and op.
+        /// gmp_lib.mpq_clear(rop)
+        /// mpfr_lib.mpfr_clear(op)
+        /// </code> 
+        /// </example>
+        public static void mpfr_get_q(mpq_t /*mpz_ptr*/ rop, /*const*/ mpfr_t op)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (op == null) throw new ArgumentNullException("op");
+            SafeNativeMethods.mpfr_get_q(rop.ToIntPtr(), op.ToIntPtr());
+        }
+
+        /// <summary>
         /// Free a string allocated by <see cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str">O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str</see> using the unallocation function (see <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Memory-Handling">GNU MPFR - Memory Handling</a>).
         /// </summary>
         /// <param name="str">Pointer to string.</param>
@@ -6423,6 +7162,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_frexp"/>
         /// <seealso cref="mpfr_get_z_2exp">mpfr_get_z_2exp</seealso>
         /// <seealso cref="mpfr_get_z">mpfr_get_z</seealso>
+        /// <seealso cref="mpfr_get_q">mpfr_get_q</seealso>
         /// <seealso cref="mpfr_get_f">mpfr_get_f</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_get_str"/>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Conversion_Functions">Conversion Functions</a></seealso>
@@ -6477,18 +7217,16 @@ namespace Math.Mpfr.Native
         /// </para>
         /// <para>
         /// Note: the note for <see cref="mpfr_urandomb">mpfr_urandomb</see> holds too.
-        /// In addition, the exponent range and the rounding mode might have a side effect on the next random state. 
-        /// </para>
-        /// <para>
-        /// The rule for the underflow flag is here “underflow before rounding” instead of the usual “underflow after rounding”.
-        /// The reason is that the exponent is drawn first, and if it is smaller than the minimum exponent, the significand is not drawn.
-        /// To fix the behavior on the underflow flag, one would have to draw the significand in some cases, meaning that the behavior
-        /// of the random generator would change, thus it would break the ABI for the MPFR 3.1 branch.
-        /// However, the observed behavior always corresponds to an existing number. 
+        /// Moreover, the exact number (the random value to be rounded) and the next random state do not depend on the current exponent
+        /// range and the rounding mode.
+        /// However, they depend on the target precision: from the same state of the random generator, if the precision of the destination
+        /// is changed, then the value may be completely different (and the state of the random generator is different too).
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_urandomb">mpfr_urandomb</seealso>
+        /// <seealso cref="mpfr_nrandom">mpfr_nrandom</seealso>
         /// <seealso cref="mpfr_grandom">mpfr_grandom</seealso>
+        /// <seealso cref="mpfr_erandom">mpfr_erandom</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -6535,7 +7273,140 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Generate two random floats according to a standard normal gaussian distribution.
+        /// Generate one random float according to a standard normal gaussian distribution (with mean zero and variance one).
+        /// </summary>
+        /// <param name="rop">The first result operand floating-point number.</param>
+        /// <param name="state">The state of the random number generator.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> corresponding to <paramref name="rop"/>. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// The floating-point number <paramref name="rop"/> can be seen as if a random real number were
+        /// generated according to the standard normal gaussian distribution and then rounded in the direction <paramref name="rnd"/>. 
+        /// </para>
+        /// <para>
+        /// The <see cref="gmp_randstate_t"/> argument should be created using the GMP gmp_randinit function (see the GMP manual). 
+        /// </para>
+        /// <para>
+        /// Note: the note for <see cref="mpfr_urandomb">mpfr_urandomb</see> holds too.
+        /// In addition, the exponent range and the rounding mode might have a side effect on the next random state. 
+        /// </para>
+        /// <para>
+        /// Note: <see cref="mpfr_nrandom"/> is much more efficient than <see cref="mpfr_grandom"/>, especially for large precision.
+        /// Thus <see cref="mpfr_grandom"/> is marked as deprecated and will be removed in a future release.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_urandomb">mpfr_urandomb</seealso>
+        /// <seealso cref="mpfr_urandom">mpfr_urandom</seealso>
+        /// <seealso cref="mpfr_erandom">mpfr_erandom</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and seed a new random number generator.
+        /// gmp_randstate_t state = new gmp_randstate_t();
+        /// gmp_lib.gmp_randinit_mt(state);
+        /// gmp_lib.gmp_randseed_ui(state, 100000U);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Generate one Gaussian random floating-point number.
+        /// Assert.IsTrue(mpfr_lib.mpfr_nrandom(rop, state, mpfr_rnd_t.MPFR_RNDN) == 10);
+        /// 
+        /// // Free all memory occupied by state and rop.
+        /// gmp_lib.gmp_randclear(state);
+        /// mpfr_lib.mpfr_clear(rop);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and seed a new random number generator.
+        /// Dim state As gmp_randstate_t = New gmp_randstate_t()
+        /// gmp_lib.gmp_randinit_mt(state)
+        /// gmp_lib.gmp_randseed_ui(state, 100000U)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Generate one Gaussian random floating-point number.
+        /// Assert.IsTrue(mpfr_lib.mpfr_grandom(rop, state, mpfr_rnd_t.MPFR_RNDN) = 1)
+        /// 
+        /// ' Free all memory occupied by state and rop.
+        /// gmp_lib.gmp_randclear(state)
+        /// mpfr_lib.mpfr_clear(rop)
+        /// </code> 
+        /// </example>
+        public static int mpfr_nrandom(mpfr_t rop, gmp_randstate_t state, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (state == null) throw new ArgumentNullException("state");
+            return SafeNativeMethods.mpfr_nrandom(rop.ToIntPtr(), state.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Generate one random float according to an exponential distribution, with mean one.
+        /// </summary>
+        /// <param name="rop">The first result operand floating-point number.</param>
+        /// <param name="state">The state of the random number generator.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> corresponding to <paramref name="rop"/>. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// Generate one random floating-point number according to an exponential distribution, with mean one.
+        /// Other characteristics are identical to <see cref="mpfr_nrandom"/>. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_urandomb">mpfr_urandomb</seealso>
+        /// <seealso cref="mpfr_urandom">mpfr_urandom</seealso>
+        /// <seealso cref="mpfr_nrandom">mpfr_erandom</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and seed a new random number generator.
+        /// gmp_randstate_t state = new gmp_randstate_t();
+        /// gmp_lib.gmp_randinit_mt(state);
+        /// gmp_lib.gmp_randseed_ui(state, 100000U);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Generate one exponential random floating-point number.
+        /// Assert.IsTrue(mpfr_lib.mpfr_erandom(rop, state, mpfr_rnd_t.MPFR_RNDN) &lt; 0);
+        /// 
+        /// // Free all memory occupied by state and rop.
+        /// gmp_lib.gmp_randclear(state);
+        /// mpfr_lib.mpfr_clear(rop);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and seed a new random number generator.
+        /// Dim state As gmp_randstate_t = New gmp_randstate_t()
+        /// gmp_lib.gmp_randinit_mt(state)
+        /// gmp_lib.gmp_randseed_ui(state, 100000U)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Generate one exponential random floating-point number.
+        /// Assert.IsTrue(mpfr_lib.mpfr_erandom(rop, state, mpfr_rnd_t.MPFR_RNDN) &lt; 0)
+        /// 
+        /// ' Free all memory occupied by state and rop.
+        /// gmp_lib.gmp_randclear(state)
+        /// mpfr_lib.mpfr_clear(rop)
+        /// </code> 
+        /// </example>
+        public static int mpfr_erandom(mpfr_t rop, gmp_randstate_t state, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (state == null) throw new ArgumentNullException("state");
+            return SafeNativeMethods.mpfr_erandom(rop.ToIntPtr(), state.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Generate two random floats according to a standard normal gaussian distribution (with mean zero and variance one).
         /// </summary>
         /// <param name="rop1">The first result operand floating-point number.</param>
         /// <param name="rop2">The second result operand floating-point number.</param>
@@ -6548,19 +7419,25 @@ namespace Math.Mpfr.Native
         /// </para>
         /// <para>
         /// The floating-point number <paramref name="rop1"/> (and <paramref name="rop2"/>) can be seen as if a random real number were
-        /// generated according to the standard normal gaussian distribution and then rounded in the direction <paramref name="rnd"/>. 
+        /// generated according to the standard normal Gaussian distribution and then rounded
+        /// in the direction <paramref name="rnd"/>. 
         /// </para>
         /// <para>
-        /// The third argument is a <a href="https://machinecognitis.github.io/Math.Gmp.Native/html/f7e5846d-548d-3bf3-74ac-219fde42a041.htm">gmp_randstate_t</a>
-        /// structure, which should be created using the GMP gmp_randinit function (see the GMP manual). 
+        /// The <see cref="gmp_randstate_t"/> argument should be created using the GMP gmp_randinit function (see the GMP manual). 
         /// </para>
         /// <para>
         /// Note: the note for <see cref="mpfr_urandomb">mpfr_urandomb</see> holds too.
         /// In addition, the exponent range and the rounding mode might have a side effect on the next random state. 
         /// </para>
+        /// <para>
+        /// Note: <see cref="mpfr_nrandom"/> is much more efficient than <see cref="mpfr_grandom"/>, especially for large precision.
+        /// Thus <see cref="mpfr_grandom"/> is marked as deprecated and will be removed in a future release.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_urandomb">mpfr_urandomb</seealso>
         /// <seealso cref="mpfr_urandom">mpfr_urandom</seealso>
+        /// <seealso cref="mpfr_nrandom">mpfr_nrandom</seealso>
+        /// <seealso cref="mpfr_erandom">mpfr_erandom</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -6578,13 +7455,13 @@ namespace Math.Mpfr.Native
         /// mpfr_t rop2 = new mpfr_t();
         /// mpfr_lib.mpfr_init2(rop2, 64U);
         /// 
-        /// // Generate two Gaussin random floating-point numbers.
+        /// // Generate two Gaussian random floating-point numbers.
         /// Assert.IsTrue(mpfr_lib.mpfr_grandom(rop1, rop2, state, mpfr_rnd_t.MPFR_RNDN) == 10);
         /// 
-        /// // Generate one Gaussin random floating-point number.
+        /// // Generate one Gaussian random floating-point number.
         /// Assert.IsTrue(mpfr_lib.mpfr_grandom(rop1, null, state, mpfr_rnd_t.MPFR_RNDN) == 1);
         /// 
-        /// // Free all memory occupied by state and rop.
+        /// // Free all memory occupied by state, rop1, and rop2.
         /// gmp_lib.gmp_randclear(state);
         /// mpfr_lib.mpfr_clears(rop1, rop2, null);
         /// </code> 
@@ -6602,13 +7479,13 @@ namespace Math.Mpfr.Native
         /// Dim rop2 As mpfr_t = New mpfr_t()
         /// mpfr_lib.mpfr_init2(rop2, 64U)
         /// 
-        /// ' Generate two Gaussin random floating-point numbers.
+        /// ' Generate two Gaussian random floating-point numbers.
         /// Assert.IsTrue(mpfr_lib.mpfr_grandom(rop1, rop2, state, mpfr_rnd_t.MPFR_RNDN) = 10)
         /// 
-        /// ' Generate one Gaussin random floating-point number.
+        /// ' Generate one Gaussian random floating-point number.
         /// Assert.IsTrue(mpfr_lib.mpfr_grandom(rop1, Nothing, state, mpfr_rnd_t.MPFR_RNDN) = 1)
         /// 
-        /// ' Free all memory occupied by state and rop.
+        /// ' Free all memory occupied by state, rop1, and rop2.
         /// gmp_lib.gmp_randclear(state)
         /// mpfr_lib.mpfr_clears(rop1, rop2, Nothing)
         /// </code> 
@@ -6640,7 +7517,9 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_urandom">mpfr_urandom</seealso>
+        /// <seealso cref="mpfr_nrandom">mpfr_nrandom</seealso>
         /// <seealso cref="mpfr_grandom">mpfr_grandom</seealso>
+        /// <seealso cref="mpfr_erandom">mpfr_erandom</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Miscellaneous_Functions">Miscellaneous Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Miscellaneous-Functions">GNU MPFR - Miscellaneous Functions</a></seealso>
         /// <example>
@@ -6789,14 +7668,14 @@ namespace Math.Mpfr.Native
         /// <param name="y">The second operand floating-point number.</param>
         /// <remarks>
         /// <para>
-        /// If <paramref name="x"/> or <paramref name="y"/> is NaN, set <paramref name="x"/> to NaN.
+        /// If <paramref name="x"/> or <paramref name="y"/> is NaN, set <paramref name="x"/> to NaN; note that the NaN flag is set as usual.
         /// If <paramref name="x"/> and <paramref name="y"/> are equal, <paramref name="x"/> is unchanged.
         /// Otherwise, if <paramref name="x"/> is different from <paramref name="y"/>, replace <paramref name="x"/>
         /// by the next floating-point number (with the precision of <paramref name="x"/> and the current exponent range)
         /// in the direction of <paramref name="y"/> (the infinite values are seen as the smallest and largest
         /// floating-point numbers).
         /// If the result is zero, it keeps the same sign.
-        /// No underflow or overflow is generated. 
+        /// No underflow, overflow, or inexact exception is raised. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_nextabove">mpfr_nextabove</seealso>
@@ -7532,6 +8411,10 @@ namespace Math.Mpfr.Native
         /// </description>
         /// </item>
         /// </list>
+        /// <para>
+        /// Note: When 0 is of integer type, it is regarded as +0 by these functions.
+        /// We do not use the usual limit rules in this case, as these rules are not used for pow.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -7540,6 +8423,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_pow_ui">mpfr_pow_ui</seealso>
@@ -7699,6 +8583,10 @@ namespace Math.Mpfr.Native
         /// </description>
         /// </item>
         /// </list>
+        /// <para>
+        /// Note: When 0 is of integer type, it is regarded as +0 by these functions.
+        /// We do not use the usual limit rules in this case, as these rules are not used for pow.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -7707,6 +8595,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_pow_ui">mpfr_pow_ui</seealso>
@@ -7855,6 +8744,10 @@ namespace Math.Mpfr.Native
         /// </description>
         /// </item>
         /// </list>
+        /// <para>
+        /// Note: When 0 is of integer type, it is regarded as +0 by these functions.
+        /// We do not use the usual limit rules in this case, as these rules are not used for pow.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -7863,6 +8756,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_pow_ui">mpfr_pow_ui</seealso>
@@ -8011,6 +8905,10 @@ namespace Math.Mpfr.Native
         /// </description>
         /// </item>
         /// </list>
+        /// <para>
+        /// Note: When 0 is of integer type, it is regarded as +0 by these functions.
+        /// We do not use the usual limit rules in this case, as these rules are not used for pow.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -8019,6 +8917,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_pow_ui">mpfr_pow_ui</seealso>
@@ -8156,6 +9055,10 @@ namespace Math.Mpfr.Native
         /// </description>
         /// </item>
         /// </list>
+        /// <para>
+        /// Note: When 0 is of integer type, it is regarded as +0 by these functions.
+        /// We do not use the usual limit rules in this case, as these rules are not used for pow.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -8164,6 +9067,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_pow_ui">mpfr_pow_ui</seealso>
@@ -8312,6 +9216,10 @@ namespace Math.Mpfr.Native
         /// </description>
         /// </item>
         /// </list>
+        /// <para>
+        /// Note: When 0 is of integer type, it is regarded as +0 by these functions.
+        /// We do not use the usual limit rules in this case, as these rules are not used for pow.
+        /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
@@ -8320,6 +9228,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_pow_ui">mpfr_pow_ui</seealso>
@@ -8410,6 +9319,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_sqrt_ui">mpfr_sqrt_ui</seealso>
         /// <seealso cref="mpfr_rec_sqrt">mpfr_rec_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -8485,6 +9395,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_sqrt_ui">mpfr_sqrt_ui</seealso>
         /// <seealso cref="mpfr_rec_sqrt">mpfr_rec_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -8552,6 +9463,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_sqrt_ui">mpfr_sqrt_ui</seealso>
         /// <seealso cref="mpfr_rec_sqrt">mpfr_rec_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -8634,6 +9546,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -8730,6 +9643,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -8821,6 +9735,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -8898,8 +9813,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -8917,6 +9834,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9010,6 +9928,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9095,6 +10014,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9180,6 +10100,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9260,6 +10181,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9326,8 +10248,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -9345,6 +10269,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9409,8 +10334,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -9428,6 +10355,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9510,6 +10438,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9595,6 +10524,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9680,6 +10610,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9760,6 +10691,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9826,8 +10758,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -9845,6 +10779,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -9909,8 +10844,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -9928,6 +10865,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10013,6 +10951,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10099,6 +11038,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10185,6 +11125,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10266,6 +11207,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10332,8 +11274,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// The same restrictions than for <see cref="mpfr_add_d">mpfr_add_d</see> apply to <see cref="mpfr_d_div">mpfr_d_div</see> and <see cref="mpfr_div_d">mpfr_div_d</see>. 
         /// </para>
         /// </remarks>
@@ -10352,6 +11296,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10416,8 +11361,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// The same restrictions than for <see cref="mpfr_add_d">mpfr_add_d</see> apply to <see cref="mpfr_d_div">mpfr_d_div</see> and <see cref="mpfr_div_d">mpfr_div_d</see>. 
         /// </para>
         /// </remarks>
@@ -10436,6 +11383,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10504,6 +11452,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -10574,6 +11523,9 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_const_euler">mpfr_const_euler</seealso>
         /// <seealso cref="mpfr_const_catalan">mpfr_const_catalan</seealso>
         /// <seealso cref="mpfr_free_cache">mpfr_free_cache</seealso>
+        /// <seealso cref="mpfr_free_cache2">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_free_pool">mpfr_free_pool</seealso>
+        /// <seealso cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
         /// <example>
@@ -10624,6 +11576,9 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_const_euler">mpfr_const_euler</seealso>
         /// <seealso cref="mpfr_const_catalan">mpfr_const_catalan</seealso>
         /// <seealso cref="mpfr_free_cache">mpfr_free_cache</seealso>
+        /// <seealso cref="mpfr_free_cache2">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_free_pool">mpfr_free_pool</seealso>
+        /// <seealso cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
         /// <example>
@@ -10674,6 +11629,9 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_const_pi">mpfr_const_pi</seealso>
         /// <seealso cref="mpfr_const_catalan">mpfr_const_catalan</seealso>
         /// <seealso cref="mpfr_free_cache">mpfr_free_cache</seealso>
+        /// <seealso cref="mpfr_free_cache2">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_free_pool">mpfr_free_pool</seealso>
+        /// <seealso cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
         /// <example>
@@ -10724,6 +11682,9 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_const_pi">mpfr_const_pi</seealso>
         /// <seealso cref="mpfr_const_euler">mpfr_const_euler</seealso>
         /// <seealso cref="mpfr_free_cache">mpfr_free_cache</seealso>
+        /// <seealso cref="mpfr_free_cache2">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_free_pool">mpfr_free_pool</seealso>
+        /// <seealso cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
         /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
         /// <example>
@@ -10770,16 +11731,19 @@ namespace Math.Mpfr.Native
         /// <para>
         /// The arithmetic-geometric mean is the common limit of the sequences u(n) and v(n), where u(0) = <paramref name="op1"/>, v(0) = <paramref name="op2"/>,
         /// u(n + 1) is the arithmetic mean of u(n) and v(n), and v(n + 1) is the geometric mean of u(n) and v(n).
-        /// If any operand is negative, set <paramref name="rop"/> to NaN. 
+        /// If any operand is negative and the other one is not zero, set <paramref name="rop"/> to NaN.
+        /// If any operand is zero and the other one is finite (resp. infinite), set <paramref name="rop"/> to +0 (resp. NaN).
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -10792,6 +11756,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
@@ -10924,6 +11890,65 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Set <paramref name="rop"/> to the natural logarithm of <paramref name="op"/> rounded in the direction <paramref name="rnd"/>.
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op">The operand integer number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// Set <paramref name="rop"/> to +0 if <paramref name="op"/> is 1 (in all rounding modes), for consistency with the ISO C99 and IEEE 754-2008 standards.
+        /// Set <paramref name="rop"/> to -Inf if <paramref name="op"/> is ±0 (i.e., the sign of the zero has no influence on the result). 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
+        /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
+        /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
+        /// <seealso cref="mpfr_exp">mpfr_exp</seealso>
+        /// <seealso cref="mpfr_exp2">mpfr_exp2</seealso>
+        /// <seealso cref="mpfr_exp10">mpfr_exp10</seealso>
+        /// <seealso cref="mpfr_expm1">mpfr_expm1</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop to log(10).
+        /// Assert.IsTrue(mpfr_lib.mpfr_log_ui(rop, 10U, mpfr_rnd_t.MPFR_RNDN) == 1);
+        /// 
+        /// // Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() == "0.230258509299404568404e1");
+        /// 
+        /// // Release unmanaged memory allocated for rop.
+        /// mpfr_lib.mpfr_clear(rop);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop to log(10).
+        /// Assert.IsTrue(mpfr_lib.mpfr_log_ui(rop, 10U, mpfr_rnd_t.MPFR_RNDN) = 1)
+        /// 
+        /// ' Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() = "0.230258509299404568404e1")
+        /// 
+        /// ' Release unmanaged memory allocated for rop.
+        /// mpfr_lib.mpfr_clear(rop)
+        /// </code> 
+        /// </example>
+        public static int mpfr_log_ui(mpfr_t rop, uint /*unsigned long*/ op, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            return SafeNativeMethods.mpfr_log_ui(rop.ToIntPtr(), op, (int)rnd);
+        }
+
+        /// <summary>
         /// Set <paramref name="rop"/> to log2(<paramref name="op"/>) rounded in the direction <paramref name="rnd"/>.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
@@ -10937,6 +11962,7 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
         /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
         /// <seealso cref="mpfr_exp">mpfr_exp</seealso>
@@ -11006,6 +12032,7 @@ namespace Math.Mpfr.Native
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
         /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
         /// <seealso cref="mpfr_exp">mpfr_exp</seealso>
@@ -11068,7 +12095,13 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// Set <paramref name="rop"/> to −Inf if <paramref name="op"/> is −1.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
         /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
         /// <seealso cref="mpfr_exp">mpfr_exp</seealso>
@@ -11132,6 +12165,7 @@ namespace Math.Mpfr.Native
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
         /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
         /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
@@ -11195,6 +12229,7 @@ namespace Math.Mpfr.Native
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
         /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
         /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
@@ -11258,6 +12293,7 @@ namespace Math.Mpfr.Native
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
         /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
         /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
@@ -11314,13 +12350,14 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set <paramref name="rop"/> to the exponential of <paramref name="op"/> followed by a subtraction by one, rounded in the direction <paramref name="rnd"/>. 
+        /// Set <paramref name="rop"/> to the e^<paramref name="op"/> - 1, rounded in the direction <paramref name="rnd"/>. 
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <seealso cref="mpfr_log">mpfr_log</seealso>
+        /// <seealso cref="mpfr_log_ui">mpfr_log_ui</seealso>
         /// <seealso cref="mpfr_log2">mpfr_log2</seealso>
         /// <seealso cref="mpfr_log10">mpfr_log10</seealso>
         /// <seealso cref="mpfr_log1p">mpfr_log1p</seealso>
@@ -11383,12 +12420,23 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// This is the sum of Euler’s constant, of the logarithm of the absolute value of <paramref name="op"/>,
+        /// and of the sum for k from 1 to infinity of (op^k)/(k · k!).
+        /// For positive <paramref name="op"/>, it corresponds to the Ei function at op (see formula 5.1.10 from
+        /// the Handbook of Mathematical Functions from Abramowitz and Stegun), and for negative <paramref name="op"/>,
+        /// to the opposite of the E1 function (sometimes called eint1) at −op (formula 5.1.1 from the same reference).
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -11401,6 +12449,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -11468,9 +12518,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -11483,6 +12535,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -12425,6 +13479,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -12509,6 +13564,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -12588,6 +13644,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -12672,6 +13729,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -12732,7 +13790,7 @@ namespace Math.Mpfr.Native
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>The returned value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
+        /// <returns>The return value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
         /// <remarks>
         /// <para>
         /// When <paramref name="op"/> is NaN, the NaN flag is set as usual.
@@ -12752,14 +13810,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -12817,8 +13878,11 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
-        /// <returns>The returned value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
+        /// <returns>The return value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
         /// <remarks>
+        /// <para>
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
+        /// </para>
         /// <para>
         /// When <paramref name="op"/> is NaN, the NaN flag is set as usual.
         /// In the other cases, the inexact flag is set when <paramref name="rop"/> differs from <paramref name="op"/>, following the ISO C99 rule for the rint function.
@@ -12826,9 +13890,7 @@ namespace Math.Mpfr.Native
         /// mathematical function, you should use one the mpfr_rint_* functions instead (however it is not possible to round to nearest with the even rounding rule yet). 
         /// </para>
         /// <para>
-        /// Note that <see cref="mpfr_round">mpfr_round</see> is different from <see cref="mpfr_rint">mpfr_rint</see> called with the rounding to nearest mode (where halfway cases are rounded to an
-        /// even integer or significand).
-        /// Note also that no double rounding is performed; for instance, 10.5 (1010.1 in binary) is rounded by <see cref="mpfr_rint">mpfr_rint</see> with rounding to nearest
+        /// Note that no double rounding is performed; for instance, 10.5 (1010.1 in binary) is rounded by <see cref="mpfr_rint">mpfr_rint</see> with rounding to nearest
         /// to 12 (1100 in binary) in 2-bit precision, because the two enclosing numbers representable on two bits are 8 and 12, and the closest is 12.
         /// (If one first rounded to an integer, one would round 10.5 to 10 with even rounding, and then 10 would be rounded to 8 again with even rounding.) 
         /// </para>
@@ -12836,15 +13898,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
-        /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_roundeven</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -12898,17 +13962,20 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set <paramref name="rop"/> to <paramref name="op"/> rounded to the next representable integer toward zero. 
+        /// Set <i>rop</i> to <i>op</i> rounded to the nearest representable integer, rounding halfway cases with the even-rounding rule zero (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDN"/>).
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
-        /// <returns>The returned value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
+        /// <returns>The return value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
         /// <remarks>
+        /// <para>
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
+        /// </para>
         /// <para>
         /// When <paramref name="op"/> is NaN, the NaN flag is set as usual.
         /// In the other cases, the inexact flag is set when <paramref name="rop"/> differs from <paramref name="op"/>, following the ISO C99 rule for the rint function.
         /// If you want the behavior to be more like IEEE 754 / ISO TS 18661-1, i.e., the usual behavior where the round-to-integer function is regarded as any other
-        /// mathematical function, you should use one the mpfr_rint_* functions instead (however it is not possible to round to nearest with the even rounding rule yet). 
+        /// mathematical function, you should use one the mpfr_rint_* functions instead. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
@@ -12919,10 +13986,96 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
+        /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
+        /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Integer-Related-Functions">GNU MPFR - Integer and Remainder Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op to 10.4.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop = round(op).
+        /// Assert.IsTrue(mpfr_lib.mpfr_roundeven(rop, op) == -2);
+        /// 
+        /// // Assert that the value of rop is 10.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == 10.0);
+        /// 
+        /// // Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op to 10.4.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_d(op, 10.4, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop = round(op).
+        /// Assert.IsTrue(mpfr_lib.mpfr_roundeven(rop, op) = -2)
+        /// 
+        /// ' Assert that the value of rop is 10.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) = 10.0)
+        /// 
+        /// ' Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_roundeven(mpfr_t rop, /*const*/ mpfr_t op)
+        {
+            if (op == null) throw new ArgumentNullException("op");
+            if (rop == null) throw new ArgumentNullException("rop");
+            return SafeNativeMethods.mpfr_roundeven(rop.ToIntPtr(), op.ToIntPtr());
+        }
+
+        /// <summary>
+        /// Set <paramref name="rop"/> to <paramref name="op"/> rounded to the next representable integer toward zero (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDZ"/>).
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op">The operand floating-point number.</param>
+        /// <returns>The return value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
+        /// <remarks>
+        /// <para>
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
+        /// </para>
+        /// <para>
+        /// When <paramref name="op"/> is NaN, the NaN flag is set as usual.
+        /// In the other cases, the inexact flag is set when <paramref name="rop"/> differs from <paramref name="op"/>, following the ISO C99 rule for the rint function.
+        /// If you want the behavior to be more like IEEE 754 / ISO TS 18661-1, i.e., the usual behavior where the round-to-integer function is regarded as any other
+        /// mathematical function, you should use one the mpfr_rint_* functions instead. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
+        /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
+        /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
+        /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
+        /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
+        /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
+        /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
+        /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
+        /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
+        /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
+        /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -12976,31 +14129,37 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set <paramref name="rop"/> to <paramref name="op"/> rounded to the next higher or equal representable integer. 
+        /// Set <paramref name="rop"/> to <paramref name="op"/> rounded to the next higher or equal representable integer (like <see cref="mpfr_rint"/> with <see cref="mpfr_rnd_t.MPFR_RNDU"/>).
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
-        /// <returns>The returned value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
+        /// <returns>The return value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
         /// <remarks>
+        /// <para>
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
+        /// </para>
         /// <para>
         /// When <paramref name="op"/> is NaN, the NaN flag is set as usual.
         /// In the other cases, the inexact flag is set when <paramref name="rop"/> differs from <paramref name="op"/>, following the ISO C99 rule for the rint function.
         /// If you want the behavior to be more like IEEE 754 / ISO TS 18661-1, i.e., the usual behavior where the round-to-integer function is regarded as any other
-        /// mathematical function, you should use one the mpfr_rint_* functions instead (however it is not possible to round to nearest with the even rounding rule yet). 
+        /// mathematical function, you should use one the mpfr_rint_* functions instead. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13058,27 +14217,33 @@ namespace Math.Mpfr.Native
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
-        /// <returns>The returned value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
+        /// <returns>The return value is zero when the result is exact, positive when it is greater than the original value of <paramref name="op"/>, and negative when it is smaller. More precisely, the returned value is 0 when <paramref name="op"/> is an integer representable in <paramref name="rop"/>, 1 or -1 when <paramref name="op"/> is an integer that is not representable in <paramref name="rop"/>, 2 or -2 when <paramref name="op"/> is not an integer.</returns>
         /// <remarks>
+        /// <para>
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
+        /// </para>
         /// <para>
         /// When <paramref name="op"/> is NaN, the NaN flag is set as usual.
         /// In the other cases, the inexact flag is set when <paramref name="rop"/> differs from <paramref name="op"/>, following the ISO C99 rule for the rint function.
         /// If you want the behavior to be more like IEEE 754 / ISO TS 18661-1, i.e., the usual behavior where the round-to-integer function is regarded as any other
-        /// mathematical function, you should use one the mpfr_rint_* functions instead (however it is not possible to round to nearest with the even rounding rule yet). 
+        /// mathematical function, you should use one the mpfr_rint_* functions instead. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13137,10 +14302,11 @@ namespace Math.Mpfr.Native
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>The returned value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
         /// <remarks>
         /// <para>
         /// If the result is not representable, it is rounded in the direction <paramref name="rnd"/>. 
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
         /// </para>
         /// <para>
         /// Contrary to <see cref="mpfr_rint">mpfr_rint</see>, this function does perform a double rounding: first <paramref name="op"/> is rounded to the nearest integer
@@ -13157,6 +14323,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
@@ -13164,6 +14331,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13217,15 +14385,16 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set <paramref name="rop"/> to <paramref name="op"/> rounded to the next integer toward zero.
+        /// Set <i>rop</i> to <i>op</i> rounded to the nearest integer, rounding halfway cases to the nearest even integer.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>The returned value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
         /// <remarks>
         /// <para>
         /// If the result is not representable, it is rounded in the direction <paramref name="rnd"/>. 
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
         /// </para>
         /// <para>
         /// Contrary to <see cref="mpfr_rint">mpfr_rint</see>, this function does perform a double rounding: first <paramref name="op"/> is rounded to the nearest integer
@@ -13242,13 +14411,104 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
+        /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
+        /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
+        /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
+        /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
+        /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
+        /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
+        /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
+        /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
+        /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Integer-Related-Functions">GNU MPFR - Integer and Remainder Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op to 25.2.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_init_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop = round(op).
+        /// Assert.IsTrue(mpfr_lib.mpfr_rint_roundeven(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() == "0.250000000000000000000e2");
+        /// 
+        /// // Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op to 25.2.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_init_set_d(op, 25.2, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop = round(op).
+        /// Assert.IsTrue(mpfr_lib.mpfr_rint_roundeven(rop, op, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() = "0.250000000000000000000e2")
+        /// 
+        /// ' Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_rint_roundeven(mpfr_t rop, /*const*/ mpfr_t op, mpfr_rnd_t rnd)
+        {
+            if (op == null) throw new ArgumentNullException("op");
+            if (rop == null) throw new ArgumentNullException("rop");
+            return SafeNativeMethods.mpfr_rint_roundeven(rop.ToIntPtr(), op.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Set <paramref name="rop"/> to <paramref name="op"/> rounded to the next integer toward zero.
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op">The operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
+        /// <remarks>
+        /// <para>
+        /// If the result is not representable, it is rounded in the direction <paramref name="rnd"/>. 
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
+        /// </para>
+        /// <para>
+        /// Contrary to <see cref="mpfr_rint">mpfr_rint</see>, this function does perform a double rounding: first <paramref name="op"/> is rounded to the nearest integer
+        /// in the direction given by the function name, then this nearest integer (if not representable) is rounded in the given direction <paramref name="rnd"/>.
+        /// Thus these round-to-integer functions behave more like the other mathematical functions, i.e., the returned result is the correct rounding of the
+        /// exact result of the function in the real numbers. 
+        /// </para>
+        /// <para>
+        /// For example, <see cref="mpfr_rint_round">mpfr_rint_round</see> with rounding to nearest and a precision of two bits rounds 6.5 to 7 (halfway cases away from zero),
+        /// then 7 is rounded to 8 by the round-even rule, despite the fact that 6 is also representable on two bits, and is closer to 6.5 than 8.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
+        /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
+        /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
+        /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13307,10 +14567,11 @@ namespace Math.Mpfr.Native
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>The returned value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
         /// <remarks>
         /// <para>
         /// If the result is not representable, it is rounded in the direction <paramref name="rnd"/>. 
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
         /// </para>
         /// <para>
         /// Contrary to <see cref="mpfr_rint">mpfr_rint</see>, this function does perform a double rounding: first <paramref name="op"/> is rounded to the nearest integer
@@ -13327,13 +14588,16 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13392,10 +14656,11 @@ namespace Math.Mpfr.Native
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
-        /// <returns>The returned value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> associated with the considered round-to-integer function (regarded in the same way as any other mathematical function).</returns>
         /// <remarks>
         /// <para>
         /// If the result is not representable, it is rounded in the direction <paramref name="rnd"/>. 
+        /// When <paramref name="op"/> is a zero or an infinity, set <paramref name="rop"/> to the same value (with the same sign).
         /// </para>
         /// <para>
         /// Contrary to <see cref="mpfr_rint">mpfr_rint</see>, this function does perform a double rounding: first <paramref name="op"/> is rounded to the nearest integer
@@ -13412,13 +14677,16 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13481,19 +14749,23 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// Unlike in <see cref="mpfr_rint">mpfr_rint</see>, <paramref name="rnd"/> affects only how the exact fractional part is rounded, not how the fractional part is generated. 
+        /// When <paramref name="op"/> is an integer or an infinity, set <paramref name="rop"/> to zero with the same sign as op.
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13567,13 +14839,16 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13666,14 +14941,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="mpfr_remquo(mpfr_t, ptr{int}, mpfr_t, mpfr_t, mpfr_rnd_t)">mpfr_remquo(mpfr_t, ptr{int}, mpfr_t, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13768,14 +15046,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="mpfr_remquo(mpfr_t, ref int, mpfr_t, mpfr_t, mpfr_rnd_t)">mpfr_remquo(mpfr_t, ref int, mpfr_t, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
@@ -13865,14 +15146,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
@@ -13955,14 +15239,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
@@ -14026,11 +15313,228 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Set <paramref name="r"/> to the value of <paramref name="x"/> - n * <paramref name="y"/>, rounded according to the direction <paramref name="rnd"/>, where n is the integer quotient of <paramref name="x"/> divided by <paramref name="y"/>, rounded  toward zero. 
+        /// </summary>
+        /// <param name="r">The result remainder floating-point number.</param>
+        /// <param name="q">Low significant bits of quotient.</param>
+        /// <param name="x">The first operand floating-point number.</param>
+        /// <param name="y">The second operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> corresponding to <paramref name="r"/>. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// Special values are handled as described in Section F.9.7.1 of the ISO C99 standard:
+        /// If <paramref name="x"/> is infinite or <paramref name="y"/> is zero, <paramref name="r"/> is NaN.
+        /// If <paramref name="y"/> is infinite and <paramref name="x"/> is finite, <paramref name="r"/> is <paramref name="x"/> rounded to the precision of <paramref name="r"/>.
+        /// If <paramref name="r"/> is zero, it has the sign of <paramref name="x"/>.
+        /// </para>
+        /// <para>
+        /// Additionally, <see cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo</see> stores the low significant bits from the quotient n in <paramref name="q"/>
+        /// (more precisely the number of bits in a long minus one), with the sign of <paramref name="x"/> divided by <paramref name="y"/>
+        /// (except if those low bits are all zero, in which case zero is returned).
+        /// Note that <paramref name="x"/> may be so large in magnitude relative to <paramref name="y"/> that an exact representation of the quotient
+        /// is not practical. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
+        /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
+        /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
+        /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
+        /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
+        /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
+        /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
+        /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
+        /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
+        /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
+        /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
+        /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
+        /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Integer-Related-Functions">GNU MPFR - Integer and Remainder Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number x to 100.
+        /// mpfr_t x = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(x, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number y to 3.
+        /// mpfr_t y = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(y, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number r.
+        /// mpfr_t r = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(r, 64U);
+        /// 
+        /// // Set r = x - n * y where n = trunc(x / y).
+        /// int q = 0;
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmodquo(r, ref q, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert the value of z and q.
+        /// Assert.IsTrue(r.ToString() == "0.100000000000000000000e1" &amp;&amp; q == 33);
+        /// 
+        /// // Release unmanaged memory allocated for r, x, and y.
+        /// mpfr_lib.mpfr_clears(r, x, y, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number x to 100.
+        /// Dim x As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(x, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number y to 3.
+        /// Dim y As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(y, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 3, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number r.
+        /// Dim r As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(r, 64U)
+        /// 
+        /// ' Set r = x - n * y where n = trunc(x / y).
+        /// Dim q As Integer = 0
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmodquo(r, q, x, y, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert the value of z and q.
+        /// Assert.IsTrue(r.ToString() = "0.100000000000000000000e1" AndAlso q = 33)
+        /// 
+        /// ' Release unmanaged memory allocated for r, x, and y.
+        /// mpfr_lib.mpfr_clears(r, x, y, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_fmodquo(mpfr_t r, ref int /*long **/ q, /*const*/ mpfr_t x, /*const*/ mpfr_t y, mpfr_rnd_t rnd)
+        {
+            if (r == null) throw new ArgumentNullException("r");
+            if (x == null) throw new ArgumentNullException("x");
+            if (y == null) throw new ArgumentNullException("y");
+            return SafeNativeMethods.mpfr_fmodquo(r.ToIntPtr(), ref q, x.ToIntPtr(), y.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Set <paramref name="r"/> to the value of <paramref name="x"/> - n * <paramref name="y"/>, rounded according to the direction <paramref name="rnd"/>, where n is the integer quotient of <paramref name="x"/> divided by <paramref name="y"/>, rounded toward zero. 
+        /// </summary>
+        /// <param name="r">The result remainder floating-point number.</param>
+        /// <param name="q">Low significant bits of quotient.</param>
+        /// <param name="x">The first operand floating-point number.</param>
+        /// <param name="y">The second operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>The return value is the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> corresponding to <paramref name="r"/>. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// Special values are handled as described in Section F.9.7.1 of the ISO C99 standard:
+        /// If <paramref name="x"/> is infinite or <paramref name="y"/> is zero, <paramref name="r"/> is NaN.
+        /// If <paramref name="y"/> is infinite and <paramref name="x"/> is finite, <paramref name="r"/> is <paramref name="x"/> rounded to the precision of <paramref name="r"/>.
+        /// If <paramref name="r"/> is zero, it has the sign of <paramref name="x"/>.
+        /// </para>
+        /// <para>
+        /// Additionally, <see cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo</see> stores the low significant bits from the quotient n in <paramref name="q"/>
+        /// (more precisely the number of bits in a long minus one), with the sign of <paramref name="x"/> divided by <paramref name="y"/>
+        /// (except if those low bits are all zero, in which case zero is returned).
+        /// Note that <paramref name="x"/> may be so large in magnitude relative to <paramref name="y"/> that an exact representation of the quotient
+        /// is not practical. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_rint">mpfr_rint</seealso>
+        /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
+        /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
+        /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
+        /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
+        /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
+        /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
+        /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
+        /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
+        /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
+        /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
+        /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
+        /// <seealso cref="mpfr_integer_p">mpfr_integer_p</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Integer-Related-Functions">GNU MPFR - Integer and Remainder Related Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number x to 100.
+        /// mpfr_t x = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(x, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number y to 3.
+        /// mpfr_t y = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(y, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 3, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number r.
+        /// mpfr_t r = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(r, 64U);
+        /// 
+        /// // Set r = x - n * y where n = trunc(x / y).
+        /// ptr&lt;int&gt; q = new ptr&lt;int&gt;(0);
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmodquo(r, q, x, y, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert the value of z and q.
+        /// Assert.IsTrue(r.ToString() == "0.100000000000000000000e1" &amp;&amp; q.Value == 33);
+        /// 
+        /// // Release unmanaged memory allocated for r, x, and y.
+        /// mpfr_lib.mpfr_clears(r, x, y, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number x to 100.
+        /// Dim x As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(x, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(x, 100, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number y to 3.
+        /// Dim y As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(y, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(y, 3, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number r.
+        /// Dim r As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(r, 64U)
+        /// 
+        /// ' Set r = x - n * y where n = trunc(x / y).
+        /// Dim q As ptr(Of int) =  New ptr(Of int)(0)
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmodquo(r, q, x, y, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert the value of z and q.
+        /// Assert.IsTrue(r.ToString() = "0.100000000000000000000e1" AndAlso q.Value = 33)
+        /// 
+        /// ' Release unmanaged memory allocated for r, x, and y.
+        /// mpfr_lib.mpfr_clears(r, x, y, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_fmodquo(mpfr_t r, ptr<int> /*long **/ q, /*const*/ mpfr_t x, /*const*/ mpfr_t y, mpfr_rnd_t rnd)
+        {
+            if (r == null) throw new ArgumentNullException("r");
+            if (q == null) throw new ArgumentNullException("q");
+            if (x == null) throw new ArgumentNullException("x");
+            if (y == null) throw new ArgumentNullException("y");
+            return SafeNativeMethods.mpfr_fmodquo(r.ToIntPtr(), ref q.Value, x.ToIntPtr(), y.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
         /// Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) unsigned long when rounded to an integer in the direction <paramref name="rnd"/>. 
         /// </summary>
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) unsigned long when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_ui">mpfr_get_ui</seealso>
         /// <seealso cref="mpfr_get_uj">mpfr_get_uj</seealso>
         /// <seealso cref="mpfr_fits_slong_p">mpfr_fits_slong_p</seealso>
@@ -14080,6 +15584,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) long when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_si">mpfr_get_si</seealso>
         /// <seealso cref="mpfr_get_sj">mpfr_get_sj</seealso>
         /// <seealso cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</seealso>
@@ -14129,6 +15643,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) unsigned long when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_ui">mpfr_get_ui</seealso>
         /// <seealso cref="mpfr_get_uj">mpfr_get_uj</seealso>
         /// <seealso cref="mpfr_fits_slong_p">mpfr_fits_slong_p</seealso>
@@ -14177,6 +15701,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) long when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_si">mpfr_get_si</seealso>
         /// <seealso cref="mpfr_get_sj">mpfr_get_sj</seealso>
         /// <seealso cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</seealso>
@@ -14225,6 +15759,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) unsigned int when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_ui">mpfr_get_ui</seealso>
         /// <seealso cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</seealso>
         /// <seealso cref="mpfr_fits_slong_p">mpfr_fits_slong_p</seealso>
@@ -14273,6 +15817,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (32-bit) int when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_si">mpfr_get_si</seealso>
         /// <seealso cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</seealso>
         /// <seealso cref="mpfr_fits_slong_p">mpfr_fits_slong_p</seealso>
@@ -14321,6 +15875,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (16-bit) unsigned short when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_ui">mpfr_get_ui</seealso>
         /// <seealso cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</seealso>
         /// <seealso cref="mpfr_fits_slong_p">mpfr_fits_slong_p</seealso>
@@ -14369,6 +15933,16 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return non-zero if <paramref name="op"/> would fit in the C data type (16-bit) short when rounded to an integer in the direction <paramref name="rnd"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// For instance, with the <see cref="mpfr_rnd_t.MPFR_RNDU"/> rounding mode on −0.5, the result will be non-zero for all mpfr_fits_* functions.
+        /// For <see cref="mpfr_rnd_t.MPFR_RNDF"/>, those functions return non-zero when it is guaranteed that the corresponding conversion function
+        /// (for example <see cref="mpfr_get_ui"/> for <see cref="mpfr_fits_ulong_p"/>), when called with faithful rounding, will always return a number
+        /// that is representable in the corresponding type.
+        /// As a consequence, for <see cref="mpfr_rnd_t.MPFR_RNDF"/>, <see cref="mpfr_fits_ulong_p"/> will return non-zero for a non-negative number
+        /// less or equal to ULONG_MAX.
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_get_si">mpfr_get_si</seealso>
         /// <seealso cref="mpfr_fits_ulong_p">mpfr_fits_ulong_p</seealso>
         /// <seealso cref="mpfr_fits_slong_p">mpfr_fits_slong_p</seealso>
@@ -14695,14 +16269,17 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_ceil">mpfr_ceil</seealso>
         /// <seealso cref="mpfr_floor">mpfr_floor</seealso>
         /// <seealso cref="mpfr_round">mpfr_round</seealso>
+        /// <seealso cref="mpfr_roundeven">mpfr_round</seealso>
         /// <seealso cref="mpfr_trunc">mpfr_trunc</seealso>
         /// <seealso cref="mpfr_rint_ceil">mpfr_rint_ceil</seealso>
         /// <seealso cref="mpfr_rint_floor">mpfr_rint_floor</seealso>
         /// <seealso cref="mpfr_rint_round">mpfr_rint_round</seealso>
+        /// <seealso cref="mpfr_rint_roundeven">mpfr_rint_round</seealso>
         /// <seealso cref="mpfr_rint_trunc">mpfr_rint_trunc</seealso>
         /// <seealso cref="mpfr_frac">mpfr_frac</seealso>
         /// <seealso cref="mpfr_modf">mpfr_modf</seealso>
         /// <seealso cref="mpfr_fmod">mpfr_fmod</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_fmodquo">mpfr_fmod</seealso>
         /// <seealso cref="mpfr_remainder">mpfr_remainder</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_remquo"/>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Integer_and_Remainder_Related_Functions">Integer and Remainder Related Functions</a></seealso>
@@ -16986,9 +18563,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17074,9 +18653,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
@@ -17088,6 +18669,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17151,9 +18734,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17165,6 +18750,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17224,6 +18811,11 @@ namespace Math.Mpfr.Native
         /// <param name="op">The operand floating-point number.</param>
         /// <param name="rnd">The rounding direction.</param>
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// This functions agrees with the rootn function of the IEEE 754-2008 standard (Section 9.2).
+        /// </para>
+        /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
         /// <seealso cref="mpfr_mul">mpfr_mul</seealso>
@@ -17231,6 +18823,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -17286,7 +18879,7 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set <paramref name="rop"/> to the <paramref name="k"/>th root of <paramref name="op"/> rounded in the direction <paramref name="rnd"/>.
+        /// Set <paramref name="rop"/> to the <paramref name="k"/>th root of <paramref name="op"/> rounded in the direction <paramref name="rnd"/>. 
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="op">The operand floating-point number.</param>
@@ -17296,9 +18889,14 @@ namespace Math.Mpfr.Native
         /// <remarks>
         /// <para>
         /// For <paramref name="k"/> = 0, set <paramref name="rop"/> to NaN.
-        /// For <paramref name="k"/> odd (resp. even) and <paramref name="op"/> negative (including -Inf),
-        /// set <paramref name="rop"/> to a negative number (resp. NaN).
-        /// The <paramref name="k"/>th root of -0 is defined to be -0, whatever the parity of <paramref name="k"/> (different from zero).
+        /// For <paramref name="k"/> odd (resp. even) and op negative (including −Inf), set <paramref name="rop"/>
+        /// to a negative number (resp. NaN).
+        /// If <paramref name="op"/> is zero, set <paramref name="rop"/> to zero with the sign obtained by the usual
+        /// limit rules, i.e., the same sign as op if <paramref name="k"/> is odd, and positive if
+        /// <paramref name="k"/> is even.
+        /// </para>
+        /// <para>
+        /// This functions agrees with the rootn function of the IEEE 754-2008 standard (Section 9.2).
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -17309,6 +18907,87 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
+        /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
+        /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
+        /// <seealso cref="mpfr_abs">mpfr_abs</seealso>
+        /// <seealso cref="mpfr_dim">mpfr_dim</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Basic_Arithmetic_Functions">Basic Arithmetic Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Basic-Arithmetic-Functions">GNU MPFR - Basic Arithmetic Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op to 8.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 8, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop to the cubic root of op.
+        /// Assert.IsTrue(mpfr_lib.mpfr_rootn_ui(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert that the value of rop is 2.
+        /// Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 2) == 0);
+        /// 
+        /// // Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op to 8.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 8, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop to the cubic root of op.
+        /// Assert.IsTrue(mpfr_lib.mpfr_rootn_ui(rop, op, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert that the value of rop is 2.
+        /// Assert.IsTrue(mpfr_lib.mpfr_cmp_si(rop, 2) = 0)
+        /// 
+        /// ' Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_rootn_ui(mpfr_t rop, /*const*/ mpfr_t op, uint k, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (op == null) throw new ArgumentNullException("op");
+            return SafeNativeMethods.mpfr_rootn_ui(rop.ToIntPtr(), op.ToIntPtr(), k, (int)rnd);
+        }
+
+        /// <summary>
+        /// Set <paramref name="rop"/> to the <paramref name="k"/>th root of <paramref name="op"/> rounded in the direction <paramref name="rnd"/>.
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op">The operand floating-point number.</param>
+        /// <param name="k">The degree of the root.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// This function is the same as <see cref="mpfr_rootn_ui"/> except when <paramref name="op"/> is −0 and 
+        /// <paramref name="k"/> is even: the result is −0 instead of +0 (the reason was to be consistent
+        /// with <see cref="mpfr_sqrt"/>).
+        /// Said otherwise, if <paramref name="op"/> is zero, set <paramref name="rop"/> to <paramref name="op"/>.
+        /// </para>
+        /// <para>
+        /// This function predates the IEEE 754-2008 standard and behaves differently from its rootn function.
+        /// It is marked as deprecated and will be removed in a future release.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_add">mpfr_add</seealso>
+        /// <seealso cref="mpfr_sub">mpfr_sub</seealso>
+        /// <seealso cref="mpfr_mul">mpfr_mul</seealso>
+        /// <seealso cref="mpfr_sqr">mpfr_sqr</seealso>
+        /// <seealso cref="mpfr_div">mpfr_div</seealso>
+        /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
+        /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
         /// <seealso cref="mpfr_abs">mpfr_abs</seealso>
@@ -17377,9 +19056,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17392,6 +19073,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17445,6 +19128,197 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Set <paramref name="rop"/> to the value of the incomplete Gamma function on <paramref name="op"/> and <paramref name="op2"/>, rounded in the direction <paramref name="rnd"/>.
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op">The operand floating-point number.</param>
+        /// <param name="op2">The second operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// In the literature, <see cref="mpfr_gamma_inc"/> is called upper incomplete Gamma function, or sometimes complementary incomplete Gamma function.
+        /// </para>
+        /// <para>
+        /// For <see cref="mpfr_gamma_inc"/> when <paramref name="op2"/> is zero, when <paramref name="op"/> is a negative integer,
+        /// <paramref name="rop"/> is set to NaN. 
+        /// </para>
+        /// <para>
+        /// Note: the current implementation of <see cref="mpfr_gamma_inc"/> is slow for large values of
+        /// <paramref name="rop"/> or <paramref name="op"/>, in which case some internal overflow might also occur.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
+        /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
+        /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
+        /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
+        /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
+        /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
+        /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
+        /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
+        /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
+        /// <seealso cref="mpfr_j0">mpfr_j0</seealso>
+        /// <seealso cref="mpfr_j1">mpfr_j1</seealso>
+        /// <seealso cref="mpfr_jn">mpfr_jn</seealso>
+        /// <seealso cref="mpfr_y0">mpfr_y0</seealso>
+        /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
+        /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
+        /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
+        /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
+        /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
+        /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
+        /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op to 1.
+        /// mpfr_t op = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop = Gamma(op).
+        /// Assert.IsTrue(mpfr_lib.mpfr_gamma(rop, op, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() == "0.100000000000000000000e1");
+        /// 
+        /// // Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op to 1.
+        /// Dim op As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op, 1, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop = Gamma(op).
+        /// Assert.IsTrue(mpfr_lib.mpfr_gamma(rop, op, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() = "0.100000000000000000000e1")
+        /// 
+        /// ' Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_gamma_inc(mpfr_t rop, /*const*/ mpfr_t op, /*const*/ mpfr_t op2, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (op == null) throw new ArgumentNullException("op");
+            if (op2 == null) throw new ArgumentNullException("op2");
+            return SafeNativeMethods.mpfr_gamma_inc(rop.ToIntPtr(), op.ToIntPtr(), op2.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Set <paramref name="rop"/> to the value of the Beta function at arguments <paramref name="op1"/> and <paramref name="op2"/>, rounded in the direction <paramref name="rnd"/>.
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op1">The operand floating-point number.</param>
+        /// <param name="op2">The second operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// Note: the current code does not try to avoid internal overflow or underflow, and might use a huge internal precision in some cases.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
+        /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
+        /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
+        /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
+        /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
+        /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
+        /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
+        /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
+        /// <seealso cref="mpfr_j0">mpfr_j0</seealso>
+        /// <seealso cref="mpfr_j1">mpfr_j1</seealso>
+        /// <seealso cref="mpfr_jn">mpfr_jn</seealso>
+        /// <seealso cref="mpfr_y0">mpfr_y0</seealso>
+        /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
+        /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
+        /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
+        /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
+        /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
+        /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
+        /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op1 to 2.
+        /// mpfr_t op1 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op1, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 2, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op2 to 2.
+        /// mpfr_t op2 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op2, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 2, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop = Beta(op1, op2).
+        /// Assert.IsTrue(mpfr_lib.mpfr_beta(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) == 1);
+        /// 
+        /// // Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() == "0.166666666666666666671e0");
+        /// 
+        /// // Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op1, op2, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op1 to 2.
+        /// Dim op1 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op1, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, 2, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op2 to 2.
+        /// Dim op2 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op2, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 2, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop = Beta(op1, op2).
+        /// Assert.IsTrue(mpfr_lib.mpfr_beta(rop, op1, op2, mpfr_rnd_t.MPFR_RNDN) = 1)
+        /// 
+        /// ' Assert the value of rop.
+        /// Assert.IsTrue(rop.ToString() = "0.166666666666666666671e0")
+        /// 
+        /// ' Release unmanaged memory allocated for rop and op.
+        /// mpfr_lib.mpfr_clears(rop, op1, op2, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_beta(mpfr_t rop, /*const*/ mpfr_t op1, /*const*/ mpfr_t op2, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (op1 == null) throw new ArgumentNullException("op1");
+            if (op2 == null) throw new ArgumentNullException("op2");
+            return SafeNativeMethods.mpfr_beta(rop.ToIntPtr(), op1.ToIntPtr(), op2.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
         /// Set <paramref name="rop"/> to the value of the logarithm of the Gamma function on <paramref name="op"/> rounded in the direction <paramref name="rnd"/>.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
@@ -17464,8 +19338,10 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17478,6 +19354,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17551,9 +19429,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="mpfr_lgamma(mpfr_t, ptr{int}, mpfr_t, mpfr_rnd_t)">mpfr_lgamma(mpfr_t, ptr{int}, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17566,6 +19446,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17641,9 +19523,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="mpfr_lgamma(mpfr_t, ref int, mpfr_t, mpfr_rnd_t)">mpfr_lgamma(mpfr_t, ref int, mpfr_t, mpfr_rnd_t)</seealso>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17656,6 +19540,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17727,6 +19613,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
@@ -17741,6 +19628,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17804,9 +19693,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
         /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
@@ -17818,6 +19709,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17881,9 +19774,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
         /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
@@ -17895,6 +19790,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -17946,9 +19843,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -17961,6 +19860,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18019,9 +19920,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18033,6 +19936,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18102,9 +20007,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18116,6 +20023,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18188,9 +20097,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18202,6 +20113,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18271,9 +20184,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18285,6 +20200,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18354,9 +20271,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18368,6 +20287,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18440,9 +20361,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18454,6 +20377,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -18526,9 +20451,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -18541,6 +20468,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
@@ -18759,6 +20688,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -18850,6 +20780,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -18925,8 +20856,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -18944,6 +20877,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19039,6 +20973,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19135,6 +21070,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19229,6 +21165,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19404,6 +21341,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19479,8 +21417,10 @@ namespace Math.Mpfr.Native
         /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
         /// <remarks>
         /// <para>
-        /// When a result is zero, its sign is the product of the signs of the operands
-        /// (for types having no signed zeros, 0 is considered positive).
+        /// When a result is zero, its sign is the product of the signs of the operands.
+        /// For types having no signed zeros, 0 is considered positive; but note that if 
+        /// <paramref name="op1"/> is non-zero and <paramref name="op2"/> is zero, the result might change from
+        /// ±Inf to NaN in future MPFR versions if there is an opposite decision on the IEEE 754 side. 
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
@@ -19498,6 +21438,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div_q">mpfr_div_q</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19593,6 +21534,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19691,6 +21633,7 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_div">mpfr_div</seealso>
         /// <seealso cref="mpfr_sqrt">mpfr_sqrt</seealso>
         /// <seealso cref="mpfr_cbrt">mpfr_cbrt</seealso>
+        /// <seealso cref="mpfr_rootn_ui">mpfr_root</seealso>
         /// <seealso cref="mpfr_root">mpfr_root</seealso>
         /// <seealso cref="mpfr_pow">mpfr_pow</seealso>
         /// <seealso cref="mpfr_neg">mpfr_neg</seealso>
@@ -19947,9 +21890,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -19961,6 +21906,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -20054,9 +22001,11 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
         /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
         /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
         /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
         /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
         /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
         /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
         /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
         /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
@@ -20068,6 +22017,8 @@ namespace Math.Mpfr.Native
         /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
         /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
         /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
         /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
         /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
         /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
@@ -20143,7 +22094,255 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Set <paramref name="rop"/> to the sum of all elements of <paramref name="tab"/>, whose size is <paramref name="n"/>, rounded in the direction <paramref name="rnd"/>.
+        /// Set <paramref name="rop"/> to (<paramref name="op1"/> * <paramref name="op2"/>) + (<paramref name="op3"/> * <paramref name="op4"/>) rounded in the direction <paramref name="rnd"/>. 
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op1">The first operand floating-point number.</param>
+        /// <param name="op2">The second operand floating-point number.</param>
+        /// <param name="op3">The third operand floating-point number.</param>
+        /// <param name="op4">The fourth operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// In case the computation of <paramref name="op1"/> × <paramref name="op2"/> overflows or underflows
+        /// (or that of <paramref name="op3"/> × <paramref name="op4"/>), the result <paramref name="rop"/> is
+        /// computed as if the two intermediate products were computed with rounding toward zero. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
+        /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
+        /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
+        /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
+        /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
+        /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
+        /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
+        /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
+        /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
+        /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
+        /// <seealso cref="mpfr_j0">mpfr_j0</seealso>
+        /// <seealso cref="mpfr_j1">mpfr_j1</seealso>
+        /// <seealso cref="mpfr_jn">mpfr_jn</seealso>
+        /// <seealso cref="mpfr_y0">mpfr_y0</seealso>
+        /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
+        /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
+        /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
+        /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmms">mpfr_fmms</seealso>
+        /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
+        /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
+        /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op1 to -210.
+        /// mpfr_t op1 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op1, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op2 to 10.
+        /// mpfr_t op2 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op2, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op3 to 10.
+        /// mpfr_t op3 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op3, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op4 to 10.
+        /// mpfr_t op4 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op4, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op4, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop = (op1 * op2) + (op3 * op4).
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmma(rop, op1, op2, op3, op4, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert that the value of rop is -2090.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2000.0);
+        /// 
+        /// // Release unmanaged memory allocated for rop, op1, op2, and op3.
+        /// mpfr_lib.mpfr_clears(rop, op1, op2, op3, op4, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op1 to -210.
+        /// Dim op1 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op1, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op2 to 10.
+        /// Dim op2 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op2, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op3 to 10.
+        /// Dim op3 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op3, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 10, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op4 to 10.
+        /// Dim op4 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op4, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op4, 10, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop = (op1 * op2) + (op3 * op4).
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmma(rop, op1, op2, op3, op4, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert that the value of rop is -2090.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) = -2000.0)
+        /// 
+        /// ' Release unmanaged memory allocated for rop, op1, op2, op3, and op4.
+        /// mpfr_lib.mpfr_clears(rop, op1, op2, op3, op4, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_fmma(mpfr_t rop, /*const*/ mpfr_t op1, /*const*/ mpfr_t op2, /*const*/ mpfr_t op3,  /*const*/ mpfr_t op4, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (op1 == null) throw new ArgumentNullException("op1");
+            if (op2 == null) throw new ArgumentNullException("op2");
+            if (op3 == null) throw new ArgumentNullException("op3");
+            if (op3 == null) throw new ArgumentNullException("op3");
+            return SafeNativeMethods.mpfr_fmma(rop.ToIntPtr(), op1.ToIntPtr(), op2.ToIntPtr(), op3.ToIntPtr(), op4.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Set <paramref name="rop"/> to (<paramref name="op1"/> * <paramref name="op2"/>) - (<paramref name="op3"/> * <paramref name="op4"/>) rounded in the direction <paramref name="rnd"/>. 
+        /// </summary>
+        /// <param name="rop">The result floating-point number.</param>
+        /// <param name="op1">The first operand floating-point number.</param>
+        /// <param name="op2">The second operand floating-point number.</param>
+        /// <param name="op3">The third operand floating-point number.</param>
+        /// <param name="op4">The fourth operand floating-point number.</param>
+        /// <param name="rnd">The rounding direction.</param>
+        /// <returns>Return zero, a positive, or a negative value if <paramref name="rop"/> is respectively equal to, greater than, or lower than the exact result. See <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">GNU MPFR - Rounding Modes</a> for details.</returns>
+        /// <remarks>
+        /// <para>
+        /// In case the computation of <paramref name="op1"/> × <paramref name="op2"/> overflows or underflows
+        /// (or that of <paramref name="op3"/> × <paramref name="op4"/>), the result <paramref name="rop"/> is
+        /// computed as if the two intermediate products were computed with rounding toward zero. 
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_fac_ui">mpfr_fac_ui</seealso>
+        /// <seealso cref="mpfr_eint">mpfr_eint</seealso>
+        /// <seealso cref="mpfr_li2">mpfr_li2</seealso>
+        /// <seealso cref="mpfr_gamma">mpfr_gamma</seealso>
+        /// <seealso cref="mpfr_gamma_inc">mpfr_gamma_inc</seealso>
+        /// <seealso cref="mpfr_lngamma">mpfr_lngamma</seealso>
+        /// <seealso cref="O:Math.Mpfr.Native.mpfr_lib.mpfr_lgamma"/>
+        /// <seealso cref="mpfr_digamma">mpfr_digamma</seealso>
+        /// <seealso cref="mpfr_beta">mpfr_beta</seealso>
+        /// <seealso cref="mpfr_zeta">mpfr_zeta</seealso>
+        /// <seealso cref="mpfr_zeta_ui">mpfr_zeta_ui</seealso>
+        /// <seealso cref="mpfr_erf">mpfr_erf</seealso>
+        /// <seealso cref="mpfr_erfc">mpfr_erfc</seealso>
+        /// <seealso cref="mpfr_j0">mpfr_j0</seealso>
+        /// <seealso cref="mpfr_j1">mpfr_j1</seealso>
+        /// <seealso cref="mpfr_jn">mpfr_jn</seealso>
+        /// <seealso cref="mpfr_y0">mpfr_y0</seealso>
+        /// <seealso cref="mpfr_y1">mpfr_y1</seealso>
+        /// <seealso cref="mpfr_yn">mpfr_yn</seealso>
+        /// <seealso cref="mpfr_fma">mpfr_fma</seealso>
+        /// <seealso cref="mpfr_fms">mpfr_fms</seealso>
+        /// <seealso cref="mpfr_fmma">mpfr_fmma</seealso>
+        /// <seealso cref="mpfr_agm">mpfr_agm</seealso>
+        /// <seealso cref="mpfr_hypot">mpfr_hypot</seealso>
+        /// <seealso cref="mpfr_ai">mpfr_ai</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create, initialize, and set a new floating-point number op1 to -210.
+        /// mpfr_t op1 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op1, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op2 to 10.
+        /// mpfr_t op2 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op2, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op3 to 10.
+        /// mpfr_t op3 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op3, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create, initialize, and set a new floating-point number op4 to 10.
+        /// mpfr_t op4 = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(op4, 64U);
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op4, 10, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Create and initialize a new floating-point number rop.
+        /// mpfr_t rop = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(rop, 64U);
+        /// 
+        /// // Set rop = (op1 * op2) - (op3 * op4).
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmms(rop, op1, op2, op3, op4, mpfr_rnd_t.MPFR_RNDN) == 0);
+        /// 
+        /// // Assert that the value of rop is -2200.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) == -2200.0);
+        /// 
+        /// // Release unmanaged memory allocated for rop, op1, op2, and op3.
+        /// mpfr_lib.mpfr_clears(rop, op1, op2, op3, op4, null);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create, initialize, and set a new floating-point number op1 to -210.
+        /// Dim op1 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op1, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op1, -210, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op2 to 10.
+        /// Dim op2 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op2, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op2, 10, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op3 to 10.
+        /// Dim op3 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op3, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op3, 10, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create, initialize, and set a new floating-point number op4 to 10.
+        /// Dim op4 As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(op4, 64U)
+        /// Assert.IsTrue(mpfr_lib.mpfr_set_si(op4, 10, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Create and initialize a new floating-point number rop.
+        /// Dim rop As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(rop, 64U)
+        /// 
+        /// ' Set rop = (op1 * op2) - (op3 * op4).
+        /// Assert.IsTrue(mpfr_lib.mpfr_fmms(rop, op1, op2, op3, op4, mpfr_rnd_t.MPFR_RNDN) = 0)
+        /// 
+        /// ' Assert that the value of rop is -2200.
+        /// Assert.IsTrue(mpfr_lib.mpfr_get_d(rop, mpfr_rnd_t.MPFR_RNDN) = -2200.0)
+        /// 
+        /// ' Release unmanaged memory allocated for rop, op1, op2, op3, and op4.
+        /// mpfr_lib.mpfr_clears(rop, op1, op2, op3, op4, Nothing)
+        /// </code> 
+        /// </example>
+        public static int mpfr_fmms(mpfr_t rop, /*const*/ mpfr_t op1, /*const*/ mpfr_t op2, /*const*/ mpfr_t op3, /*const*/ mpfr_t op4, mpfr_rnd_t rnd)
+        {
+            if (rop == null) throw new ArgumentNullException("rop");
+            if (op1 == null) throw new ArgumentNullException("op1");
+            if (op2 == null) throw new ArgumentNullException("op2");
+            if (op3 == null) throw new ArgumentNullException("op3");
+            if (op3 == null) throw new ArgumentNullException("op4");
+            return SafeNativeMethods.mpfr_fmms(rop.ToIntPtr(), op1.ToIntPtr(), op2.ToIntPtr(), op3.ToIntPtr(), op4.ToIntPtr(), (int)rnd);
+        }
+
+        /// <summary>
+        /// Set <paramref name="rop"/> to the sum of all elements of <paramref name="tab"/>, whose size is <paramref name="n"/>, correctly rounded in the direction <paramref name="rnd"/>.
         /// </summary>
         /// <param name="rop">The result floating-point number.</param>
         /// <param name="tab">Array of floating-point numbers.</param>
@@ -20152,10 +22351,28 @@ namespace Math.Mpfr.Native
         /// <returns>The returned int value is zero, <paramref name="rop"/> is guaranteed to be the exact sum; otherwise <paramref name="rop"/> might be smaller than, equal to, or larger than the exact sum.</returns>
         /// <remarks>
         /// <para>
-        /// If the returned int value is zero, <paramref name="rop"/> is guaranteed to be the exact sum; otherwise <paramref name="rop"/>
-        /// might be smaller than, equal to, or larger than the exact sum (in accordance to the rounding mode).
-        /// However, <see cref="mpfr_sum">mpfr_sum</see> does guarantee the result is correctly rounded. 
+        /// Warning: for efficiency reasons, <paramref name="tab"/> is an array of pointers to <see cref="mpfr_t"/>,
+        /// not an array of <see cref="mpfr_t"/>.
+        /// If <paramref name="n"/> = 0, then the result is +0, and if <paramref name="n"/> = 1, then the function
+        /// is equivalent to <see cref="mpfr_set"/>.
+        /// For the special exact cases, the result is the same as the one obtained with a succession of additions
+        /// (<see cref="mpfr_add"/>) in infinite precision. In particular, if the result is an exact zero and
+        /// <paramref name="n"/> &#8804; 1:
         /// </para>
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// if all the inputs have the same sign (i.e., all +0 or all −0), then the result has the same sign as the inputs;
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// otherwise, either because all inputs are zeros with at least a +0 and a −0, or because some inputs are non-zero
+        /// (but they globally cancel), the result is +0, except for the <see cref="mpfr_rnd_t.MPFR_RNDD"/> rounding mode,
+        /// where it is −0.
+        /// </description>
+        /// </item>
+        /// </list>
         /// </remarks>
         /// <seealso cref="mpfr_add">mpfr_add</seealso>
         /// <seealso cref="mpfr_add_ui">mpfr_add_ui</seealso>
@@ -20237,11 +22454,13 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
-        /// Free various caches used by MPFR internally, in particular the caches used by the functions computing constants (<see cref="mpfr_const_log2">mpfr_const_log2</see>, <see cref="mpfr_const_pi">mpfr_const_pi</see>, <see cref="mpfr_const_euler">mpfr_const_euler</see> and <see cref="mpfr_const_catalan">mpfr_const_catalan</see>).
+        /// Free all caches and pools used by MPFR internally.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// You should call this function before terminating a thread, even if you did not call these functions directly (they could have been called internally).
+        /// Free all caches and pools used by MPFR internally (thoses local to the current thread and those shared by all threads).
+        /// You should call this function before terminating a thread, even if you did not call mpfr_const_* functions directly
+        /// (they could have been called internally).
         /// </para>
         /// </remarks>
         /// <seealso cref="mpfr_const_log2">mpfr_const_log2</seealso>
@@ -20288,6 +22507,180 @@ namespace Math.Mpfr.Native
         }
 
         /// <summary>
+        /// Free various caches and pools used by MPFR internally, as specified by <paramref name="way"/>, which is a set of flags
+        /// </summary>
+        /// <param name="way">Flags specifying what to free,.</param>
+        /// <remarks>
+        /// <para>
+        /// Free those local to the current thread if flag <see cref="mpfr_free_cache_t.MPFR_FREE_LOCAL_CACHE"/> is set.
+        /// Free those shared by all threads if flag <see cref="mpfr_free_cache_t.MPFR_FREE_GLOBAL_CACHE"/> is set.
+        /// </para>
+        /// <para>
+        /// The other bits of <paramref name="way"/> are currently ignored and are reserved for future use; they should be zero.
+        /// </para>
+        /// <para>
+        /// Note: <see cref="mpfr_free_cache2"/>(<see cref="mpfr_free_cache_t.MPFR_FREE_LOCAL_CACHE"/> | <see cref="mpfr_free_cache_t.MPFR_FREE_GLOBAL_CACHE"/>) is currently
+        /// equivalent to <see cref="mpfr_free_cache"/>().
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_const_log2">mpfr_const_log2</seealso>
+        /// <seealso cref="mpfr_const_pi">mpfr_const_pi</seealso>
+        /// <seealso cref="mpfr_const_euler">mpfr_const_euler</seealso>
+        /// <seealso cref="mpfr_const_catalan">mpfr_const_catalan</seealso>
+        /// <seealso cref="mpfr_free_cache">mpfr_free_cache</seealso>
+        /// <seealso cref="mpfr_free_pool">mpfr_free_pool</seealso>
+        /// <seealso cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create and initialize a new floating-point number z.
+        /// mpfr_t z = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(z, 64U);
+        /// 
+        /// // Assert that z is the Catalan's constant.
+        /// Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) == 1);
+        /// Assert.IsTrue(z.ToString() == "0.693147180559945309429e0");
+        /// 
+        /// // Release unmanaged memory allocated for x and z.
+        /// mpfr_lib.mpfr_clear(z);
+        /// 
+        /// // Free constants cache.
+        /// mpfr_lib.mpfr_free_cache2(mpfr_free_cache_t.MPFR_FREE_GLOBAL_CACHE | mpfr_free_cache_t.MPFR_FREE_LOCAL_CACHE);
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create and initialize a new floating-point number z.
+        /// Dim z As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(z, 64U)
+        /// 
+        /// ' Assert that z is the Catalan's constant.
+        /// Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) = 1)
+        /// Assert.IsTrue(z.ToString() = "0.693147180559945309429e0")
+        /// 
+        /// ' Release unmanaged memory allocated for x and z.
+        /// mpfr_lib.mpfr_clear(z)
+        /// 
+        /// ' Free constants cache.
+        /// mpfr_lib.mpfr_free_cache2(mpfr_free_cache_t.MPFR_FREE_GLOBAL_CACHE Or mpfr_free_cache_t.MPFR_FREE_LOCAL_CACHE)
+        /// </code> 
+        /// </example>
+        public static void mpfr_free_cache2(mpfr_free_cache_t way)
+        {
+            SafeNativeMethods.mpfr_free_cache2((uint) way);
+        }
+
+        /// <summary>
+        /// Free the pools used by MPFR internally.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Note: This function is automatically called after the thread-local caches are freed (with <see cref="mpfr_free_cache"/> or <see cref="mpfr_free_cache2"/>).
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_const_log2">mpfr_const_log2</seealso>
+        /// <seealso cref="mpfr_const_pi">mpfr_const_pi</seealso>
+        /// <seealso cref="mpfr_const_euler">mpfr_const_euler</seealso>
+        /// <seealso cref="mpfr_const_catalan">mpfr_const_catalan</seealso>
+        /// <seealso cref="mpfr_free_cache">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_free_cache2">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_mp_memory_cleanup">mpfr_mp_memory_cleanup</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create and initialize a new floating-point number z.
+        /// mpfr_t z = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(z, 64U);
+        /// 
+        /// // Assert that z is the Catalan's constant.
+        /// Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) == 1);
+        /// Assert.IsTrue(z.ToString() == "0.693147180559945309429e0");
+        /// 
+        /// // Release unmanaged memory allocated for x and z.
+        /// mpfr_lib.mpfr_clear(z);
+        /// 
+        /// // Free internal pools.
+        /// mpfr_lib.mpfr_free_pool();
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create and initialize a new floating-point number z.
+        /// Dim z As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(z, 64U)
+        /// 
+        /// ' Assert that z is the Catalan's constant.
+        /// Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) = 1)
+        /// Assert.IsTrue(z.ToString() = "0.693147180559945309429e0")
+        /// 
+        /// ' Release unmanaged memory allocated for x and z.
+        /// mpfr_lib.mpfr_clear(z)
+        /// 
+        /// ' Free internal pools.
+        /// mpfr_lib.mpfr_free_pool()
+        /// </code> 
+        /// </example>
+        public static void mpfr_free_pool(/*void*/)
+        {
+            SafeNativeMethods.mpfr_free_pool();
+        }
+
+        /// <summary>
+        /// This function should be called before calling <see cref="gmp_lib.mp_set_memory_functions"/>.
+        /// </summary>
+        /// <returns>Zero is returned in case of success, non-zero in case of error.</returns>
+        /// <remarks>
+        /// <para>
+        /// See Section 4.7 <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Memory-Handling">GNU MPFR - Memory Handling</a>, page 10, for more information.
+        /// Zero is returned in case of success, nonzero in case of error.
+        /// Errors are currently not possible, but checking the return value is recommended for future compatibility.
+        /// </para>
+        /// </remarks>
+        /// <seealso cref="mpfr_const_log2">mpfr_const_log2</seealso>
+        /// <seealso cref="mpfr_const_pi">mpfr_const_pi</seealso>
+        /// <seealso cref="mpfr_const_euler">mpfr_const_euler</seealso>
+        /// <seealso cref="mpfr_const_catalan">mpfr_const_catalan</seealso>
+        /// <seealso cref="mpfr_free_cache">mpfr_free_cache</seealso>
+        /// <seealso cref="mpfr_free_cache2">mpfr_free_cache2</seealso>
+        /// <seealso cref="mpfr_free_pool">mpfr_free_pool</seealso>
+        /// <seealso cref="mpfr_lib"><a href="/html/6146e71f-a352-2e48-f234-6d79ad0f8c3c.htm#Special_Functions">Special Functions</a></seealso>
+        /// <seealso cref="mpfr_lib"><a href="http://www.mpfr.org/mpfr-current/mpfr.html#Special-Functions">GNU MPFR - Special Functions</a></seealso>
+        /// <example>
+        /// <code language="C#">
+        /// // Create and initialize a new floating-point number z.
+        /// mpfr_t z = new mpfr_t();
+        /// mpfr_lib.mpfr_init2(z, 64U);
+        /// 
+        /// // Assert that z is the Catalan's constant.
+        /// Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) == 1);
+        /// Assert.IsTrue(z.ToString() == "0.693147180559945309429e0");
+        /// 
+        /// // Release unmanaged memory allocated for x and z.
+        /// mpfr_lib.mpfr_clear(z);
+        /// 
+        /// // Free internal pools.
+        /// mpfr_lib.mpfr_free_pool();
+        /// </code> 
+        /// <code language="VB.NET">
+        /// ' Create and initialize a new floating-point number z.
+        /// Dim z As mpfr_t = New mpfr_t()
+        /// mpfr_lib.mpfr_init2(z, 64U)
+        /// 
+        /// ' Assert that z is the Catalan's constant.
+        /// Assert.IsTrue(mpfr_lib.mpfr_const_log2(z, mpfr_rnd_t.MPFR_RNDN) = 1)
+        /// Assert.IsTrue(z.ToString() = "0.693147180559945309429e0")
+        /// 
+        /// ' Release unmanaged memory allocated for x and z.
+        /// mpfr_lib.mpfr_clear(z)
+        /// 
+        /// ' Free internal pools.
+        /// mpfr_lib.mpfr_free_pool()
+        /// </code> 
+        /// </example>
+        public static int mpfr_mp_memory_cleanup(/*void*/)
+        {
+            return SafeNativeMethods.mpfr_mp_memory_cleanup();
+        }
+
+        /// <summary>
         /// This function rounds <paramref name="x"/> emulating subnormal number arithmetic.
         /// </summary>
         /// <param name="x">The operand floating-point number.</param>
@@ -20296,10 +22689,10 @@ namespace Math.Mpfr.Native
         /// <returns>The usual <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> is returned.</returns>
         /// <remarks>
         /// <para>
-        /// If <paramref name="x"/> is outside the subnormal exponent range, it just propagates the ternary value <paramref name="t"/>;
-        /// otherwise, it rounds <paramref name="x"/> to precision EXP(<paramref name="x"/>) - emin + 1 according to rounding mode <paramref name="rnd"/>
-        /// and previous ternary value <paramref name="t"/>, avoiding double rounding problems.
-        /// More precisely in the subnormal domain, denoting by e the value of emin, <paramref name="x"/> is rounded in fixed-point arithmetic to an
+        /// If <paramref name="x"/> is outside the subnormal exponent range of the emulated floating-point system, this function just propagates
+        /// the ternary value <paramref name="t"/>; otherwise, it rounds <paramref name="x"/> to precision EXP(<paramref name="x"/>) - emin + 1
+        /// according to rounding mode <paramref name="rnd"/> and previous ternary value <paramref name="t"/>, avoiding double rounding problems.
+        /// More precisely in the subnormal domain, denoting by e the value of emin, <paramref name="x"/> is rounded in fixedpoint arithmetic to an
         /// integer multiple of two to the power e - 1; as a consequence, 1.5 multiplied by two to the power e - 1 when <paramref name="t"/> is zero
         /// is rounded to two to the power e with rounding to nearest.
         /// </para>
@@ -20309,7 +22702,7 @@ namespace Math.Mpfr.Native
         /// <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> used when computing <paramref name="x"/>
         /// (as in <see cref="mpfr_check_range">mpfr_check_range</see>).
         /// The subnormal exponent range is from emin to emin + PREC(<paramref name="x"/>) - 1.
-        /// If the result cannot be represented in the current exponent range (due to a too small emax),
+        /// If the result cannot be represented in the current exponent range of MPFR (due to a too small emax),
         /// the behavior is undefined.
         /// Note that unlike most functions, the result is compared to the exact one, not the input value <paramref name="x"/>,
         /// i.e., the <a href="http://www.mpfr.org/mpfr-current/mpfr.html#Rounding-Modes">ternary value</a> is propagated. 
@@ -20320,27 +22713,56 @@ namespace Math.Mpfr.Native
         /// Moreover, if a second rounding occurred (because the input <paramref name="x"/> was in the subnormal range), the underflow flag is set. 
         /// </para>
         /// <para>
+        /// Warning! If you change emin (with <see cref="mpfr_set_emin"/>) just before calling <see cref="mpfr_subnormalize"/>, you need to make
+        /// sure that the value is in the current exponent range of MPFR.
+        /// But it is better to change emin before any computation, if possible.
+        /// </para>
+        /// <para>
         /// This is an example of how to emulate binary double IEEE 754 arithmetic (binary64 in IEEE 754-2008) using MPFR:
         /// </para>
         /// <code language="C#">
         /// mpfr_t xa, xb; int i; volatile double a, b;
         /// mpfr_set_default_prec(53);
-        /// mpfr_set_emin(-1073); mpfr_set_emax(1024);
+        /// mpfr_set_emin(-1073);
+        /// mpfr_set_emax(1024);
         /// 
         /// mpfr_init(xa); mpfr_init(xb);
         /// 
         /// b = 34.3; mpfr_set_d(xb, b, MPFR_RNDN);
-        /// a = 0x1.1235P-1021; mpfr_set_d(xa, a, MPFR_RNDN);
+        /// a = 0x1.1235P-1021;
+        /// mpfr_set_d(xa, a, MPFR_RNDN);
         /// 
         /// a /= b;
         /// i = mpfr_div(xa, xa, xb, MPFR_RNDN);
         /// i = mpfr_subnormalize(xa, i, MPFR_RNDN); /* new ternary value */
         /// 
-        /// mpfr_clear(xa); mpfr_clear(xb);
+        /// mpfr_clear(xa);
+        /// mpfr_clear(xb);
         /// </code> 
         /// <para>
-        /// Warning: this emulates a double IEEE 754 arithmetic with correct rounding in the subnormal range, which may not be the case for your hardware.
+        /// Note that <see cref="mpfr_set_emin"/> and <see cref="mpfr_set_emax"/> are called early enough in order to make sure that all
+        /// computed values are in the current exponent range.
+        /// Warning! This emulates a double IEEE 754 arithmetic with correct rounding in the subnormal range, which may not be the case
+        /// for your hardware.
         /// </para>
+        /// <para>
+        /// Below is another example showing how to emulate fixed-point arithmetic in a specific case.
+        /// Here we compute the sine of the integers 1 to 17 with a result in a fixed-point arithmetic rounded at 2−42 
+        /// (using the fact that the result is at most 1 in absolute value):
+        /// </para>
+        /// <code language="C#">
+        /// mpfr_t x; int i, inex;
+        /// mpfr_set_emin(-41); 
+        /// mpfr_init2(x, 42);
+        /// for (i = 1; i &#8804; 17; i++)
+        /// { 
+        ///     mpfr_set_ui(x, i, MPFR_RNDN);
+        ///     inex = mpfr_sin(x, x, MPFR_RNDZ);
+        ///     mpfr_subnormalize(x, inex, MPFR_RNDZ);
+        ///     mpfr_dump(x);
+        /// }
+        /// mpfr_clear(x);
+        /// </code> 
         /// </remarks>
         /// <seealso cref="mpfr_get_emin">mpfr_get_emin</seealso>
         /// <seealso cref="mpfr_get_emax">mpfr_get_emax</seealso>
@@ -21192,865 +23614,937 @@ namespace Math.Mpfr.Native
 
             #endregion
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_out_str")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_out_str")]
             public static extern uint /*size_t*/ __gmpfr_out_str_x86(IntPtr /*FILE **/ stream, int @base, uint /*size_t*/ n, IntPtr /*mpfr_srcptr*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_out_str")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_out_str")]
             public static extern ulong /*size_t*/ __gmpfr_out_str_x64(IntPtr /*FILE **/ stream, int @base, ulong /*size_t*/ n, IntPtr /*mpfr_srcptr*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_inp_str")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_inp_str")]
             public static extern uint /*size_t*/ __gmpfr_inp_str_x86(IntPtr /*mpfr_ptr*/ rop, IntPtr /*FILE **/ stream, int @base, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_inp_str")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_inp_str")]
             public static extern ulong /*size_t*/ __gmpfr_inp_str_x64(IntPtr /*mpfr_ptr*/ rop, IntPtr /*FILE **/ stream, int @base, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int __gmpfr_fpif_export(IntPtr /*FILE **/ stream, IntPtr /*mpfr_srcptr*/ op);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int __gmpfr_fpif_import(IntPtr /*mpfr_ptr*/ op, IntPtr /*FILE **/ stream);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern long /*intmax_t*/ __gmpfr_mpfr_get_sj(IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern ulong /*uintmax_t*/ __gmpfr_mpfr_get_uj(IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int __gmpfr_set_sj(IntPtr /*mpfr_t*/ rop, long /*intmax_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int __gmpfr_set_uj(IntPtr /*mpfr_t*/ rop, ulong /*uintmax_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int __gmpfr_set_sj_2exp(IntPtr /*mpfr_t*/ rop, long /*intmax_t*/ op, long /*intmax_t*/ e, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int __gmpfr_set_uj_2exp(IntPtr /*mpfr_t*/ rop, ulong /*uintmax_t*/ op, ulong /*uintmax_t*/ e, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern /*const*/ IntPtr /*char **/ mpfr_get_version(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern /*const*/ IntPtr /*char **/ mpfr_get_patches(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_buildopt_tls_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_buildopt_float128_p(/*void*/);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_buildopt_decimal_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_buildopt_gmpinternals_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_buildopt_sharedcache_p(/*void*/);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern /*const*/ IntPtr /*char **/ mpfr_buildopt_tune_case(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_emin(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_emin(int /*mpfr_exp_t*/ exp);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_emin_min(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_emin_max(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_emax(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_emax(int /*mpfr_exp_t*/ exp);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_emax_min(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_emax_max(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_default_rounding_mode(int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_rnd_t*/ mpfr_get_default_rounding_mode(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern /*const*/ IntPtr /*char **/ mpfr_print_rnd_mode(int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_flags(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_underflow(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_overflow(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_divby0(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_nanflag(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_inexflag(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear_erangeflag(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_underflow(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_overflow(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_divby0(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_nanflag(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_inexflag(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_erangeflag(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_underflow_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_overflow_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_divby0_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_nanflag_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_inexflag_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_erangeflag_p(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void mpfr_flags_clear(/*mpfr_flags_t*/ uint mask);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void mpfr_flags_set(/*mpfr_flags_t*/ uint mask);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern /*mpfr_flags_t*/ uint mpfr_flags_test(/*mpfr_flags_t*/ uint mask);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern /*mpfr_flags_t*/ uint mpfr_flags_save(/*void*/);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void mpfr_flags_restore(/*mpfr_flags_t*/ uint flags, /*mpfr_flags_t*/ uint mask);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_check_range(IntPtr /*mpfr_t*/ x, int t, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_init2(IntPtr /*mpfr_t*/ x, uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_init(IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_clear(IntPtr /*mpfr_t*/ x);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern void mpfr_inits2(uint /*mpfr_prec_t*/ prec, IntPtr /*mpfr_t*/ x /*...*/);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern void mpfr_inits(IntPtr /*mpfr_t*/ x, IntPtr args /*...*/);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern void mpfr_clears(IntPtr /*mpfr_t*/ x, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_prec_round(IntPtr /*mpfr_t*/ x, uint /*mpfr_prec_t*/ prec, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_can_round(/*const*/ IntPtr /*mpfr_t*/ b, int /*mpfr_exp_t*/ err, int /*mpfr_rnd_t*/ rnd1, int /*mpfr_rnd_t*/ rnd2, uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern uint /*mpfr_prec_t*/ mpfr_min_prec(/*const*/ IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_exp(/*const*/ IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_exp(IntPtr /*mpfr_t*/ x, int /*mpfr_exp_t*/ e);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern uint /*mpfr_prec_t*/ mpfr_get_prec(/*const*/ IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_prec(IntPtr /*mpfr_t*/ x, uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_prec_raw(IntPtr /*mpfr_t*/ x, uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_default_prec(uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern uint /*mpfr_prec_t*/ mpfr_get_default_prec(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_d(IntPtr /*mpfr_t*/ rop, double op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_flt(IntPtr /*mpfr_t*/ rop, float op, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern int mpfr_set_decimal64(IntPtr /*mpfr_t*/, _Decimal64, int /*mpfr_rnd_t*/);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern int mpfr_set_ld(IntPtr /*mpfr_t*/, long double, int /*mpfr_rnd_t*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_z(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpz_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_z_2exp(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpz_t*/ op, int /*mpfr_exp_t*/ e, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_nan(IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_inf(IntPtr /*mpfr_t*/ x, int sign);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_set_zero(IntPtr /*mpfr_t*/ x, int sign);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_f(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpf_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_get_f(IntPtr /*mpf_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_si(IntPtr /*mpfr_t*/ rop, int /*long*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_ui(IntPtr /*mpfr_t*/ rop, uint /*unsigned long*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_si_2exp(IntPtr /*mpfr_t*/ rop, int /*long*/ op, int /*mpfr_exp_t*/ e, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_ui_2exp(IntPtr /*mpfr_t*/ rop, uint /*unsigned long*/ op, int /*mpfr_exp_t*/ e, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_q(IntPtr /*mpfr_t*/ rop, IntPtr /*mpq_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set_str(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*char **/ s, int @base, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_init_set_str(IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*char **/ s, int @base, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern int mpfr_set4(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd, int s);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_abs(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_set(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_neg(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_signbit(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_setsign(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int s, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_copysign(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_get_z_2exp(IntPtr /*mpz_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern float mpfr_get_flt(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern double mpfr_get_d(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern _Decimal64 mpfr_get_decimal64(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern long double mpfr_get_ld(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern double mpfr_get_d1(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern double mpfr_get_d_2exp(ref int /*long **/ exp, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern long double mpfr_get_ld_2exp(ptr<int> /*long **/ exp, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_frexp(ref int /*mpfr_exp_t **/ exp, IntPtr /*mpfr_t*/ y, /*const*/ IntPtr /*mpfr_t*/ x, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*long*/ mpfr_get_si(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern uint /*unsigned long*/ mpfr_get_ui(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_get_str")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_get_str")]
             public static extern IntPtr /*char **/ mpfr_get_str_x86(IntPtr /*char **/ str, ref int /*mpfr_exp_t **/ expptr, int b, uint /*size_t*/ n, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_get_str")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_get_str")]
             public static extern IntPtr /*char **/ mpfr_get_str_x64(IntPtr /*char **/ str, ref int /*mpfr_exp_t **/ expptr, int b, ulong /*size_t*/ n, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_get_z(IntPtr /*mpz_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void mpfr_get_q(IntPtr /*mpq_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_free_str(IntPtr /*char **/ str);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_urandom(IntPtr /*mpfr_t*/ rop, IntPtr /*gmp_randstate_t*/ state, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_nrandom(IntPtr /*mpfr_t*/ rop, IntPtr /*gmp_randstate_t*/ state, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_grandom(IntPtr /*mpfr_t*/ rop1, IntPtr /*mpfr_t*/ rop2, IntPtr /*gmp_randstate_t*/ state, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_erandom(IntPtr /*mpfr_t*/ rop, IntPtr /*gmp_randstate_t*/ state, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_urandomb(IntPtr /*mpfr_t*/ rop, IntPtr /*gmp_randstate_t*/ state);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_nextabove(IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_nextbelow(IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_nexttoward(IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*mpfr_t*/ y);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vasprintf")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vasprintf")]
             public static extern int mpfr_vasprintf(ref IntPtr /*char ***/ str, /*const*/ IntPtr /*char **/ template, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vfprintf")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vfprintf")]
             public static extern int mpfr_vfprintf(IntPtr /*FILE */stream, /*const*/ IntPtr /*char **/ template, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vprintf")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vprintf")]
             public static extern int mpfr_vprintf(/*const*/ IntPtr /*char **/ template, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vsnprintf")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vsnprintf")]
             public static extern int mpfr_vsnprintf_x86(IntPtr /*char **/ buf, uint /*size_t*/ n, /*const*/ IntPtr /*char **/ template, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vsnprintf")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vsnprintf")]
             public static extern int mpfr_vsnprintf_x64(IntPtr /*char **/ buf, ulong /*size_t*/ n, /*const*/ IntPtr /*char **/ template, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vsprintf")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "__gmpfr_vsprintf")]
             public static extern int mpfr_vsprintf(IntPtr /*char **/ buf, /*const*/ IntPtr /*char **/ template, IntPtr args /*...*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_pow(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_pow_si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_pow_ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_ui_pow_ui(IntPtr /*mpfr_t*/ rop, uint /*unsigned long int*/ op1, uint /*unsigned long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_ui_pow(IntPtr /*mpfr_t*/ rop, uint /*unsigned long int*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_pow_z(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpz_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sqrt(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sqrt_ui(IntPtr /*mpfr_t*/ rop, uint /*unsigned long*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_rec_sqrt(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_add(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sub(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_add_ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sub_ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_ui_sub(IntPtr /*mpfr_t*/ rop, uint /*unsigned long*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_ui_div(IntPtr /*mpfr_t*/ rop, uint /*unsigned long*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_add_si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sub_si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_si_sub(IntPtr /*mpfr_t*/ rop, int /*long int*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long int*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_si_div(IntPtr /*mpfr_t*/ rop, int /*long int*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_add_d(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, double op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sub_d(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, double op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_d_sub(IntPtr /*mpfr_t*/ rop, double op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_d(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, double op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_d(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, double op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_d_div(IntPtr /*mpfr_t*/ rop, double op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sqr(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_const_pi(IntPtr /*mpfr_t*/ rop, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_const_log2(IntPtr /*mpfr_t*/ rop, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_const_euler(IntPtr /*mpfr_t*/ rop, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_const_catalan(IntPtr /*mpfr_t*/ rop, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_agm(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_log(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_log_ui(IntPtr /*mpfr_t*/ rop, /*const*/ uint /*unsigned long*/ op, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_log2(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_log10(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_log1p(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_exp(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_exp2(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_exp10(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_expm1(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_eint(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_li2(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern int mpfr_cmp3(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int s);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_d(/*const*/ IntPtr /*mpfr_t*/ op1, double op2);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern int mpfr_cmp_ld(/*const*/ IntPtr /*mpfr_t*/, long double);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmpabs(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_ui(/*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_si(/*const*/ IntPtr /*mpfr_t*/ op1, int /*long*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_ui_2exp(/*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_exp_t*/ e);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_si_2exp(/*const*/ IntPtr /*mpfr_t*/ op1, int /*long*/ op2, int /*mpfr_exp_t*/ e);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_reldiff(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_eq(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, uint /*unsigned long*/ op3);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sgn(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_2exp(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_2exp(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_2ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_2ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, uint /*unsigned long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_2si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_2si(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, int /*long*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_rint(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_round(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_roundeven(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_trunc(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_ceil(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_floor(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_rint_round(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_rint_roundeven(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_rint_trunc(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_rint_ceil(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_rint_floor(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_frac(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_modf(IntPtr /*mpfr_t*/ iop, IntPtr /*mpfr_t*/ fop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_remquo(IntPtr /*mpfr_t*/ r, ref int /*long **/ q, /*const*/ IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*mpfr_t*/ y, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_remainder(IntPtr /*mpfr_t*/ r, /*const*/ IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*mpfr_t*/ y, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fmod(IntPtr /*mpfr_t*/ r, /*const*/ IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*mpfr_t*/ y, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_fmodquo(IntPtr /*mpfr_t*/ r, ref int /*long **/ q, /*const*/ IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*mpfr_t*/ y, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_ulong_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_slong_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_uint_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_sint_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_ushort_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_sshort_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_uintmax_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fits_intmax_p(/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern void mpfr_extract(IntPtr /*mpz_t*/ y, /*const*/ IntPtr /*mpfr_t*/ p, uint /*unsigned int*/ i);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_swap(IntPtr /*mpfr_t*/ x, IntPtr /*mpfr_t*/ y);
 
-            //[DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            //[DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             //public static extern void mpfr_dump(/*const*/ IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_nan_p(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_inf_p(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_number_p(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_integer_p(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_zero_p(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_regular_p(/*const*/ IntPtr /*mpfr_t*/ op);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_greater_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_greaterequal_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_less_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_lessequal_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_lessgreater_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_equal_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_unordered_p(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_atanh(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_acosh(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_asinh(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cosh(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sinh(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_tanh(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sinh_cosh(IntPtr /*mpfr_t*/ sop, IntPtr /*mpfr_t*/ cop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sech(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_csch(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_coth(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_acos(IntPtr /*mpfr_t*/ rop,/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_asin(IntPtr /*mpfr_t*/ rop,/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_atan(IntPtr /*mpfr_t*/ rop,/*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sin(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sin_cos(IntPtr /*mpfr_t*/ sop, IntPtr /*mpfr_t*/ cop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cos(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_tan(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_atan2(IntPtr /*mpfr_t*/ rop,/*const*/ IntPtr /*mpfr_t*/ y,/*const*/ IntPtr /*mpfr_t*/ x, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sec(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_csc(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cot(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_hypot(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ x, /*const*/ IntPtr /*mpfr_t*/ y, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_erf(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_erfc(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cbrt(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_rootn_ui(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, uint /*unsigned long*/ k, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_root(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, uint /*unsigned long*/ k, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_gamma(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_gamma_inc(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_beta(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_lngamma(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_lgamma(IntPtr /*mpfr_t*/ rop, ref int /*int **/ signp, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_digamma(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_zeta(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_zeta_ui(IntPtr /*mpfr_t*/ rop, uint /*unsigned long*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fac_ui(IntPtr /*mpfr_t*/ rop, uint /*unsigned long int*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_j0(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_j1(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_jn(IntPtr /*mpfr_t*/ rop, int /*long*/ n, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_y0(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_y1(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_yn(IntPtr /*mpfr_t*/ rop, int /*long*/ n, /*const*/ IntPtr /*mpfr_t*/ op, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_ai(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ x, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_min(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_max(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_dim(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_z(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpz_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_z(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpz_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_add_z(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpz_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sub_z(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpz_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_z_sub(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpz_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_z(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpz_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_mul_q(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, IntPtr /*mpq_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_div_q(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, IntPtr /*mpq_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_add_q(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, IntPtr /*mpq_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sub_q(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, IntPtr /*mpq_t*/ op2, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_q(/*const*/ IntPtr /*mpfr_t*/ op1, IntPtr /*mpq_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_cmp_f(/*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpf_t*/ op2);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fma(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, /*const*/ IntPtr /*mpfr_t*/ op3, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_fms(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, /*const*/ IntPtr /*mpfr_t*/ op3, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_fmma(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, /*const*/ IntPtr /*mpfr_t*/ op3, /*const*/ IntPtr /*mpfr_t*/ op4, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_fmms(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t*/ op1, /*const*/ IntPtr /*mpfr_t*/ op2, /*const*/ IntPtr /*mpfr_t*/ op3, /*const*/ IntPtr /*mpfr_t*/ op4, int /*mpfr_rnd_t*/ rnd);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_sum(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*mpfr_t[]*/ tab, uint /*unsigned long*/ n, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_free_cache(/*void*/);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void mpfr_free_cache2(uint /*mpfr_free_cache_t*/ way);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void mpfr_free_pool(/*void*/);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int mpfr_mp_memory_cleanup(/*void*/);
+
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_subnormalize(IntPtr /*mpfr_t*/ x, int t, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_strtofr(IntPtr /*mpfr_t*/ rop, /*const*/ IntPtr /*char **/ nptr, ref IntPtr /*char ***/ endptr, int @base, int /*mpfr_rnd_t*/ rnd);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_custom_get_size")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_custom_get_size")]
             public static extern uint /*size_t*/ mpfr_custom_get_size_x86(uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_custom_get_size")]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "mpfr_custom_get_size")]
             public static extern ulong /*size_t*/ mpfr_custom_get_size_x64(uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_custom_init(IntPtr /*void **/ significand, uint /*mpfr_prec_t*/ prec);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern IntPtr /*void **/ mpfr_custom_get_significand(/*const*/ IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int /*mpfr_exp_t*/ mpfr_custom_get_exp(/*const*/ IntPtr /*mpfr_t*/ x);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_custom_move(IntPtr /*mpfr_t*/ x, IntPtr /*void **/ new_position);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern void mpfr_custom_init_set(IntPtr /*mpfr_t*/ x, int kind, int /*mpfr_exp_t*/ exp, uint /*mpfr_prec_t*/ prec, IntPtr /*void **/ significand);
 
-            [DllImport(@"libmpfr-4.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(@"libmpfr-6.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int mpfr_custom_get_kind(/*const*/ IntPtr /*mpfr_t*/ x);
 
         }
